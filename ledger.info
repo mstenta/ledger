@@ -1,0 +1,4 @@
+; $Id$
+name = "Ledger"
+description = "Keep track of transactions."
+core = 6.x
