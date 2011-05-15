@@ -1,0 +1,31 @@
+Ledger - A double-entry bookkeeping package.
+
+Entities:
+  Account
+    Title
+    Description
+    Parent Account
+  Transaction
+    Date
+    Description
+    Credit Account
+    Credit Value
+    Debit Account
+    Debit Value
+  
+Menu items:
+  /ledger - The main Ledger interface
+    Form for entering a single transaction
+    List of all accounts, expandable, with current balance
+  /ledger/account/%account_id
+    View of all transactions, paged, sortable, searchable
+    
+Future Modules:
+  Ledger Import - allow importing transactions and accounts from other sources
+    Menu items:
+      /ledger/import
+        Form for uploading a file of a given type
+          QIF
+          GNUCash
+  Ledger Chart - provide charts of stuff...
+  Ledger Commerce - integrate ledger with Drupal Commerce
