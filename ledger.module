@@ -25,5 +25,5 @@ function ledger_menu() {
  */
 function ledger_page() {
   $output = 'ledger';
-  return $ledger;
+  return $output;
 }

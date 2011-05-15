@@ -1,4 +1,4 @@
-; $Id$
 name = "Ledger"
 description = "Keep track of transactions."
-core = 6.x
+core = 7.x
+package = "Accounting"
