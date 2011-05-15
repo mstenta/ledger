@@ -1,10 +1,48 @@
 <?php
 
 /**
+ * @file
+ * Ledger.
+ */
+
+/**
+ * Implements hook_entity_info().
+ */
+function ledger_entity_info() {
+  return array(
+    'account' => array(
+      'label' => t('Account'),
+      'base table' => 'ledger_account',
+      'entity keys' => array(
+        'id' => 'aid',
+      ),
+      'fieldable' => TRUE,
+    ),
+    'transaction' => array(
+      'label' => t('Transaction'),
+      'base table' => 'ledger_transaction',
+      'entity keys' => array(
+        'id' => 'tid',
+      ),
+      'fieldable' => TRUE,
+    ),
+  );
+}
+
+/**
  * Implementation of hook_perm().
  */
-function ledger_perm() {
-  return array('access ledger');
+function ledger_permission() {
+  return array(
+    'access ledger' => array(
+      'title' => t('Access Ledger'), 
+      'description' => t('Access the ledger interface.'),
+    ),
+    'administer ledger' => array(
+      'title' => t('Administer Ledger'), 
+      'description' => t('Access the ledger interface.'),
+    ),
+  );
 }
 
 /**
@@ -15,7 +53,6 @@ function ledger_menu() {
     'title' => 'Ledger', 
     'page callback' => 'ledger_page', 
     'access arguments' => array('access ledger'),
-    'type' => MENU_CALLBACK,
   );
   return $items;
 }
