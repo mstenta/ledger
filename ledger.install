@@ -10,76 +10,92 @@
  */
 function ledger_schema() {
   $schema['ledger_account'] = array(
-    'description' => 'TODO: please describe this table!',
+    'description' => 'Ledger accounts',
     'fields' => array(
       'aid' => array(
-        'description' => 'TODO: please describe this field!',
+        'description' => 'Account ID',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
+      'pid' => array(
+        'description' => 'Parent account ID',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       'name' => array(
-        'description' => 'TODO: please describe this field!',
+        'description' => 'Account name',
         'type' => 'varchar',
         'length' => '255',
         'not null' => FALSE,
       ),
       'description' => array(
-        'description' => 'TODO: please describe this field!',
+        'description' => 'Account description',
         'type' => 'varchar',
         'length' => '255',
         'not null' => FALSE,
       ),
       'type' => array(
-        'description' => 'TODO: please describe this field!',
+        'description' => 'Account type',
         'type' => 'varchar',
         'length' => '255',
         'not null' => FALSE,
       ),
     ),
     'primary key' => array('aid'),
+    'indexes' => array(
+      'pid' => array('pid'),
+      'name' => array('name'),
+      'type' => array('type'),
+    ),
   );
   $schema['ledger_transaction'] = array(
-    'description' => 'TODO: please describe this table!',
+    'description' => 'Ledger transactions',
     'fields' => array(
       'tid' => array(
-        'description' => 'TODO: please describe this field!',
+        'description' => 'Transaction ID',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
       'description' => array(
-        'description' => 'TODO: please describe this field!',
+        'description' => 'Transaction description',
         'type' => 'varchar',
         'length' => '255',
         'not null' => FALSE,
       ),
       'value' => array(
-        'description' => 'TODO: please describe this field!',
+        'description' => 'Transaction value',
+        'type' => 'float',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'credit_aid' => array(
+        'description' => 'Credit account ID',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
       ),
-      'credit_acct' => array(
-        'description' => 'TODO: please describe this field!',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'debit_acct' => array(
-        'description' => 'TODO: please describe this field!',
+      'debit_aid' => array(
+        'description' => 'Debit account ID',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
       ),
       'timestamp' => array(
-        'description' => 'TODO: please describe this field!',
+        'description' => 'Timestamp of the transaction',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
       ),
     ),
     'primary key' => array('tid'),
+    'indexes' => array(
+      'credit_aid' => array('credit_aid'),
+      'debit_aid' => array('debit_aid'),
+      'timestamp' => array('timestamp'),
+    ),
   );
   return $schema;
 }
