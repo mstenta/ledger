@@ -12,14 +12,14 @@ Entities:
     Credit Value
     Debit Account
     Debit Value
-  
+
 Menu items:
   /ledger - The main Ledger interface
     Form for entering a single transaction
     List of all accounts, expandable, with current balance
   /ledger/account/%account_id
     View of all transactions, paged, sortable, searchable
-    
+
 Future Modules:
   Ledger Import - allow importing transactions and accounts from other sources
     Menu items:
@@ -29,3 +29,4 @@ Future Modules:
           GNUCash
   Ledger Chart - provide charts of stuff...
   Ledger Commerce - integrate ledger with Drupal Commerce
+  Ledger Budget - generate/manage budgets
