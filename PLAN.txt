@@ -2,31 +2,49 @@ Ledger - A double-entry bookkeeping package.
 
 Entities:
   Account
-    Title
+    Account ID
+    Parent Account ID
+    Name
     Description
-    Parent Account
+    Type
   Transaction
-    Date
+    Transaction ID
     Description
-    Credit Account
-    Credit Value
-    Debit Account
-    Debit Value
+    Value
+    Credit Account ID
+    Debit Account ID
+    Timestamp
 
 Menu items:
-  /ledger - The main Ledger interface
+  /ledger(/accounts)
+    The main Ledger interface (default menu item)
+    Full list of accounts and balances, organized into 5 account categories: Assets, Capital, Income, Expenses, Liabilities
+      Accounts w/ subaccounts expandable and collapsible
+    Click on account name to view transactions (/ledger/account/[account id])
     Form for entering a single transaction
-    List of all accounts, expandable, with current balance
-  /ledger/account/%account_id
-    View of all transactions, paged, sortable, searchable
-
-Future Modules:
-  Ledger Import - allow importing transactions and accounts from other sources
-    Menu items:
-      /ledger/import
-        Form for uploading a file of a given type
-          QIF
-          GNUCash
-  Ledger Chart - provide charts of stuff...
-  Ledger Commerce - integrate ledger with Drupal Commerce
-  Ledger Budget - generate/manage budgets
+  /ledger/transactions
+    General ledger (view of all transactions)
+      Exposed sort and filters
+    Form for entering a single transaction
+  /ledger/account/add
+    Add account form
+  /ledger/account/[account id]
+    View of all transactions in account
+      Exposed sort and filters
+      Click transaction to edit (/ledger/transaction/[transaction id]/edit)
+        Edit in place via Ajax
+    Form for entering a single transaction
+  /ledger/account/[account id]/edit
+    Edit account form
+  /ledger/account/[account id]/delete
+    Delete account confirmation form
+  /ledger/transaction/add
+    Transaction add form
+  /ledger/transaction/[transaction id]
+    View of a single transaction
+  /ledger/transaction/[transaction id]/edit
+    Transaction edit form
+  /ledger/transaction/[transaction id]/delete
+    Delete transaction confirmation form
+  /ledger/settings
+    Ledger settings form

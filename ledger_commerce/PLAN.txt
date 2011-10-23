@@ -1,0 +1,10 @@
+Ledger Commerce
+
+Connects the Ledger module to the Commerce module.
+When a payment is entered via Commerce, create a transaction in Ledger.
+Allow user to define default accounts to use in the transaction, ie:
+  debit account: Assets > Accounts Receivable
+  credit account: Income > Sales
+
+Menu items:
+  /ledger/settings/commerce

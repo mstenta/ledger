@@ -1,0 +1,16 @@
+Ledger Feeds
+
+Connects the Ledger module to the Feeds module to provide account and transaction import functionality.
+Defines parser plugins for parsing various types of files.
+Provides some default Feed importers for each parser that can be overridden by the user.
+
+FeedsParsers:
+  LedgerQIFParser - parses QIF files
+  LedgerIIFParser - parses IIF files
+  LedgerGnuCashParser - parses GnuCash XML files
+
+Menu items:
+  /ledger/import
+    Lists possible import methods
+  /ledger/import/[qif/iif/gnucash]
+    Feed importer for the particular file type

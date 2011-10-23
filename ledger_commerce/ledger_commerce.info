@@ -1,0 +1,5 @@
+name = "Ledger Commerce"
+description = "Record transactions from Commerce to Ledger."
+core = 7.x
+package = "Accounting"
+dependencies[] = commerce_payment
