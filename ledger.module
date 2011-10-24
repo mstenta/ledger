@@ -26,18 +26,12 @@ function ledger_entity_info() {
     ),
     'label callback' => 'entity_class_label',
     'uri callback' => 'entity_class_uri',
-    'access callback' => 'ledger_account_access',
     'module' => 'ledger',
-    'admin ui' => array(
-      'path' => 'ledger/accounts',
-      'file' => 'ledger.account.admin.inc',
-      'controller class' => 'LedgerAccountUIController',
-    ),
   );
   $entities['ledger_transaction'] = array(
     'label' => t('Ledger Transaction'),
-    'entity class' => 'Entity',
-    'controller class' => 'EntityAPIController',
+    'entity class' => 'LedgerTransaction',
+    'controller class' => 'LedgerTransactionController',
     'base table' => 'ledger_transaction',
     'fieldable' => TRUE,
     'entity keys' => array(
@@ -45,6 +39,7 @@ function ledger_entity_info() {
     ),
     'label callback' => 'entity_class_label',
     'uri callback' => 'entity_class_uri',
+    'module' => 'ledger',
   );
   return $entities;
 }
