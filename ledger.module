@@ -2,65 +2,70 @@
 
 /**
  * @file
- * Ledger.
+ * Ledger
  */
+
+/**
+ * Include code for the entity types.
+ */
+module_load_include('inc', 'ledger', 'includes/ledger.account');
+module_load_include('inc', 'ledger', 'includes/ledger.transaction');
 
 /**
  * Implements hook_entity_info().
  */
 function ledger_entity_info() {
-  return array(
-    'account' => array(
-      'label' => t('Account'),
-      'base table' => 'ledger_account',
-      'entity keys' => array(
-        'id' => 'aid',
-      ),
-      'fieldable' => TRUE,
+  $entities['ledger_account'] = array(
+    'label' => t('Ledger Account'),
+    'entity class' => 'LedgerAccount',
+    'controller class' => 'LedgerAccountController',
+    'base table' => 'ledger_account',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'aid',
     ),
-    'transaction' => array(
-      'label' => t('Transaction'),
-      'base table' => 'ledger_transaction',
-      'entity keys' => array(
-        'id' => 'tid',
-      ),
-      'fieldable' => TRUE,
+    'label callback' => 'entity_class_label',
+    'uri callback' => 'entity_class_uri',
+    'access callback' => 'ledger_account_access',
+    'module' => 'ledger',
+    'admin ui' => array(
+      'path' => 'ledger/accounts',
+      'file' => 'ledger.account.admin.inc',
+      'controller class' => 'LedgerAccountUIController',
     ),
   );
+  $entities['ledger_transaction'] = array(
+    'label' => t('Ledger Transaction'),
+    'entity class' => 'Entity',
+    'controller class' => 'EntityAPIController',
+    'base table' => 'ledger_transaction',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'tid',
+    ),
+    'label callback' => 'entity_class_label',
+    'uri callback' => 'entity_class_uri',
+  );
+  return $entities;
 }
 
 /**
- * Implementation of hook_perm().
+ * Implementation of hook_permission().
+ *
+ * @todo
+ *   Add fine-tuned permissions for viewing and editing individual accounts. ie:
+ *     view any accounts
+ *     edit any accounts
+ *     delete any accounts
+ *     view own accounts
+ *     edit own accounts
+ *     delete own accounts
  */
 function ledger_permission() {
   return array(
-    'access ledger' => array(
-      'title' => t('Access Ledger'), 
-      'description' => t('Access the ledger interface.'),
-    ),
     'administer ledger' => array(
       'title' => t('Administer Ledger'), 
-      'description' => t('Access the ledger interface.'),
+      'description' => t('Administer all ledger accounts and transactions.'),
     ),
   );
-}
-
-/**
- * Implementation of hook_menu().
- */
-function ledger_menu() {
-  $items['ledger'] = array(
-    'title' => 'Ledger', 
-    'page callback' => 'ledger_page', 
-    'access arguments' => array('access ledger'),
-  );
-  return $items;
-}
-
-/**
- * Ledger page callback
- */
-function ledger_page() {
-  $output = 'ledger';
-  return $output;
 }

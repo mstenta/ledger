@@ -26,25 +26,25 @@ Menu items:
     General ledger (view of all transactions)
       Exposed sort and filters
     Form for entering a single transaction
-  /ledger/account/add
+  /ledger/accounts/add
     Add account form
-  /ledger/account/[account id]
+  /ledger/accounts/[account id]
     View of all transactions in account
       Exposed sort and filters
       Click transaction to edit (/ledger/transaction/[transaction id]/edit)
         Edit in place via Ajax
     Form for entering a single transaction
-  /ledger/account/[account id]/edit
+  /ledger/accounts/[account id]/edit
     Edit account form
-  /ledger/account/[account id]/delete
+  /ledger/accounts/[account id]/delete
     Delete account confirmation form
-  /ledger/transaction/add
+  /ledger/transactions/add
     Transaction add form
-  /ledger/transaction/[transaction id]
+  /ledger/transactions/[transaction id]
     View of a single transaction
-  /ledger/transaction/[transaction id]/edit
+  /ledger/transactions/[transaction id]/edit
     Transaction edit form
-  /ledger/transaction/[transaction id]/delete
+  /ledger/transactions/[transaction id]/delete
     Delete transaction confirmation form
   /ledger/settings
     Ledger settings form
