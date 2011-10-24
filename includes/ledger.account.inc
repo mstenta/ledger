@@ -44,11 +44,10 @@ class LedgerAccountController extends EntityAPIController {
    */
   public function create(array $values = array()) {
     
-    // Add values that are specific to our Model
+    // Add values that are specific to our account
     $values += array( 
       'aid' => '',
-      'pid' => 0,      // 
-            // 'is_new' => TRUE,
+      'pid' => 0,
       'name' => '',
       'description' => '',
       'type' => '',
