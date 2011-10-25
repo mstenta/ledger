@@ -22,8 +22,8 @@ function ledger_entity_property_info() {
   );
   $account['parent'] = array(
     'type' => 'ledger_account',
-    'label' => t("Parent Account"),
-    'description' => t("The parent account in the ledger."),
+    'label' => t('Parent Account'),
+    'description' => t('The parent account in the ledger.'),
     'getter callback' => 'ledger_account_get_properties',
     'setter callback' => 'ledger_account_set_properties',
     'setter permission' => 'administer ledger',
@@ -79,12 +79,12 @@ function ledger_entity_property_info() {
     'setter callback' => 'entity_property_verbatim_set',
     'setter permission' => 'administer ledger',
     'required' => TRUE,
-    'schema field' => 'description',
+    'schema field' => 'value',
   );
   $account['credit_account'] = array(
     'type' => 'ledger_account',
-    'label' => t("Credit Account"),
-    'description' => t("The credit account of the transaction."),
+    'label' => t('Credit Account'),
+    'description' => t('The credit account of the transaction.'),
     'getter callback' => 'ledger_transaction_get_properties',
     'setter callback' => 'ledger_transaction_set_properties',
     'setter permission' => 'administer ledger',
@@ -93,8 +93,8 @@ function ledger_entity_property_info() {
   );
   $account['debit_account'] = array(
     'type' => 'ledger_account',
-    'label' => t("Debit Account"),
-    'description' => t("The debit account of the transaction."),
+    'label' => t('Debit Account'),
+    'description' => t('The debit account of the transaction.'),
     'getter callback' => 'ledger_transaction_get_properties',
     'setter callback' => 'ledger_transaction_set_properties',
     'setter permission' => 'administer ledger',
