@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Field handler to present an order edit link.
+ * Field handler to present an account edit link.
  */
 class ledger_handler_field_ledger_account_link_edit extends ledger_handler_field_ledger_account_link {
   function render($values) {

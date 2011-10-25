@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Field handler to present a link to delete an order.
+ * Field handler to present a link to delete an account.
  */
 class ledger_handler_field_ledger_account_link_delete extends ledger_handler_field_ledger_account_link {
   function render($values) {
