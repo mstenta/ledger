@@ -81,7 +81,7 @@ function ledger_entity_property_info() {
     'required' => TRUE,
     'schema field' => 'value',
   );
-  $account['credit_account'] = array(
+  $transaction['credit_account'] = array(
     'type' => 'ledger_account',
     'label' => t('Credit Account'),
     'description' => t('The credit account of the transaction.'),
@@ -91,7 +91,7 @@ function ledger_entity_property_info() {
     'required' => TRUE,
     'schema field' => 'credit_aid',
   );
-  $account['debit_account'] = array(
+  $transaction['debit_account'] = array(
     'type' => 'ledger_account',
     'label' => t('Debit Account'),
     'description' => t('The debit account of the transaction.'),
