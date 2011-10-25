@@ -78,3 +78,31 @@ class LedgerAccountController extends EntityAPIController {
 function ledger_account_access($op, $account = NULL, $user = NULL) {
   return user_access('administer ledger', $user);
 }
+
+/**
+ * Loads an account by ID.
+ */
+function ledger_account_load($aid) {
+  $accounts = ledger_account_load_multiple(array($aid), array());
+  return $accounts ? reset($accounts) : FALSE;
+}
+
+/**
+ * Loads multiple accounts by ID or based on a set of matching conditions.
+ *
+ * @see entity_load()
+ *
+ * @param $accounts_ids
+ *   An array of account IDs.
+ * @param $conditions
+ *   An array of conditions on the {ledger_account} table in the form
+ *     'field' => $value.
+ * @param $reset
+ *   Whether to reset the internal account loading cache.
+ *
+ * @return
+ *   An array of account objects indexed by aid.
+ */
+function ledger_account_load_multiple($account_ids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('ledger_account', $account_ids, $conditions, $reset);
+}
