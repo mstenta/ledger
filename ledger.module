@@ -6,10 +6,11 @@
  */
 
 /**
- * Include code for the entity types.
+ * Include code for the entity types and callbacks.
  */
 module_load_include('inc', 'ledger', 'includes/ledger.account');
 module_load_include('inc', 'ledger', 'includes/ledger.transaction');
+module_load_include('inc', 'ledger', 'includes/callbacks');
 
 /**
  * Implements hook_entity_info().
