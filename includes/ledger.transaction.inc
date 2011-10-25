@@ -79,3 +79,31 @@ class LedgerTransactionController extends EntityAPIController {
 function ledger_transaction_access($op, $account = NULL, $user = NULL) {
   return user_access('administer ledger', $user);
 }
+
+/**
+ * Loads a transaction by ID.
+ */
+function ledger_transaction_load($tid) {
+  $transactions = ledger_transaction_load_multiple(array($tid), array());
+  return $transactions ? reset($transactions) : FALSE;
+}
+
+/**
+ * Loads multiple transactions by ID or based on a set of matching conditions.
+ *
+ * @see entity_load()
+ *
+ * @param $transaction_ids
+ *   An array of transaction IDs.
+ * @param $conditions
+ *   An array of conditions on the {ledger_transaction} table in the form
+ *     'field' => $value.
+ * @param $reset
+ *   Whether to reset the internal transaction loading cache.
+ *
+ * @return
+ *   An array of transaction objects indexed by tid.
+ */
+function ledger_transaction_load_multiple($transaction_ids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('ledger_transaction', $transaction_ids, $conditions, $reset);
+}

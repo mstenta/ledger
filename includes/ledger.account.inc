@@ -92,7 +92,7 @@ function ledger_account_load($aid) {
  *
  * @see entity_load()
  *
- * @param $accounts_ids
+ * @param $account_ids
  *   An array of account IDs.
  * @param $conditions
  *   An array of conditions on the {ledger_account} table in the form
