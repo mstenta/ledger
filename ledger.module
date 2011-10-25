@@ -75,13 +75,3 @@ function ledger_views_api() {
     'path' => drupal_get_path('module', 'ledger') . '/includes/views',
   );
 }
-
-/**
- * Returns an initialized account object.
- *
- * @return
- *   An account object with all default fields initialized.
- */
-function ledger_account_new($values = array()) {
-  return entity_get_controller('ledger_account')->create($values);
-}

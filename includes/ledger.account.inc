@@ -106,3 +106,13 @@ function ledger_account_load($aid) {
 function ledger_account_load_multiple($account_ids = array(), $conditions = array(), $reset = FALSE) {
   return entity_load('ledger_account', $account_ids, $conditions, $reset);
 }
+
+/**
+ * Returns an initialized account object.
+ *
+ * @return
+ *   An account object with all default fields initialized.
+ */
+function ledger_account_new($values = array()) {
+  return entity_get_controller('ledger_account')->create($values);
+}
