@@ -107,3 +107,13 @@ function ledger_transaction_load($tid) {
 function ledger_transaction_load_multiple($transaction_ids = array(), $conditions = array(), $reset = FALSE) {
   return entity_load('ledger_transaction', $transaction_ids, $conditions, $reset);
 }
+
+/**
+ * Returns an initialized transaction object.
+ *
+ * @return
+ *   A transaction object with all default fields initialized.
+ */
+function ledger_transaction_new($values = array()) {
+  return entity_get_controller('ledger_transaction')->create($values);
+}
