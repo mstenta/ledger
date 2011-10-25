@@ -9,3 +9,7 @@ files[] = includes/views/handlers/ledger_handler_field_ledger_account.inc
 files[] = includes/views/handlers/ledger_handler_field_ledger_account_link.inc
 files[] = includes/views/handlers/ledger_handler_field_ledger_account_link_edit.inc
 files[] = includes/views/handlers/ledger_handler_field_ledger_account_link_delete.inc
+files[] = includes/views/handlers/ledger_handler_field_ledger_transaction.inc
+files[] = includes/views/handlers/ledger_handler_field_ledger_transaction_link.inc
+files[] = includes/views/handlers/ledger_handler_field_ledger_transaction_link_edit.inc
+files[] = includes/views/handlers/ledger_handler_field_ledger_transaction_link_delete.inc
