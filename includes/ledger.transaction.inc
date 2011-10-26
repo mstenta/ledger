@@ -69,14 +69,14 @@ class LedgerTransactionController extends EntityAPIController {
  * @param $op
  *   The operation being performed. One of 'view', 'update', 'create', 'delete'
  *   or just 'edit' (being the same as 'create' or 'update').
- * @param $account
+ * @param $transaction
  *   Optionally a specific ledger transaction to check.
  * @param $user
  *   The user to check for. Leave it to NULL to check for the global user.
  * @return boolean
  *   Whether access is allowed or not.
  */
-function ledger_transaction_access($op, $account = NULL, $user = NULL) {
+function ledger_transaction_access($op, $transaction = NULL, $user = NULL) {
   return user_access('administer ledger', $user);
 }
 
