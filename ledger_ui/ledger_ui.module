@@ -5,8 +5,12 @@
  * Ledger
  */
 
+/***************************************************************
+ * Drupal core hooks
+ ***************************************************************/
+
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function ledger_ui_menu() {
   $items = array();
@@ -123,7 +127,7 @@ function ledger_ui_menu() {
 }
 
 /**
- * Implementation of hook_menu_local_tasks_alter().
+ * Implements hook_menu_local_tasks_alter().
  */
 function ledger_ui_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   
@@ -150,8 +154,12 @@ function ledger_ui_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   }
 }
 
+/***************************************************************
+ * Views hooks
+ ***************************************************************/
+
 /**
- * Implementation of hook_views_api().
+ * Implements hook_views_api().
  */
 function ledger_ui_views_api() {
   return array(
@@ -159,6 +167,10 @@ function ledger_ui_views_api() {
     'path' => drupal_get_path('module', 'ledger_ui') . '/views',
   );
 }
+
+/***************************************************************
+ * Menu item title callbacks
+ ***************************************************************/
 
 /**
  * Menu item title callback: returns an account name for it's pages.

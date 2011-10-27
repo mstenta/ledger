@@ -12,6 +12,10 @@ module_load_include('inc', 'ledger', 'includes/ledger.account');
 module_load_include('inc', 'ledger', 'includes/ledger.transaction');
 module_load_include('inc', 'ledger', 'includes/callbacks');
 
+/***************************************************************
+ * Drupal core hooks
+ ***************************************************************/
+
 /**
  * Implements hook_entity_info().
  */
@@ -46,7 +50,7 @@ function ledger_entity_info() {
 }
 
 /**
- * Implementation of hook_permission().
+ * Implements hook_permission().
  *
  * @todo
  *   Add fine-tuned permissions for viewing and editing individual accounts. ie:

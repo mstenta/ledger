@@ -5,7 +5,7 @@
  */
 
 /**
- * Implementation of hook_views_data_alter().
+ * Implementations hook_views_data_alter().
  */
 function ledger_ui_views_data_alter(&$data) {
   

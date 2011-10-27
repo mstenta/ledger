@@ -6,7 +6,7 @@
  */
 
 /**
- * Implementation of hook_entity_property_info().
+ * Implementations hook_entity_property_info().
  */
 function ledger_entity_property_info() {
   $info = array();
