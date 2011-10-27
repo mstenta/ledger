@@ -15,6 +15,6 @@ class ledger_handler_field_ledger_account_link_edit extends ledger_handler_field
     }
 
     $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');
-    return l($text, 'ledger/accounts/' . $account->aid . '/edit', array('query' => drupal_get_destination()));
+    return l($text, 'admin/ledger/accounts/' . $account->aid . '/edit', array('query' => drupal_get_destination()));
   }
 }

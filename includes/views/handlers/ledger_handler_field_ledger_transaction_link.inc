@@ -37,6 +37,6 @@ class ledger_handler_field_ledger_transaction_link extends views_handler_field {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
     $tid = $this->get_value($values, 'tid');
 
-    return l($text, 'ledger/transactions/' . $tid, array('query' => drupal_get_destination()));
+    return l($text, 'admin/ledger/transactions/' . $tid, array('query' => drupal_get_destination()));
   }
 }

@@ -15,6 +15,6 @@ class ledger_handler_field_ledger_transaction_link_delete extends ledger_handler
     }
 
     $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
-    return l($text, 'ledger/transactions/' . $transaction->tid . '/delete', array('query' => drupal_get_destination()));
+    return l($text, 'admin/ledger/transactions/' . $transaction->tid . '/delete', array('query' => drupal_get_destination()));
   }
 }

@@ -52,7 +52,7 @@ class ledger_handler_field_ledger_account extends views_handler_field {
     if ($this->options['link_to_account'] == 'view' && $data !== NULL && $data !== '') {
       $aid = $this->get_value($values, 'aid');
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = 'ledger/accounts/' . $aid;
+      $this->options['alter']['path'] = 'admin/ledger/accounts/' . $aid;
     }
 
     return $data;

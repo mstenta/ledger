@@ -15,6 +15,6 @@ class ledger_handler_field_ledger_transaction_link_edit extends ledger_handler_f
     }
 
     $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');
-    return l($text, 'ledger/transactions/' . $transaction->tid . '/edit', array('query' => drupal_get_destination()));
+    return l($text, 'admin/ledger/transactions/' . $transaction->tid . '/edit', array('query' => drupal_get_destination()));
   }
 }

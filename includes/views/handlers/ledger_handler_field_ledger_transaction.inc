@@ -52,7 +52,7 @@ class ledger_handler_field_ledger_transaction extends views_handler_field {
     if ($this->options['link_to_transaction'] == 'view' && $data !== NULL && $data !== '') {
       $tid = $this->get_value($values, 'tid');
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = 'ledger/transactions/' . $tid;
+      $this->options['alter']['path'] = 'admin/ledger/transactions/' . $tid;
     }
 
     return $data;
