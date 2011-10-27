@@ -24,6 +24,7 @@ function ledger_ui_menu() {
   
   // Note: the following pages are defined by default Views:
   //   /admin/ledger/accounts
+  //   /admin/ledger/accounts/%(/transactions)
   //   /admin/ledger/transactions
 
   // Create account
@@ -38,22 +39,6 @@ function ledger_ui_menu() {
     'file' => 'ledger_ui.admin.account.inc',
   );
   
-  // View account
-  $items['admin/ledger/accounts/%ledger_account'] = array(
-    'title callback' => 'ledger_ui_account_title',
-    'title arguments' => array(3),
-    'page callback' => 'ledger_ui_page_temp',
-    'page arguments' => array(3),
-    'access callback' => 'ledger_account_access',
-    'access arguments' => array('view', 3),
-  );
-  $items['admin/ledger/accounts/%ledger_account/view'] = array(
-    'title' => 'View',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
-  );
-  
   // Edit account
   $items['admin/ledger/accounts/%ledger_account/edit'] = array(
     'title' => 'Edit',
@@ -62,7 +47,7 @@ function ledger_ui_menu() {
     'access callback' => 'ledger_account_access',
     'access arguments' => array('update', 3),
     'type' => MENU_LOCAL_TASK,
-    'weight' => -5,
+    'weight' => 10,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'ledger_ui.admin.account.inc',
   );
@@ -80,17 +65,17 @@ function ledger_ui_menu() {
     'file' => 'ledger_ui.admin.account.inc',
   );
   
-  //// Create transaction
-  //$items['admin/ledger/transactions/add'] = array(
-  //  'title' => 'Record a ledger transaction',
-  //  'description' => 'Record a new transaction in the ledger.',
-  //  'page callback' => 'ledger_ui_transaction_form_wrapper',
-  //  'page arguments' => array(entity_get_controller('ledger_transaction')->create()),
-  //  'access callback' => 'ledger_transaction_access',
-  //  'access arguments' => array('create'),
-  //  'weight' => 10,
-  //  'file' => 'ledger_ui.admin.transaction.inc',
-  //);
+  // Create transaction
+  $items['admin/ledger/transactions/add'] = array(
+    'title' => 'Record a ledger transaction',
+    'description' => 'Record a new transaction in the ledger.',
+    'page callback' => 'ledger_ui_transaction_form_wrapper',
+    'page arguments' => array(entity_get_controller('ledger_transaction')->create()),
+    'access callback' => 'ledger_transaction_access',
+    'access arguments' => array('create'),
+    'weight' => 10,
+    'file' => 'ledger_ui.admin.transaction.inc',
+  );
   
   // View transaction
   $items['admin/ledger/transactions/%ledger_transaction'] = array(
@@ -104,7 +89,7 @@ function ledger_ui_menu() {
   $items['admin/ledger/transactions/%ledger_transaction/view'] = array(
     'title' => 'View',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
+    'weight' => 0,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
   
@@ -116,7 +101,7 @@ function ledger_ui_menu() {
     'access callback' => 'ledger_transaction_access',
     'access arguments' => array('update', 3),
     'type' => MENU_LOCAL_TASK,
-    'weight' => -5,
+    'weight' => 10,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'ledger_ui.admin.transaction.inc',
   );
