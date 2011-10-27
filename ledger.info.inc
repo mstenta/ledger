@@ -72,35 +72,6 @@ function ledger_entity_property_info() {
     'required' => TRUE,
     'schema field' => 'description',
   );
-  $transaction['value'] = array(
-    'type' => 'decimal',
-    'label' => t('Value'),
-    'description' => t('The value of the transaction.'),
-    'setter callback' => 'entity_property_verbatim_set',
-    'setter permission' => 'administer ledger',
-    'required' => TRUE,
-    'schema field' => 'value',
-  );
-  $transaction['credit_account'] = array(
-    'type' => 'ledger_account',
-    'label' => t('Credit Account'),
-    'description' => t('The credit account of the transaction.'),
-    'getter callback' => 'ledger_transaction_get_properties',
-    'setter callback' => 'ledger_transaction_set_properties',
-    'setter permission' => 'administer ledger',
-    'required' => TRUE,
-    'schema field' => 'credit_aid',
-  );
-  $transaction['debit_account'] = array(
-    'type' => 'ledger_account',
-    'label' => t('Debit Account'),
-    'description' => t('The debit account of the transaction.'),
-    'getter callback' => 'ledger_transaction_get_properties',
-    'setter callback' => 'ledger_transaction_set_properties',
-    'setter permission' => 'administer ledger',
-    'required' => TRUE,
-    'schema field' => 'debit_aid',
-  );
   $transaction['timestamp'] = array(
     'type' => 'date',
     'label' => t('Timestamp'),

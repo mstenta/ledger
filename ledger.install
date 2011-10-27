@@ -65,24 +65,6 @@ function ledger_schema() {
         'length' => '255',
         'not null' => FALSE,
       ),
-      'value' => array(
-        'description' => 'Transaction value',
-        'type' => 'float',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'credit_aid' => array(
-        'description' => 'Credit account ID',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'debit_aid' => array(
-        'description' => 'Debit account ID',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'timestamp' => array(
         'description' => 'Timestamp of the transaction',
         'type' => 'int',
@@ -92,8 +74,6 @@ function ledger_schema() {
     ),
     'primary key' => array('tid'),
     'indexes' => array(
-      'credit_aid' => array('credit_aid'),
-      'debit_aid' => array('debit_aid'),
       'timestamp' => array('timestamp'),
     ),
   );
