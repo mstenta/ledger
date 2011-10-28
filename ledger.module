@@ -70,6 +70,56 @@ function ledger_permission() {
   );
 }
 
+/**
+ * Implements hook_enable().
+ */
+function ledger_enable() {
+  
+  $field_type = 'ledger_entry';
+  $entity_type = 'ledger_transaction';
+  $field_name = 'lender_transaction_entry';
+  
+  // If a field type we know should exist isn't found, clear the Field cache.
+  if (!field_info_field_types($field_type)) {
+    field_cache_clear();
+  }
+
+  // Look for or add a line item reference field to the order type.
+  $field = field_info_field($field_name);
+  $instance = field_info_instance($entity_type, $field_name, $entity_type);
+
+  if (empty($field)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => $field_type,
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'entity_types' => array($entity_type),
+      'translatable' => FALSE,
+    );
+    $field = field_create_field($field);
+  }
+
+  if (empty($instance)) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => $entity_type,
+      'bundle' => $entity_type,
+      'label' => t('Ledger Entries'),
+      'settings' => array(),
+      'widget' => array(
+        'type' => 'ledger_entry_default_widget',
+      ),
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+          'type' => 'ledger_entry_default_formatter',
+        ),
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
 /***************************************************************
  * Field API hooks
  ***************************************************************/
@@ -201,22 +251,6 @@ function ledger_field_widget_info() {
 
 /**
  * Implements hook_field_widget_form().
- *
- * hook_widget_form() is where Drupal tells us to create form elements for
- * our field's widget.
- *
- * We provide one of three different forms, depending on the widget type of
- * the Form API item provided.
- *
- * The 'field_example_colorpicker' and 'field_example_text' are essentially
- * the same, but field_example_colorpicker adds a javascript colorpicker
- * helper.
- *
- * field_example_3text displays three text fields, one each for red, green,
- * and blue. However, the field type defines a single text column,
- * rgb, which needs an HTML color spec. Define an element validate
- * handler that converts our r, g, and b fields into a simulated single
- * 'rgb' form element.
  */
 function ledger_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
 

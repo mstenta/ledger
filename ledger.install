@@ -81,7 +81,7 @@ function ledger_schema() {
 }
 
 /**
- * Implements hook_field_schema()
+ * Implements hook_field_schema().
  */
 function ledger_field_schema($field) {
   $columns = array(
