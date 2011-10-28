@@ -70,8 +70,179 @@ function ledger_permission() {
   );
 }
 
+/***************************************************************
+ * Field API hooks
+ ***************************************************************/
+
 /**
- * Implementation of hook_views_api().
+ * Implements hook_field_info().
+ */
+function ledger_field_info() {
+  return array(
+    'ledger_entry' => array(
+      'label' => t('Ledger Entry'),
+      'description' => t('Represents a single debit or credit to an account.'),
+      'default_widget' => 'ledger_entry_default_widget',
+      'default_formatter' => 'ledger_entry_default_formatter',
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_validate().
+ *
+ * @see ledger_field_widget_error()
+ */
+function ledger_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+  foreach ($items as $delta => $item) {
+    
+    // Make sure both an account and a value are entered
+    if (empty($item['aid']) || empty($item['value'])) {
+      $errors[$field['field_name']][$langcode][$delta][] = array(
+        'error' => 'ledger_entry_invalid',
+        'message' => t('Account and value are both required.'),
+      );
+    }
+    
+    else {
+      
+      // Make sure the account is a valid account
+      $account = ledger_account_load($item['aid']);
+      if (!$account->aid) {
+        $errors[$field['field_name']][$langcode][$delta][] = array(
+          'error' => 'ledger_entry_invalid',
+          'message' => t('The account selected is not a valid account.'),
+        );
+      }
+      
+      // Make sure the value is a float value
+      if (!is_numeric($item['value'])) {
+        $errors[$field['field_name']][$langcode][$delta][] = array(
+          'error' => 'ledger_entry_invalid',
+          'message' => t('The transaction value must be a number.'),
+        );
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_error().
+ *
+ * @see ledger_field_validate()
+ * @see form_error()
+ */
+function ledger_field_widget_error($element, $error, $form, &$form_state) {
+  switch ($error['error']) {
+    case 'ledger_entry_invalid':
+      form_error($element, $error['message']);
+      break;
+  }
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function ledger_field_is_empty($item, $field) {
+  return empty($item['aid']) && empty($item['value']);
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ *
+ * @see ledger_field_formatter_view()
+ */
+function ledger_field_formatter_info() {
+  return array(
+    'ledger_entry_default_formatter' => array(
+      'label' => t('Default'),
+      'field types' => array('ledger_entry'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ *
+ * @see ledger_field_formatter_info()
+ */
+function ledger_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  if ($display['type'] == 'ledger_entry_default_formatter') {
+    foreach ($items as $delta => $item) {
+      
+      // Load the account
+      $account = ledger_account_load($item['aid']);
+      
+      // Format the element
+      $element[$delta] = array(
+        '#type' => 'html_tag',
+        '#tag' => 'p',
+        '#value' => t('@account: @value', array('@account' => $account->name, '@value' => $item['value'])),
+      );
+    }
+  }
+  return $element;
+}
+
+/**
+ * Implements hook_field_widget_info().
+ *
+ * @see ledger_field_widget_form()
+ */
+function ledger_field_widget_info() {
+  return array(
+    'ledger_entry_default_widget' => array(
+      'label' => t('Ledger entry'),
+      'field types' => array('ledger_entry'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_widget_form().
+ *
+ * hook_widget_form() is where Drupal tells us to create form elements for
+ * our field's widget.
+ *
+ * We provide one of three different forms, depending on the widget type of
+ * the Form API item provided.
+ *
+ * The 'field_example_colorpicker' and 'field_example_text' are essentially
+ * the same, but field_example_colorpicker adds a javascript colorpicker
+ * helper.
+ *
+ * field_example_3text displays three text fields, one each for red, green,
+ * and blue. However, the field type defines a single text column,
+ * rgb, which needs an HTML color spec. Define an element validate
+ * handler that converts our r, g, and b fields into a simulated single
+ * 'rgb' form element.
+ */
+function ledger_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+
+  $element['#delta'] = $delta;
+  
+  $element['aid'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Account ID',
+    '#default_value' => $items[$delta]['aid'],
+  );
+  
+  $element['value'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Transaction Value',
+    '#default_value' => $items[$delta]['value'],
+  );
+  
+  return $element;
+}
+
+/***************************************************************
+ * Views API hooks
+ ***************************************************************/
+
+/**
+ * Implements hook_views_api().
  */
 function ledger_views_api() {
   return array(
