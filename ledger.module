@@ -45,6 +45,11 @@ function ledger_entity_info() {
     'label callback' => 'entity_class_label',
     'uri callback' => 'entity_class_uri',
     'module' => 'ledger',
+    'bundles' => array(
+      'ledger_transaction' => array(
+        'label' => t('Transaction', array(), array('context' => 'a ledger transaction')),
+      ),
+    ),
   );
   return $entities;
 }
