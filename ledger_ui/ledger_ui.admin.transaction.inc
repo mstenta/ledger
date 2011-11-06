@@ -42,44 +42,6 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     '#size' => 50,
   );
   
-  // Value
-  $form['value'] = array(
-    '#title' => t('Value'),
-    '#type' => 'textfield',
-    '#default_value' => $transaction->value,
-    '#description' => t('The value of the transaction.'),
-    '#required' => TRUE,
-    '#size' => 30,
-  );
-  
-  // Credit account ID
-  /**
-   * @todo
-   *   Dropdown of available accounts.
-   */
-  $form['credit_aid'] = array(
-    '#title' => t('Credit account ID'),
-    '#type' => 'textfield',
-    '#default_value' => $transaction->credit_aid,
-    '#description' => t('The credit account\'s ID.'),
-    '#required' => TRUE,
-    '#size' => 30,
-  );
-  
-  // Debit account ID
-  /**
-   * @todo
-   *   Dropdown of available accounts.
-   */
-  $form['debit_aid'] = array(
-    '#title' => t('Debit account ID'),
-    '#type' => 'textfield',
-    '#default_value' => $transaction->debit_aid,
-    '#description' => t('The debit account\'s ID.'),
-    '#required' => TRUE,
-    '#size' => 30,
-  );
-  
   // Timestamp
   $form['timestamp'] = array(
     '#title' => t('Timestamp'),
@@ -89,6 +51,10 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     '#required' => TRUE,
     '#size' => 10,
   );
+  
+  // Add the field related form elements.
+  $form_state['ledger_transaction'] = $transaction;
+  field_attach_form('ledger_transaction', $transaction, $form, $form_state);
   
   // Form actions
   $form['actions'] = array('#type' => 'actions');
