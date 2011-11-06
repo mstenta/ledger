@@ -80,16 +80,36 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
 }
 
 /**
+ * Form API validate callback for the ledger transaction form.
+ */
+function ledger_transaction_form_validate(&$form, &$form_state) {
+  
+  // Load transaction object from $form_state
+  $transaction = $form_state['ledger_transaction'];
+  
+  // Notify field widgets to validate their data.
+  field_attach_form_validate('ledger_transaction', $transaction, $form, $form_state);
+}
+
+/**
  * Form API submit callback for the ledger transaction form.
  */
 function ledger_transaction_form_submit(&$form, &$form_state) {
   
-  // Build a new transaction object
-  $transaction = ledger_transaction_new($form_state['values']);
+  // If the user is editing a transaction, load a fresh copy to merge changes to.
+  if ($form_state['ledger_transaction']->tid) {
+    $form_state['ledger_transaction'] = ledger_transaction_load($form_state['ledger_transaction']->tid);
+  }
   
-  // Save and go back.
+  // Merge changes into the transaction object in the form state so it is accessible
+  // by field handlers.
+  $transaction = $form_state['ledger_transaction'];
+  
+  // Notify field widgets.
+  field_attach_submit('ledger_transaction', $transaction, $form, $form_state);
+  
+  // Save
   $transaction->save();
-  $form_state['redirect'] = 'ledger/transactions';
 }
 
 /**
