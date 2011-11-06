@@ -268,19 +268,19 @@ function ledger_field_widget_info() {
  * Implements hook_field_widget_form().
  */
 function ledger_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-
+  
   $element['#delta'] = $delta;
   
   $element['aid'] = array(
     '#type' => 'textfield',
     '#title' => 'Account ID',
-    '#default_value' => $items[$delta]['aid'],
+    '#default_value' => !empty($items[$delta]['aid']) ? $items[$delta]['aid'] : '',
   );
   
   $element['value'] = array(
     '#type' => 'textfield',
     '#title' => 'Transaction Value',
-    '#default_value' => $items[$delta]['value'],
+    '#default_value' => !empty($items[$delta]['value']) ? $items[$delta]['value'] : '0.00',
   );
   
   return $element;
