@@ -19,7 +19,7 @@ class LedgerTransaction extends Entity {
   }
   
   protected function defaultUri() {
-    return array('path' => 'ledger/transactions/' . $this->tid);
+    return array('path' => 'admin/ledger/transactions/' . $this->tid);
   }
 }
 

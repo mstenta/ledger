@@ -107,12 +107,12 @@ function ledger_account_form_submit(&$form, &$form_state) {
   
   // Save and go back.
   $account->save();
-  $form_state['redirect'] = 'ledger/accounts';
+  $form_state['redirect'] = 'admin/ledger/accounts';
 }
 
 /**
  * Form API submit callback for the ledger account delete button.
  */
 function ledger_account_form_submit_delete(&$form, &$form_state) {
-  $form_state['redirect'] = 'ledger/accounts/' . $form_state['ledger_account']->aid . '/delete';
+  $form_state['redirect'] = 'admin/ledger/accounts/' . $form_state['ledger_account']->aid . '/delete';
 }

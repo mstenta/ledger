@@ -19,7 +19,7 @@ class LedgerAccount extends Entity {
   }
   
   protected function defaultUri() {
-    return array('path' => 'ledger/accounts/' . $this->aid);
+    return array('path' => 'admin/ledger/accounts/' . $this->aid);
   }
 }
 
