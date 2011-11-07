@@ -48,9 +48,6 @@ class LedgerTransactionController extends EntityAPIController {
     $values += array( 
       'tid' => '',
       'description' => '',
-      'value' => 0.00,
-      'credit_aid' => '',
-      'debit_aid' => '',
       'timestamp' => time(),  // Default to current time
     );
     
