@@ -173,7 +173,7 @@ function ledger_field_validate($entity_type, $entity, $field, $instance, $langco
       
       // Make sure the account is a valid account
       $account = ledger_account_load($item['aid']);
-      if (!$account->aid) {
+      if (empty($account->aid)) {
         $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'ledger_entry_invalid',
           'message' => t('The account selected is not a valid account.'),
