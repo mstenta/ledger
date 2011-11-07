@@ -5,12 +5,12 @@
  * Ledger
  */
 
-/**
- * Include code for the entity types and callbacks.
- */
-module_load_include('inc', 'ledger', 'includes/ledger.account');
-module_load_include('inc', 'ledger', 'includes/ledger.transaction');
-module_load_include('inc', 'ledger', 'includes/callbacks');
+/***************************************************************
+ * Include files
+ ***************************************************************/
+module_load_include('inc', 'ledger', 'includes/ledger.account');  // Account entity
+module_load_include('inc', 'ledger', 'includes/ledger.transaction');  // Transaction Entity
+module_load_include('inc', 'ledger', 'includes/callbacks');  // Ledger property callbacks
 
 /***************************************************************
  * Drupal core hooks
