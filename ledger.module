@@ -150,14 +150,6 @@ function ledger_field_info() {
  */
 function ledger_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
   
-  // Make sure there are at least two ledger_entry fields
-  if (count($items) < 2) {
-    $errors[$field['field_name']][$langcode][0][] = array(
-      'error' => 'ledger_entry_invalid',
-      'message' => t('There must be at least two ledger entries in a transaction.'),
-    );
-  }
-  
   // Loop through each item for specific field validation.
   foreach ($items as $delta => $item) {
     
