@@ -282,6 +282,17 @@ function ledger_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     '#title' => 'Transaction Value',
     '#default_value' => !empty($items[$delta]['value']) ? $items[$delta]['value'] : '0.00',
   );
+   
+  // Link for removing the ledger entry
+  $element['remove'] = array(
+    '#name' => 'ledger_entry_' . $delta . '_remove',
+    '#type' => 'markup',
+    '#validate' => array(),
+    '#markup' => '<div class="ledger-entry-remove">Remove</div>',
+  );
+  
+  // Add JS to make the remove link work
+  drupal_add_js(drupal_get_path('module', 'ledger') . '/js/ledger_entry_remove.js');
   
   return $element;
 }
