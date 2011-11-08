@@ -40,7 +40,12 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     '#description' => t('A brief description of the transaction.'),
     '#required' => TRUE,
     '#size' => 50,
+    '#weight' => 0,
   );
+  
+  // Add the field related form elements.
+  $form_state['ledger_transaction'] = $transaction;
+  field_attach_form('ledger_transaction', $transaction, $form, $form_state);
   
   // Timestamp
   $form['timestamp'] = array(
@@ -50,11 +55,8 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     '#description' => t('The timestamp of the transaction.'),
     '#required' => TRUE,
     '#size' => 10,
+    '#weight' => 10,
   );
-  
-  // Add the field related form elements.
-  $form_state['ledger_transaction'] = $transaction;
-  field_attach_form('ledger_transaction', $transaction, $form, $form_state);
   
   // Form actions
   $form['actions'] = array('#type' => 'actions');
