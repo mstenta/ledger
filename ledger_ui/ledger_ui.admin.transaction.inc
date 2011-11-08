@@ -103,7 +103,12 @@ function ledger_transaction_form_submit(&$form, &$form_state) {
     $form_state['ledger_transaction'] = ledger_transaction_load($form_state['ledger_transaction']->tid);
   }
   
-  // Merge changes into the transaction object in the form state so it is accessible
+  // If a new transaction is being created, build a new transaction object
+  else {
+    $form_state['ledger_transaction'] = ledger_transaction_new($form_state['values']);
+  }
+  
+  // Merge changes into the transaction object in the form_state so it is accessible
   // by field handlers.
   $transaction = $form_state['ledger_transaction'];
   
