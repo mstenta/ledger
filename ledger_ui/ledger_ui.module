@@ -133,7 +133,8 @@ function ledger_ui_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   
   // Add action link 'ledger/accounts/add' on 'ledger/accounts'.
   if ($root_path == 'admin/ledger/accounts') {
-    $item = menu_get_item('admin/ledger/accounts/add');
+    $item = menu_get_item('admin/ledger/accounts/add');  // Load the menu item for the account add form
+    $item['localized_options']['query']['destination'] = $_GET['q'];  // Set the destination argument to the current path
     if ($item['access']) {
       $data['actions']['output'][] = array(
         '#theme' => 'menu_local_action',
@@ -144,7 +145,8 @@ function ledger_ui_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   
   // Add action link 'ledger/transactions/add' on 'ledger/transactions'.
   else if ($root_path == 'admin/ledger/transactions' || $root_path == 'admin/ledger/accounts/%') {
-    $item = menu_get_item('admin/ledger/transactions/add');
+    $item = menu_get_item('admin/ledger/transactions/add');  // Load the menu item for the transaction add form
+    $item['localized_options']['query']['destination'] = $_GET['q'];  // Set the destination argument to the current path
     if ($item['access']) {
       $data['actions']['output'][] = array(
         '#theme' => 'menu_local_action',

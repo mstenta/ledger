@@ -107,7 +107,6 @@ function ledger_account_form_submit(&$form, &$form_state) {
   
   // Save and go back.
   $account->save();
-  $form_state['redirect'] = 'admin/ledger/accounts';
 }
 
 /**
