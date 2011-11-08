@@ -143,7 +143,7 @@ function ledger_ui_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   }
   
   // Add action link 'ledger/transactions/add' on 'ledger/transactions'.
-  else if ($root_path == 'admin/ledger/transactions') {
+  else if ($root_path == 'admin/ledger/transactions' || $root_path == 'admin/ledger/accounts/%') {
     $item = menu_get_item('admin/ledger/transactions/add');
     if ($item['access']) {
       $data['actions']['output'][] = array(
