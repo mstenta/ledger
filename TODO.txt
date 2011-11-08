@@ -13,3 +13,13 @@ ledger_entry fields
       alerts "not yet implemented" when "Remove" is clicked
       text is not a link or a button, just text with a text cursor on mouse over
     see http://websmiths.co/blog/drupal-7-unlimited-fields-remove-button
+delete transactions
+  page callback
+  "Are you sure you want to delete this transaction?"
+  "The following ledger account entries will be removed: ..."
+delete Accounts
+  page callback
+  "Are you sure you want to delete this account?"
+  "What do you want to do with the transactions in this account?"
+    a) delete them
+    b) move them to another account (dropdown)
