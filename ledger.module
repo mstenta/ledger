@@ -272,7 +272,7 @@ function ledger_field_widget_form(&$form, &$form_state, $field, $instance, $lang
   $element['value'] = array(
     '#type' => 'textfield',
     '#title' => 'Transaction Value',
-    '#default_value' => !empty($items[$delta]['value']) ? $items[$delta]['value'] : '0.00',
+    '#default_value' => !empty($items[$delta]['value']) ? $items[$delta]['value'] : '',
   );
    
   // Link for removing the ledger entry
