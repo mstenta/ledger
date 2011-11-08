@@ -7,7 +7,7 @@
 /**
  * Implementations hook_views_data_alter().
  */
-function ledger_ui_views_data_alter(&$data) {
+function ledger_views_data_alter(&$data) {
   
   /**
    * Accounts
