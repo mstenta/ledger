@@ -153,15 +153,20 @@ function ledger_field_validate($entity_type, $entity, $field, $instance, $langco
   // Loop through each item for specific field validation.
   foreach ($items as $delta => $item) {
     
-    // Make sure both an account and a value are entered
-    if (empty($item['aid']) || empty($item['value'])) {
+    // Store emptiness of the fields so it only needs to be checked once.
+    $aid_empty = empty($item['aid']);
+    $value_empty = empty($item['value']);
+    
+    // If one of the two fields is empty, but not both of them...
+    if (($aid_empty || $value_empty) && !($aid_empty && $value_empty)) {
       $errors[$field['field_name']][$langcode][$delta][] = array(
         'error' => 'ledger_entry_invalid',
         'message' => t('Account and value are both required.'),
       );
     }
-    
-    else {
+      
+    // Or, if both fields have a value...
+    else if (!$aid_empty && !$value_empty) {
       
       // Make sure the account is a valid account
       $account = ledger_account_load($item['aid']);
