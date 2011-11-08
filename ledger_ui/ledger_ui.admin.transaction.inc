@@ -111,6 +111,8 @@ function ledger_transaction_form_submit(&$form, &$form_state) {
   // Merge changes into the transaction object in the form_state so it is accessible
   // by field handlers.
   $transaction = $form_state['ledger_transaction'];
+  $transaction->description = $form_state['values']['description'];
+  $transaction->timestamp = $form_state['values']['timestamp'];
   
   // Notify field widgets.
   field_attach_submit('ledger_transaction', $transaction, $form, $form_state);
