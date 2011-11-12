@@ -39,7 +39,6 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     '#default_value' => $transaction->description,
     '#description' => t('A brief description of the transaction.'),
     '#required' => TRUE,
-    '#size' => 50,
     '#weight' => 0,
   );
   
@@ -51,12 +50,21 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
   $form['timestamp'] = array(
     '#title' => t('Timestamp'),
     '#type' => 'textfield',
-    '#default_value' => $transaction->timestamp,
+    '#default_value' => date('Y-m-d H:i:s', $transaction->timestamp),
     '#description' => t('The timestamp of the transaction.'),
     '#required' => TRUE,
-    '#size' => 10,
     '#weight' => 10,
   );
+  
+  // Use the date_popup module if it's available.
+  if (!module_exists('date_popup')) {
+    $form['timestamp']['#type'] = 'date_popup';
+    $form['timestamp'] += array(
+      '#date_format' => 'Y-m-d H:i:s',
+      '#date_type' => DATE_UNIX,
+      '#date_timezone' => date_default_timezone(),
+    );
+  }
   
   // Form actions
   $form['actions'] = array('#type' => 'actions');
@@ -73,9 +81,9 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     $form['actions']['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete transaction'),
-      '#weight' => 45,
       '#limit_validation_errors' => array(),
-      '#submit' => array('ledger_transaction_form_submit_delete')
+      '#submit' => array('ledger_transaction_form_submit_delete'),
+      '#weight' => 45,
     );
   }
   return $form;
@@ -88,6 +96,12 @@ function ledger_transaction_form_validate(&$form, &$form_state) {
   
   // Load transaction object from $form_state
   $transaction = $form_state['ledger_transaction'];
+  
+  // Convert the timestamp to unix-style and validate
+  $form_state['values']['timestamp'] = strtotime($form_state['values']['timestamp']);
+  if ($form_state['values']['timestamp'] === FALSE) {
+    form_set_error('timestamp', 'Invalid timestamp.');
+  }
   
   // Notify field widgets to validate their data.
   field_attach_form_validate('ledger_transaction', $transaction, $form, $form_state);
