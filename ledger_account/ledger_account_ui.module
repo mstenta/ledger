@@ -209,13 +209,16 @@ function ledger_account_form_submit(&$form, &$form_state) {
     $account->pid = $form_state['values']['pid'];
   }
   
-  // If a new account is being created, build a new account object
+  // If a new account is being created, build a new account object.
   else {
     $account = ledger_account_new($form_state['values']);
   }
   
-  // Save and go back.
+  // Save.
   $account->save();
+  
+  // Provide a default redirect.
+  $form_state['redirect'] = 'admin/ledger/accounts';
 }
 
 /**
