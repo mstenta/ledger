@@ -130,6 +130,12 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
     $account->name .= ' (cloned)';
   }
   
+  // Account id
+  $form['aid'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $account->aid,
+  );
+  
   // Account name
   $form['name'] = array(
     '#title' => t('Account name'),
@@ -193,6 +199,33 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
     );
   }
   return $form;
+}
+
+/**
+ * Form API validate callback for the ledger account form.
+ */
+function ledger_account_form_validate(&$form, &$form_state) {
+  
+  // Make sure the parent account ID is a valid account.
+  $pid = $form_state['values']['pid'];
+  if (!empty($pid)) {
+    
+    // An account cannot be it's own parent.
+    if ($pid == $form_state['values']['aid']) {
+      form_set_error('pid', 'An account cannot be its own parent.');
+    }
+    
+    else {
+      
+      // Load the parent account
+      $parent_account = ledger_account_load($pid);
+
+      // Check to see if the parent account exists.
+      if (!isset($parent_account->aid)) {
+        form_set_error('pid', 'Invalid account.');
+      }
+    }
+  }
 }
 
 /**
