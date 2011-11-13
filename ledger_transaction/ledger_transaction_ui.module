@@ -24,7 +24,7 @@ function ledger_transaction_ui_menu() {
     'title' => 'Record a ledger transaction',
     'description' => 'Record a new transaction in the ledger.',
     'page callback' => 'ledger_transaction_ui_transaction_form_wrapper',
-    'page arguments' => array(entity_get_controller('ledger_transaction')->create()),
+    'page arguments' => array(entity_get_controller('ledger_transaction')->create(), 3),
     'access callback' => 'ledger_transaction_access',
     'access arguments' => array('create'),
     'weight' => 10,
@@ -35,7 +35,7 @@ function ledger_transaction_ui_menu() {
     'title callback' => 'ledger_transaction_title',
     'title arguments' => array(3),
     'page callback' => 'ledger_transaction_ui_transaction_form_wrapper',
-    'page arguments' => array(3),
+    'page arguments' => array(3, 4),
     'access callback' => 'ledger_transaction_access',
     'access arguments' => array('update', 3),
   );
@@ -50,9 +50,9 @@ function ledger_transaction_ui_menu() {
   $items['admin/ledger/transactions/%ledger_transaction/delete'] = array(
     'title' => 'Delete',
     'page callback' => 'ledger_transaction_ui_transaction_form_wrapper',
-    'page arguments' => array(3),
+    'page arguments' => array(3, 4),
     'access callback' => 'ledger_transaction_access',
-    'access arguments' => array('update', 3),
+    'access arguments' => array('delete', 3),
     'type' => MENU_LOCAL_TASK,
     'weight' => 20,
     'context' => MENU_CONTEXT_INLINE,
@@ -100,7 +100,7 @@ function ledger_transaction_ui_views_api() {
 /**
  * Wrapper function for the ledger_ui_transaction_form that serves as a page callback.
  */
-function ledger_transaction_ui_transaction_form_wrapper($transaction) {
+function ledger_transaction_ui_transaction_form_wrapper($transaction, $op) {
   
   // Create the breadcrumb for the page
   $breadcrumb = array(
@@ -111,26 +111,25 @@ function ledger_transaction_ui_transaction_form_wrapper($transaction) {
   );
   drupal_set_breadcrumb($breadcrumb);
   
-  // Display the ledger transaction add form.
-  return drupal_get_form('ledger_transaction_form', $transaction, 'add');
+  // Display the ledger transaction form.
+  if ($op == 'delete') {
+    return drupal_get_form('ledger_transaction_delete_form', $transaction);
+  } else {
+    return drupal_get_form('ledger_transaction_form', $transaction, $op);
+  }
 }
 
 /***************************************************************
- * Transaction entity form
+ * Transaction entity forms
  ***************************************************************/
 
 /**
- * Generates the ledger transaction editing form.
+ * Form callback: ledger transaction edit form.
  */
 function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit') {
   
   // Save the transaction object to the $form_state.
   $form_state['ledger_transaction'] = $transaction;
-  
-  // If it's a clone, add "(cloned)" to the end of the transaction description by default.
-  if ($op == 'clone') {
-    $transaction->description .= ' (cloned)';
-  }
   
   // Transaction description
   $form['description'] = array(
@@ -176,22 +175,12 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     '#weight' => 40,
   );
   
-  // If we're not adding or cloning a transaction, show the delete button.
-  if ($op != 'add' && $op != 'clone') {
-    $form['actions']['delete'] = array(
-      '#type' => 'submit',
-      '#value' => t('Delete transaction'),
-      '#limit_validation_errors' => array(),
-      '#submit' => array('ledger_transaction_form_submit_delete'),
-      '#weight' => 45,
-    );
-  }
   return $form;
 }
 
 /**
- * Form API validate callback for the ledger transaction form.
- */
+* Validate callback for ledger_transaction_form().
+*/
 function ledger_transaction_form_validate(&$form, &$form_state) {
   
   // Load transaction object from $form_state
@@ -208,7 +197,7 @@ function ledger_transaction_form_validate(&$form, &$form_state) {
 }
 
 /**
- * Form API submit callback for the ledger transaction form.
+ * Submit callback for ledger_transaction_form().
  */
 function ledger_transaction_form_submit(&$form, &$form_state) {
   
@@ -235,8 +224,52 @@ function ledger_transaction_form_submit(&$form, &$form_state) {
 }
 
 /**
- * Form API submit callback for the ledger transaction delete button.
+ * Form callback: confirmation form for deleting a transaction.
+ *
+ * @param $transaction
+ *   The transaction object to delete through the form.
+ *
+ * @return
+ *   The form array to confirm deletion..
+ *
+ * @see confirm_form()
  */
-function ledger_transaction_form_submit_delete(&$form, &$form_state) {
-  $form_state['redirect'] = 'ledger/transactions/' . $form_state['ledger_transaction']->tid . '/delete';
+function ledger_transaction_delete_form($form, &$form_state, $transaction) {
+  
+  // Save the transaction object to the $form_state.
+  $form_state['ledger_transaction'] = $transaction;
+  
+  // Confirm form
+  $form = confirm_form($form,
+    t('Are you sure you want to delete the transaction "@description"?', array('@description' => $transaction->description)),
+    '',
+    '<p>' . t('Deleting this transaction cannot be undone.') . '</p>',
+    t('Delete'),
+    t('Cancel'),
+    'confirm'
+  );
+  return $form;
+}
+
+/**
+ * Submit callback for ledger_transaction_delete_form().
+ */
+function ledger_transaction_delete_form_submit($form, &$form_state) {
+  
+  // Get the account object from the $form_state.
+  $transaction = $form_state['ledger_transaction'];
+  
+  // Delete the account and log the results.
+  /**
+   * @todo:
+   *   Make this check to see if the deletion succeeded, like Drupal Commerce does.
+   *   Commerce currently uses it's own custom fork of EntityAPIController which extends the delete() function to return TRUE/FALSE.
+   *   See commerce_order_order_delete_form_submit().
+   */
+  ledger_transaction_delete($transaction->tid);
+  drupal_set_message(t('Transaction "@description" has been deleted.', array('@description' => $transaction->description)));
+  watchdog('ledger_transaction', 'Deleted transaction "@description."', array('@description' => $transaction->description), WATCHDOG_NOTICE);
+  
+  // Redirect
+  $form_state['redirect'] = 'admin/ledger/transactions';
 }

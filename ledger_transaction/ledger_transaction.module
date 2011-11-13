@@ -227,3 +227,29 @@ function ledger_transaction_new($values = array()) {
 function ledger_transaction_title($transaction) {
   return $transaction->description;
 }
+
+/**
+ * Deletes a transaction by ID.
+ *
+ * @param $tid
+ *   The ID of the transaction to delete.
+ *
+ * @return
+ *   TRUE on success, FALSE otherwise.
+ */
+function ledger_transaction_delete($tid) {
+  return ledger_transaction_delete_multiple(array($tid));
+}
+
+/**
+ * Deletes multiple transactions by ID.
+ *
+ * @param $aids
+ *   An array of transaction IDs to delete.
+ *
+ * @return
+ *   TRUE on success, FALSE otherwise.
+ */
+function ledger_transaction_delete_multiple($tids) {
+  return entity_get_controller('ledger_transaction')->delete($tids);
+}
