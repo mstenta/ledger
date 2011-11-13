@@ -219,3 +219,28 @@ function ledger_account_get_properties($account, array $options, $name, $entity_
     return $account->pid;
   }
 }
+
+/***************************************************************
+ * Account form helper functions.
+ ***************************************************************/
+
+/**
+ * Returns a list of accounts to use in a form select element.
+ */
+function ledger_account_select_options() {
+  static $options = array();
+  if (empty($options)) {
+    
+    // Give it a 0 value to start
+    $options[0] = 'none';
+    
+    // Load up all the accounts from the database.
+    $query = db_select('ledger_account', 'a');
+    $query->fields('a', array('aid', 'name'));
+    $accounts = $query->execute();
+    foreach ($accounts as $account) {
+      $options[$account->aid] = $account->name;
+    }
+  }
+  return $options;
+}

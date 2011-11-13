@@ -150,8 +150,9 @@ function ledger_entry_field_widget_form(&$form, &$form_state, $field, $instance,
   $element['#delta'] = $delta;
   
   $element['aid'] = array(
-    '#type' => 'textfield',
-    '#title' => 'Account ID',
+    '#type' => 'select',
+    '#title' => 'Account',
+    '#options' => ledger_account_select_options(),
     '#default_value' => !empty($items[$delta]['aid']) ? $items[$delta]['aid'] : '',
   );
   

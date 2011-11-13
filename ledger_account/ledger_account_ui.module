@@ -165,16 +165,12 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
   );
   
   // Parent account ID
-  /**
-   * @todo
-   *   Dropdown of available accounts of the same account type.
-   */
   $form['pid'] = array(
-    '#title' => t('Parent account ID'),
-    '#type' => 'textfield',
+    '#title' => t('Parent account'),
+    '#type' => 'select',
+    '#options' => ledger_account_select_options(),
     '#default_value' => $account->pid,
-    '#description' => t('The parent account\'s ID.'),
-    '#size' => 30,
+    '#description' => t('The account\'s parent account.'),
   );
   
   // Form actions
