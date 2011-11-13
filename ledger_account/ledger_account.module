@@ -172,6 +172,32 @@ function ledger_account_title($account) {
   return $account->name;
 }
 
+/**
+ * Deletes an account by ID.
+ *
+ * @param $aid
+ *   The ID of the account to delete.
+ *
+ * @return
+ *   TRUE on success, FALSE otherwise.
+ */
+function ledger_account_delete($aid) {
+  return ledger_account_delete_multiple(array($aid));
+}
+
+/**
+ * Deletes multiple accounts by ID.
+ *
+ * @param $aids
+ *   An array of account IDs to delete.
+ *
+ * @return
+ *   TRUE on success, FALSE otherwise.
+ */
+function ledger_account_delete_multiple($aids) {
+  return entity_get_controller('ledger_account')->delete($aids);
+}
+
 /***************************************************************
  * Account entity properties get/set callbacks
  ***************************************************************/

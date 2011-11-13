@@ -23,7 +23,7 @@ function ledger_account_ui_menu() {
     'title' => 'Create a ledger account',
     'description' => 'Create a new ledger account.',
     'page callback' => 'ledger_account_ui_account_form_wrapper',
-    'page arguments' => array(entity_get_controller('ledger_account')->create()),
+    'page arguments' => array(entity_get_controller('ledger_account')->create(), 3),
     'access callback' => 'ledger_account_access',
     'access arguments' => array('create'),
     'weight' => 10,
@@ -33,7 +33,7 @@ function ledger_account_ui_menu() {
   $items['admin/ledger/accounts/%ledger_account/edit'] = array(
     'title' => 'Edit',
     'page callback' => 'ledger_account_ui_account_form_wrapper',
-    'page arguments' => array(3),
+    'page arguments' => array(3, 4),
     'access callback' => 'ledger_account_access',
     'access arguments' => array('update', 3),
     'type' => MENU_LOCAL_TASK,
@@ -45,9 +45,9 @@ function ledger_account_ui_menu() {
   $items['admin/ledger/accounts/%ledger_account/delete'] = array(
     'title' => 'Delete',
     'page callback' => 'ledger_account_ui_account_form_wrapper',
-    'page arguments' => array(3),
+    'page arguments' => array(3, 4),
     'access callback' => 'ledger_account_access',
-    'access arguments' => array('update', 3),
+    'access arguments' => array('delete', 3),
     'type' => MENU_LOCAL_TASK,
     'weight' => 20,
     'context' => MENU_CONTEXT_INLINE,
@@ -95,7 +95,7 @@ function ledger_account_ui_views_api() {
 /**
  * Wrapper function for the ledger_ui_account_form that serves as a page callback.
  */
-function ledger_account_ui_account_form_wrapper($account) {
+function ledger_account_ui_account_form_wrapper($account, $op) {
   
   // Set the page title
   drupal_set_title(ledger_account_title($account));
@@ -109,26 +109,25 @@ function ledger_account_ui_account_form_wrapper($account) {
   );
   drupal_set_breadcrumb($breadcrumb);
   
-  // Display the ledger account add form.
-  return drupal_get_form('ledger_account_form', $account, 'add');
+  // Display the ledger account form.
+  if ($op == 'delete') {
+    return drupal_get_form('ledger_account_delete_form', $account);
+  } else {
+    return drupal_get_form('ledger_account_form', $account, $op);
+  }
 }
 
 /***************************************************************
- * Account entity form
+ * Account entity forms
  ***************************************************************/
 
 /**
- * Generates the ledger account editing form.
+ * Form callback: ledger account edit form.
  */
 function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
   
   // Save the account object to the $form_state.
   $form_state['ledger_account'] = $account;
-  
-  // If it's a clone, add "(cloned)" to the end of the account name by default.
-  if ($op == 'clone') {
-    $account->name .= ' (cloned)';
-  }
   
   // Account id
   $form['aid'] = array(
@@ -188,21 +187,11 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
     '#weight' => 40,
   );
   
-  // If we're not adding or cloning an account, show the delete button.
-  if ($op != 'add' && $op != 'clone') {
-    $form['actions']['delete'] = array(
-      '#type' => 'submit',
-      '#value' => t('Delete account'),
-      '#weight' => 45,
-      '#limit_validation_errors' => array(),
-      '#submit' => array('ledger_account_form_submit_delete')
-    );
-  }
   return $form;
 }
 
 /**
- * Form API validate callback for the ledger account form.
+ * Validate callback for ledger_account_form().
  */
 function ledger_account_form_validate(&$form, &$form_state) {
   
@@ -229,7 +218,7 @@ function ledger_account_form_validate(&$form, &$form_state) {
 }
 
 /**
- * Form API submit callback for the ledger account form.
+ * Submit callback for ledger_account_form().
  */
 function ledger_account_form_submit(&$form, &$form_state) {
   
@@ -255,8 +244,52 @@ function ledger_account_form_submit(&$form, &$form_state) {
 }
 
 /**
- * Form API submit callback for the ledger account delete button.
+ * Form callback: confirmation form for deleting an account.
+ *
+ * @param $account
+ *   The account object to delete through the form.
+ *
+ * @return
+ *   The form array to confirm deletion..
+ *
+ * @see confirm_form()
  */
-function ledger_account_form_submit_delete(&$form, &$form_state) {
-  $form_state['redirect'] = 'admin/ledger/accounts/' . $form_state['ledger_account']->aid . '/delete';
+function ledger_account_delete_form($form, &$form_state, $account) {
+  
+  // Save the account object to the $form_state.
+  $form_state['ledger_account'] = $account;
+  
+  // Confirm form
+  $form = confirm_form($form,
+    t('Are you sure you want to delete the account "@name"?', array('@name' => $account->name)),
+    '',
+    '<p>' . t('Deleting this account cannot be undone.') . '</p>',
+    t('Delete'),
+    t('Cancel'),
+    'confirm'
+  );
+  return $form;
+}
+
+/**
+ * Submit callback for ledger_account_delete_form().
+ */
+function ledger_account_delete_form_submit($form, &$form_state) {
+  
+  // Get the account object from the $form_state.
+  $account = $form_state['ledger_account'];
+  
+  // Delete the account and log the results.
+  /**
+   * @todo:
+   *   Make this check to see if the deletion succeeded, like Drupal Commerce does.
+   *   Commerce currently uses it's own custom fork of EntityAPIController which extends the delete() function to return TRUE/FALSE.
+   *   See commerce_order_order_delete_form_submit().
+   */
+  ledger_account_delete($account->aid);
+  drupal_set_message(t('Account "@name" has been deleted.', array('@name' => $account->name)));
+  watchdog('ledger_account', 'Deleted account "@name."', array('@name' => $account->name), WATCHDOG_NOTICE);
+  
+  // Redirect
+  $form_state['redirect'] = 'admin/ledger/accounts';
 }

@@ -37,6 +37,6 @@ class ledger_account_handler_field_link extends views_handler_field {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
     $aid = $this->get_value($values, 'aid');
 
-    return l($text, 'admin/ledger/accounts/' . $aid, array('query' => drupal_get_destination()));
+    return l($text, 'admin/ledger/accounts/' . $aid);
   }
 }

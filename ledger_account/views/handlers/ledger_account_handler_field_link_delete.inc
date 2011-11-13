@@ -15,6 +15,6 @@ class ledger_account_handler_field_link_delete extends ledger_account_handler_fi
     }
 
     $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
-    return l($text, 'admin/ledger/accounts/' . $account->aid . '/delete', array('query' => drupal_get_destination()));
+    return l($text, 'admin/ledger/accounts/' . $account->aid . '/delete');
   }
 }
