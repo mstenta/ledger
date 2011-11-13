@@ -1,0 +1,229 @@
+<?php
+
+/**
+ * @file
+ * Ledger Transaction
+ */
+
+/***************************************************************
+ * Drupal core hooks
+ ***************************************************************/
+
+/**
+ * Implements hook_entity_info().
+ */
+function ledger_transaction_entity_info() {
+  $entities['ledger_transaction'] = array(
+    'label' => t('Ledger Transaction'),
+    'entity class' => 'LedgerTransaction',
+    'controller class' => 'LedgerTransactionController',
+    'base table' => 'ledger_transaction',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'tid',
+    ),
+    'label callback' => 'entity_class_label',
+    'uri callback' => 'entity_class_uri',
+    'module' => 'ledger_transaction',
+    'bundles' => array(
+      'ledger_transaction' => array(
+        'label' => t('Transaction', array(), array('context' => 'a ledger transaction')),
+      ),
+    ),
+  );
+  return $entities;
+}
+
+/**
+ * Implements hook_enable().
+ */
+function ledger_transaction_enable() {
+  
+  /**
+   * Create a ledger_entry field and add an instance of it to the Transaction entity type.
+   */
+  $field_type = 'ledger_entry';
+  $entity_type = 'ledger_transaction';
+  $field_name = 'ledger_transaction_entry';
+  
+  // If a field type we know should exist isn't found, clear the Field cache.
+  if (!field_info_field_types($field_type)) {
+    field_cache_clear();
+  }
+
+  // Look for or add a line item reference field to the order type.
+  $field = field_info_field($field_name);
+  $instance = field_info_instance($entity_type, $field_name, $entity_type);
+
+  if (empty($field)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => $field_type,
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'entity_types' => array($entity_type),
+      'translatable' => FALSE,
+    );
+    $field = field_create_field($field);
+  }
+
+  if (empty($instance)) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => $entity_type,
+      'bundle' => $entity_type,
+      'label' => t('Ledger Entries'),
+      'settings' => array(),
+      'widget' => array(
+        'type' => 'ledger_entry_default_widget',
+      ),
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+          'type' => 'ledger_entry_default_formatter',
+        ),
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+/***************************************************************
+ * Views API hooks
+ ***************************************************************/
+
+/**
+ * Implements hook_views_api().
+ */
+function ledger_transaction_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ledger_transaction') . '/views',
+  );
+}
+
+/***************************************************************
+ * Ledger Transaction class and functions
+ ***************************************************************/
+
+/**
+ * The class for LedgerTransaction entities.
+ */
+class LedgerTransaction extends Entity {
+  
+  public function __construct($values = array()) {
+    parent::__construct($values, 'ledger_transaction');
+  }
+  
+  protected function defaultLabel() {
+    return t('@description', array('@description' => $this->description));
+  }
+  
+  protected function defaultUri() {
+    return array('path' => 'admin/ledger/transactions/' . $this->tid);
+  }
+}
+
+/**
+ * The controller for LedgerTransaction entities
+ */
+class LedgerTransactionController extends EntityAPIController {
+  public function __construct($entityType) {
+    parent::__construct($entityType);
+  }
+
+  /**
+   * Create a transaction - we first set up the values that are specific
+   * to our ledger_transaction schema but then also go through the EntityAPIController
+   * function.
+   * 
+   * @param $values
+   *   Values passed in.
+   *
+   * @return
+   *   A model object with all default fields initialized.
+   */
+  public function create(array $values = array()) {
+    
+    // Add values that are specific to our transaction
+    $values += array( 
+      'tid' => '',
+      'description' => '',
+      'timestamp' => time(),  // Default to current time
+    );
+    
+    $transaction = parent::create($values);
+    return $transaction;
+  }
+}
+
+/**
+ * Access callback for ledger transaction.
+ *
+ * @todo
+ *   Expand this access function to check based on the operation being performed.
+ *   Also add ability to check a specific transaction entity.
+ *
+ * @param $op
+ *   The operation being performed. One of 'view', 'update', 'create', 'delete'
+ *   or just 'edit' (being the same as 'create' or 'update').
+ * @param $transaction
+ *   Optionally a specific ledger transaction to check.
+ * @param $user
+ *   The user to check for. Leave it to NULL to check for the global user.
+ * @return boolean
+ *   Whether access is allowed or not.
+ */
+function ledger_transaction_access($op, $transaction = NULL, $user = NULL) {
+  return user_access('administer ledger', $user);
+}
+
+/**
+ * Loads a transaction by ID.
+ */
+function ledger_transaction_load($tid) {
+  $transactions = ledger_transaction_load_multiple(array($tid), array());
+  return $transactions ? reset($transactions) : FALSE;
+}
+
+/**
+ * Loads multiple transactions by ID or based on a set of matching conditions.
+ *
+ * @see entity_load()
+ *
+ * @param $transaction_ids
+ *   An array of transaction IDs.
+ * @param $conditions
+ *   An array of conditions on the {ledger_transaction} table in the form
+ *     'field' => $value.
+ * @param $reset
+ *   Whether to reset the internal transaction loading cache.
+ *
+ * @return
+ *   An array of transaction objects indexed by tid.
+ */
+function ledger_transaction_load_multiple($transaction_ids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('ledger_transaction', $transaction_ids, $conditions, $reset);
+}
+
+/**
+ * Returns an initialized transaction object.
+ *
+ * @return
+ *   A transaction object with all default fields initialized.
+ */
+function ledger_transaction_new($values = array()) {
+  return entity_get_controller('ledger_transaction')->create($values);
+}
+
+/**
+ * Returns a title for the transaction.
+ *
+ * @param $transaction
+ *   A ledger transaction object.
+ *
+ * @return
+ *   A string that represents the transaction title.
+ */
+function ledger_transaction_title($transaction) {
+  return $transaction->description;
+}

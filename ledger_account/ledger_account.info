@@ -1,0 +1,11 @@
+name = "Account"
+description = "Defines the Account entity and associated features."
+core = 7.x
+package = "Ledger"
+dependencies[] = entity
+dependencies[] = ledger
+
+files[] = views/handlers/ledger_account_handler_field_link_delete.inc
+files[] = views/handlers/ledger_account_handler_field_link_edit.inc
+files[] = views/handlers/ledger_account_handler_field_link.inc
+files[] = views/handlers/ledger_account_handler_field.inc

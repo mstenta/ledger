@@ -1,0 +1,6 @@
+name = "Transaction UI"
+description = "Exposes a default UI for the Transactions through transaction edit forms, the Ledger Entry field, and default Views."
+core = 7.x
+package = "Ledger"
+dependencies[] = ledger_ui
+dependencies[] = ledger_transaction

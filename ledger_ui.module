@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Ledger
+ */
+
+/***************************************************************
+ * Drupal core hooks
+ ***************************************************************/
+
+/**
+ * Implements hook_menu().
+ */
+function ledger_ui_menu() {
+  $items = array();
+  
+  // Top level "Ledger" container.
+  $items['admin/ledger'] = array(
+    'title' => 'Ledger',
+    'description' => 'Administer the accounts and transactions in the ledger.',
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file path' => drupal_get_path('module', 'system'),
+    'file' => 'system.admin.inc',
+    'weight' => -7,
+  );
+
+  return $items;
+}

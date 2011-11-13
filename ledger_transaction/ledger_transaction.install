@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @file
+ * Ledger Transaction install
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function ledger_transaction_schema() {
+  $schema['ledger_transaction'] = array(
+    'description' => 'Ledger transactions',
+    'fields' => array(
+      'tid' => array(
+        'description' => 'Transaction ID',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'description' => array(
+        'description' => 'Transaction description',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+      ),
+      'timestamp' => array(
+        'description' => 'Timestamp of the transaction',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('tid'),
+    'indexes' => array(
+      'timestamp' => array('timestamp'),
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ledger_transaction_uninstall() {
+
+  // Delete any field instances attached to the account and transaction types.
+  ledger_delete_instances('ledger_transaction');
+}

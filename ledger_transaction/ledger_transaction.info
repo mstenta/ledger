@@ -1,0 +1,13 @@
+name = "Transaction"
+description = "Defines the Ledger Transaction entity type and Views integration."
+core = 7.x
+package = "Ledger"
+dependencies[] = entity
+dependencies[] = ledger
+dependencies[] = ledger_entry
+dependencies[] = ledger_account
+
+files[] = views/handlers/ledger_transaction_handler_field_link_delete.inc
+files[] = views/handlers/ledger_transaction_handler_field_link_edit.inc
+files[] = views/handlers/ledger_transaction_handler_field_link.inc
+files[] = views/handlers/ledger_transaction_handler_field.inc

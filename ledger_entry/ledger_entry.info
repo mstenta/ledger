@@ -1,0 +1,5 @@
+name = "Ledger Entry"
+description = "Defines the Ledger Entry field."
+core = 7.x
+package = "Ledger"
+dependencies[] = ledger_account

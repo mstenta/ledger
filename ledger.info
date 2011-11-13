@@ -1,15 +1,4 @@
 name = "Ledger"
-description = "Keep track of transactions."
+description = "Defines features and functions common to the Ledger modules. Must be enabled to uninstall other Ledger modules."
 core = 7.x
-package = "Accounting"
-dependencies[] = entity
-files[] = includes/ledger.account.inc
-files[] = includes/ledger.transaction.inc
-files[] = includes/views/handlers/ledger_handler_field_ledger_account.inc
-files[] = includes/views/handlers/ledger_handler_field_ledger_account_link.inc
-files[] = includes/views/handlers/ledger_handler_field_ledger_account_link_edit.inc
-files[] = includes/views/handlers/ledger_handler_field_ledger_account_link_delete.inc
-files[] = includes/views/handlers/ledger_handler_field_ledger_transaction.inc
-files[] = includes/views/handlers/ledger_handler_field_ledger_transaction_link.inc
-files[] = includes/views/handlers/ledger_handler_field_ledger_transaction_link_edit.inc
-files[] = includes/views/handlers/ledger_handler_field_ledger_transaction_link_delete.inc
+package = "Ledger"

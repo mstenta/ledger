@@ -1,5 +1,0 @@
-name = "Ledger Feeds"
-description = "Import accounts and transactions to Ledger via the Feeds module."
-core = 7.x
-package = "Accounting"
-dependencies[] = feeds

@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Ledger Account install
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function ledger_account_schema() {
+  $schema['ledger_account'] = array(
+    'description' => 'Ledger accounts',
+    'fields' => array(
+      'aid' => array(
+        'description' => 'Account ID',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'pid' => array(
+        'description' => 'Parent account ID',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'name' => array(
+        'description' => 'Account name',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+      ),
+      'description' => array(
+        'description' => 'Account description',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+      ),
+      'type' => array(
+        'description' => 'Account type',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('aid'),
+    'indexes' => array(
+      'pid' => array('pid'),
+      'name' => array('name'),
+      'type' => array('type'),
+    ),
+  );
+  return $schema;
+}

@@ -1,0 +1,239 @@
+<?php
+
+/**
+ * @file
+ * Ledger Transaction UI
+ */
+
+/***************************************************************
+ * Drupal core hooks
+ ***************************************************************/
+
+/**
+ * Implements hook_menu().
+ */
+function ledger_transaction_ui_menu() {
+  $items = array();
+  
+  // Note: the following pages are defined by default Views:
+  //   /admin/ledger/accounts/%(/transactions)
+  //   /admin/ledger/transactions
+  
+  // Create transaction
+  $items['admin/ledger/transactions/add'] = array(
+    'title' => 'Record a ledger transaction',
+    'description' => 'Record a new transaction in the ledger.',
+    'page callback' => 'ledger_transaction_ui_transaction_form_wrapper',
+    'page arguments' => array(entity_get_controller('ledger_transaction')->create()),
+    'access callback' => 'ledger_transaction_access',
+    'access arguments' => array('create'),
+    'weight' => 10,
+  );
+  
+  // Edit transaction
+  $items['admin/ledger/transactions/%ledger_transaction'] = array(
+    'title callback' => 'ledger_transaction_title',
+    'title arguments' => array(3),
+    'page callback' => 'ledger_transaction_ui_transaction_form_wrapper',
+    'page arguments' => array(3),
+    'access callback' => 'ledger_transaction_access',
+    'access arguments' => array('update', 3),
+  );
+  $items['admin/ledger/transactions/%ledger_transaction/edit'] = array(
+    'title' => 'Edit',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 0,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+  );
+  
+  // Delete transaction
+  $items['admin/ledger/transactions/%ledger_transaction/delete'] = array(
+    'title' => 'Delete',
+    'page callback' => 'ledger_transaction_ui_transaction_form_wrapper',
+    'page arguments' => array(3),
+    'access callback' => 'ledger_transaction_access',
+    'access arguments' => array('update', 3),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 20,
+    'context' => MENU_CONTEXT_INLINE,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function ledger_transaction_ui_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  
+  // Add action link 'ledger/transactions/add' on 'ledger/transactions'.
+  if ($root_path == 'admin/ledger/transactions' || $root_path == 'admin/ledger/accounts/%') {
+    $item = menu_get_item('admin/ledger/transactions/add');  // Load the menu item for the transaction add form
+    $item['localized_options']['query']['destination'] = current_path();  // Set the destination argument to the current path
+    if ($item['access']) {
+      $data['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
+    }
+  }
+}
+
+/***************************************************************
+ * Views hooks
+ ***************************************************************/
+
+/**
+ * Implements hook_views_api().
+ */
+function ledger_transaction_ui_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ledger_transaction_ui') . '/views',
+  );
+}
+
+/***************************************************************
+ * Page callbacks
+ ***************************************************************/
+
+/**
+ * Wrapper function for the ledger_ui_transaction_form that serves as a page callback.
+ */
+function ledger_transaction_ui_transaction_form_wrapper($transaction) {
+  
+  // Create the breadcrumb for the page
+  $breadcrumb = array(
+    l(t('Home'), '<front>'),
+    l(t('Administration'), 'admin'),
+    l(t('Ledger'), 'admin/ledger'),
+    l(t('Transactions'), 'admin/ledger/transactions'),
+  );
+  drupal_set_breadcrumb($breadcrumb);
+  
+  // Display the ledger transaction add form.
+  return drupal_get_form('ledger_transaction_form', $transaction, 'add');
+}
+
+/***************************************************************
+ * Transaction entity form
+ ***************************************************************/
+
+/**
+ * Generates the ledger transaction editing form.
+ */
+function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit') {
+  
+  // Save the transaction object to the $form_state.
+  $form_state['ledger_transaction'] = $transaction;
+  
+  // If it's a clone, add "(cloned)" to the end of the transaction description by default.
+  if ($op == 'clone') {
+    $transaction->description .= ' (cloned)';
+  }
+  
+  // Transaction description
+  $form['description'] = array(
+    '#title' => t('Description'),
+    '#type' => 'textfield',
+    '#default_value' => $transaction->description,
+    '#description' => t('A brief description of the transaction.'),
+    '#required' => TRUE,
+    '#weight' => 0,
+  );
+  
+  // Add the field related form elements.
+  $form_state['ledger_transaction'] = $transaction;
+  field_attach_form('ledger_transaction', $transaction, $form, $form_state);
+  
+  // Timestamp
+  $form['timestamp'] = array(
+    '#title' => t('Timestamp'),
+    '#type' => 'textfield',
+    '#default_value' => date('Y-m-d H:i:s', $transaction->timestamp),
+    '#description' => t('The timestamp of the transaction.'),
+    '#required' => TRUE,
+    '#weight' => 10,
+  );
+  
+  // Use the date_popup module if it's available.
+  if (module_exists('date_popup')) {
+    $form['timestamp']['#type'] = 'date_popup';
+    $form['timestamp'] += array(
+      '#date_format' => 'Y-m-d H:i:s',
+      '#date_type' => DATE_UNIX,
+      '#date_timezone' => date_default_timezone(),
+    );
+  }
+  
+  // Form actions
+  $form['actions'] = array('#type' => 'actions');
+  
+  // Submit button
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save transaction'),
+    '#weight' => 40,
+  );
+  
+  // If we're not adding or cloning a transaction, show the delete button.
+  if ($op != 'add' && $op != 'clone') {
+    $form['actions']['delete'] = array(
+      '#type' => 'submit',
+      '#value' => t('Delete transaction'),
+      '#limit_validation_errors' => array(),
+      '#submit' => array('ledger_transaction_form_submit_delete'),
+      '#weight' => 45,
+    );
+  }
+  return $form;
+}
+
+/**
+ * Form API validate callback for the ledger transaction form.
+ */
+function ledger_transaction_form_validate(&$form, &$form_state) {
+  
+  // Load transaction object from $form_state
+  $transaction = $form_state['ledger_transaction'];
+  
+  // Convert the timestamp to unix-style and validate
+  $form_state['values']['timestamp'] = strtotime($form_state['values']['timestamp']);
+  if ($form_state['values']['timestamp'] === FALSE) {
+    form_set_error('timestamp', 'Invalid timestamp.');
+  }
+  
+  // Notify field widgets to validate their data.
+  field_attach_form_validate('ledger_transaction', $transaction, $form, $form_state);
+}
+
+/**
+ * Form API submit callback for the ledger transaction form.
+ */
+function ledger_transaction_form_submit(&$form, &$form_state) {
+  
+  // If the user is editing a transaction, load a fresh copy to merge changes to.
+  if ($form_state['ledger_transaction']->tid) {
+    $transaction = ledger_transaction_load($form_state['ledger_transaction']->tid);
+    $transaction->description = $form_state['values']['description'];
+    $transaction->timestamp = $form_state['values']['timestamp'];
+  }
+  
+  // If a new transaction is being created, build a new transaction object
+  else {
+    $transaction = ledger_transaction_new($form_state['values']);
+  }
+  
+  // Notify field widgets.
+  field_attach_submit('ledger_transaction', $transaction, $form, $form_state);
+  
+  // Save
+  $transaction->save();
+}
+
+/**
+ * Form API submit callback for the ledger transaction delete button.
+ */
+function ledger_transaction_form_submit_delete(&$form, &$form_state) {
+  $form_state['redirect'] = 'ledger/transactions/' . $form_state['ledger_transaction']->tid . '/delete';
+}

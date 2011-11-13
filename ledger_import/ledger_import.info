@@ -1,0 +1,6 @@
+name = "Ledger Import"
+description = "Import accounts and transactions to Ledger via the Feeds module."
+core = 7.x
+package = "Ledger"
+dependencies[] = ledger
+dependencies[] = feeds

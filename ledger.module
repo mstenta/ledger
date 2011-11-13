@@ -6,67 +6,13 @@
  */
 
 /***************************************************************
- * Include files
+ * Drupal hooks
  ***************************************************************/
-module_load_include('inc', 'ledger', 'includes/ledger.account');  // Account entity
-module_load_include('inc', 'ledger', 'includes/ledger.transaction');  // Transaction Entity
-module_load_include('inc', 'ledger', 'includes/callbacks');  // Ledger property callbacks
-
-/***************************************************************
- * Drupal core hooks
- ***************************************************************/
-
-/**
- * Implements hook_entity_info().
- */
-function ledger_entity_info() {
-  $entities['ledger_account'] = array(
-    'label' => t('Ledger Account'),
-    'entity class' => 'LedgerAccount',
-    'controller class' => 'LedgerAccountController',
-    'base table' => 'ledger_account',
-    'fieldable' => TRUE,
-    'entity keys' => array(
-      'id' => 'aid',
-    ),
-    'label callback' => 'entity_class_label',
-    'uri callback' => 'entity_class_uri',
-    'module' => 'ledger',
-  );
-  $entities['ledger_transaction'] = array(
-    'label' => t('Ledger Transaction'),
-    'entity class' => 'LedgerTransaction',
-    'controller class' => 'LedgerTransactionController',
-    'base table' => 'ledger_transaction',
-    'fieldable' => TRUE,
-    'entity keys' => array(
-      'id' => 'tid',
-    ),
-    'label callback' => 'entity_class_label',
-    'uri callback' => 'entity_class_uri',
-    'module' => 'ledger',
-    'bundles' => array(
-      'ledger_transaction' => array(
-        'label' => t('Transaction', array(), array('context' => 'a ledger transaction')),
-      ),
-    ),
-  );
-  return $entities;
-}
 
 /**
  * Implements hook_permission().
- *
- * @todo
- *   Add fine-tuned permissions for viewing and editing individual accounts. ie:
- *     view any accounts
- *     edit any accounts
- *     delete any accounts
- *     view own accounts
- *     edit own accounts
- *     delete own accounts
  */
-function ledger_permission() {
+function ledger_account_permission() {
   return array(
     'administer ledger' => array(
       'title' => t('Administer Ledger'), 
@@ -75,235 +21,135 @@ function ledger_permission() {
   );
 }
 
+/***************************************************************
+ * Functions for keeping the fields and their instances tidy.
+ * This code is copied directly (and minimally modified) from
+ * the illustrious Commerce module (commerce.module version 7.x-1.0
+ * line 104-222).
+ ***************************************************************/
+
 /**
- * Implements hook_enable().
+ * Attempts to directly activate a field that was disabled due to its module
+ * being disabled.
+ *
+ * The normal API function for updating fields, field_update_field(), will not
+ * work on disabled fields. As a workaround, this function directly updates the
+ * database and clears the field cache if necessary.
+ *
+ * @param $field_name
+ *   The name of the field to activate.
+ *
+ * @return
+ *   Boolean indicating whether or not the field was activated.
  */
-function ledger_enable() {
+function ledger_activate_field($field_name) {
   
-  $field_type = 'ledger_entry';
-  $entity_type = 'ledger_transaction';
-  $field_name = 'ledger_transaction_entry';
-  
-  // If a field type we know should exist isn't found, clear the Field cache.
-  if (!field_info_field_types($field_type)) {
+  // Set it to active via a query because field_update_field() does
+  // not work on inactive fields.
+  $updated = db_update('field_config')
+    ->fields(array('active' => 1))
+    ->condition('field_name', $field_name, '=')
+    ->execute();
+
+  // If a row was actually updated...
+  if ($updated) {
+    // Clear the field cache to refresh the field info data.
     field_cache_clear();
+    return TRUE;
   }
 
-  // Look for or add a line item reference field to the order type.
+  return FALSE;
+}
+
+/**
+ * Enables and deletes fields of the specified type.
+ *
+ * @param $type
+ *   The type of fields to enable and delete.
+ *
+ * @see commerce_delete_field()
+ */
+function ledger_delete_fields($type) {
+  
+  // Read the fields for any active or inactive field of the specified type.
+  foreach (field_read_fields(array('type' => $type), array('include_inactive' => TRUE)) as $field_name => $field) {
+    ledger_delete_field($field_name);
+  }
+}
+
+/**
+ * Enables and deletes the specified field.
+ *
+ * The normal API function for deleting fields, field_delete_field(), will not
+ * work on disabled fields. As a workaround, this function first activates the
+ * fields of the specified type and then deletes them.
+ *
+ * @param $field_name
+ *   The name of the field to enable and delete.
+ */
+function ledger_delete_field($field_name) {
+  
+  // In case the field is inactive, first activate it.
+  ledger_activate_field($field_name);
+  
+  // Delete the field.
+  field_delete_field($field_name);
+}
+
+/**
+ * Deletes any field instance attached to entities of the specified type,
+ * regardless of whether or not the field is active.
+ *
+ * @param $entity_type
+ *   The type of entity whose fields should be deleted.
+ * @param $bundle
+ *   Optionally limit instance deletion to a specific bundle of the specified
+ *   entity type.
+ */
+function ledger_delete_instances($entity_type, $bundle = NULL) {
+  
+  // Prepare a parameters array to load the specified instances.
+  $params = array(
+    'entity_type' => $entity_type,
+  );
+
+  if (!empty($bundle)) {
+    $params['bundle'] = $bundle;
+  }
+
+  // Read and delete the matching field instances.
+  foreach (field_read_instances($params, array('include_inactive' => TRUE)) as $instance) {
+    ledger_delete_instance($instance);
+  }
+}
+
+
+/**
+ * Deletes the specified instance and handles field cleanup manually in case the
+ * instance is of a disabled field.
+ *
+ * @param $instance
+ *   The field instance info array to be deleted.
+ */
+function ledger_delete_instance($instance) {
+  
+  // First activate the instance's field if necessary.
+  $field_name = $instance['field_name'];
+  $activated = ledger_activate_field($field_name);
+
+  // Then delete the instance.
+  field_delete_instance($instance, FALSE);
+
+  // Now check to see if there are any other instances of the field left.
   $field = field_info_field($field_name);
-  $instance = field_info_instance($entity_type, $field_name, $entity_type);
 
-  if (empty($field)) {
-    $field = array(
-      'field_name' => $field_name,
-      'type' => $field_type,
-      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
-      'entity_types' => array($entity_type),
-      'translatable' => FALSE,
-    );
-    $field = field_create_field($field);
+  if (count($field['bundles']) == 0) {
+    field_delete_field($field_name);
   }
-
-  if (empty($instance)) {
-    $instance = array(
-      'field_name' => $field_name,
-      'entity_type' => $entity_type,
-      'bundle' => $entity_type,
-      'label' => t('Ledger Entries'),
-      'settings' => array(),
-      'widget' => array(
-        'type' => 'ledger_entry_default_widget',
-      ),
-      'display' => array(
-        'default' => array(
-          'label' => 'hidden',
-          'type' => 'ledger_entry_default_formatter',
-        ),
-      ),
-    );
-    field_create_instance($instance);
+  elseif ($activated) {
+    // If there are remaining instances but the field was originally disabled,
+    // disabled it again now.
+    $field['active'] = 0;
+    field_update_field($field);
   }
-}
-
-/***************************************************************
- * Field API hooks
- ***************************************************************/
-
-/**
- * Implements hook_field_info().
- */
-function ledger_field_info() {
-  return array(
-    'ledger_entry' => array(
-      'label' => t('Ledger Entry'),
-      'description' => t('Represents a single debit or credit to an account.'),
-      'default_widget' => 'ledger_entry_default_widget',
-      'default_formatter' => 'ledger_entry_default_formatter',
-    ),
-  );
-}
-
-/**
- * Implements hook_field_validate().
- *
- * @see ledger_field_widget_error()
- */
-function ledger_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
-  
-  // Loop through each item for specific field validation.
-  foreach ($items as $delta => $item) {
-    
-    // Store emptiness of the fields so it only needs to be checked once.
-    $aid_empty = empty($item['aid']);
-    $value_empty = empty($item['value']);
-    
-    // If one of the two fields is empty, but not both of them...
-    if (($aid_empty || $value_empty) && !($aid_empty && $value_empty)) {
-      $errors[$field['field_name']][$langcode][$delta][] = array(
-        'error' => 'ledger_entry_invalid',
-        'message' => t('Account and value are both required.'),
-      );
-    }
-      
-    // Or, if both fields have a value...
-    else if (!$aid_empty && !$value_empty) {
-      
-      // Make sure the account is a valid account
-      $account = ledger_account_load($item['aid']);
-      if (empty($account->aid)) {
-        $errors[$field['field_name']][$langcode][$delta][] = array(
-          'error' => 'ledger_entry_invalid',
-          'message' => t('The account selected is not a valid account.'),
-        );
-      }
-      
-      // Make sure the value is a float value
-      if (!is_numeric($item['value'])) {
-        $errors[$field['field_name']][$langcode][$delta][] = array(
-          'error' => 'ledger_entry_invalid',
-          'message' => t('The transaction value must be a number.'),
-        );
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_field_widget_error().
- *
- * @see ledger_field_validate()
- * @see form_error()
- */
-function ledger_field_widget_error($element, $error, $form, &$form_state) {
-  switch ($error['error']) {
-    case 'ledger_entry_invalid':
-      form_error($element, $error['message']);
-      break;
-  }
-}
-
-/**
- * Implements hook_field_is_empty().
- */
-function ledger_field_is_empty($item, $field) {
-  return empty($item['aid']) && empty($item['value']);
-}
-
-/**
- * Implements hook_field_formatter_info().
- *
- * @see ledger_field_formatter_view()
- */
-function ledger_field_formatter_info() {
-  return array(
-    'ledger_entry_default_formatter' => array(
-      'label' => t('Default'),
-      'field types' => array('ledger_entry'),
-    ),
-  );
-}
-
-/**
- * Implements hook_field_formatter_view().
- *
- * @see ledger_field_formatter_info()
- */
-function ledger_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  $element = array();
-  if ($display['type'] == 'ledger_entry_default_formatter') {
-    foreach ($items as $delta => $item) {
-      
-      // Load the account
-      $account = ledger_account_load($item['aid']);
-      
-      // Format the element
-      $element[$delta] = array(
-        '#type' => 'html_tag',
-        '#tag' => 'p',
-        '#value' => t('@account: @value', array('@account' => $account->name, '@value' => $item['value'])),
-      );
-    }
-  }
-  return $element;
-}
-
-/**
- * Implements hook_field_widget_info().
- *
- * @see ledger_field_widget_form()
- */
-function ledger_field_widget_info() {
-  return array(
-    'ledger_entry_default_widget' => array(
-      'label' => t('Ledger entry'),
-      'field types' => array('ledger_entry'),
-    ),
-  );
-}
-
-/**
- * Implements hook_field_widget_form().
- */
-function ledger_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  
-  $element['#delta'] = $delta;
-  
-  $element['aid'] = array(
-    '#type' => 'textfield',
-    '#title' => 'Account ID',
-    '#default_value' => !empty($items[$delta]['aid']) ? $items[$delta]['aid'] : '',
-  );
-  
-  $element['value'] = array(
-    '#type' => 'textfield',
-    '#title' => 'Transaction Value',
-    '#default_value' => !empty($items[$delta]['value']) ? $items[$delta]['value'] : '',
-  );
-   
-  // Link for removing the ledger entry
-  $element['remove'] = array(
-    '#name' => 'ledger_entry_' . $delta . '_remove',
-    '#type' => 'markup',
-    '#validate' => array(),
-    '#markup' => '<div class="ledger-entry-remove">Remove</div>',
-  );
-  
-  // Add JS to make the remove link work
-  drupal_add_js(drupal_get_path('module', 'ledger') . '/js/ledger_entry_remove.js');
-  
-  return $element;
-}
-
-/***************************************************************
- * Views API hooks
- ***************************************************************/
-
-/**
- * Implements hook_views_api().
- */
-function ledger_views_api() {
-  return array(
-    'api' => 3,
-    'path' => drupal_get_path('module', 'ledger') . '/includes/views',
-  );
 }

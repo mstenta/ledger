@@ -1,0 +1,176 @@
+<?php
+
+/**
+ * @file
+ * Ledger Entry
+ * Defines the Ledger Entry field.
+ */
+
+/***************************************************************
+ * Field API hooks
+ ***************************************************************/
+
+/**
+ * Implements hook_field_info().
+ */
+function ledger_entry_field_info() {
+  return array(
+    'ledger_entry' => array(
+      'label' => t('Ledger Entry'),
+      'description' => t('Represents a single debit or credit to an account.'),
+      'default_widget' => 'ledger_entry_default_widget',
+      'default_formatter' => 'ledger_entry_default_formatter',
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_validate().
+ *
+ * @see ledger_entry_field_widget_error()
+ */
+function ledger_entry_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+  
+  // Loop through each item for specific field validation.
+  foreach ($items as $delta => $item) {
+    
+    // Store emptiness of the fields so it only needs to be checked once.
+    $aid_empty = empty($item['aid']);
+    $value_empty = empty($item['value']);
+    
+    // If one of the two fields is empty, but not both of them...
+    if (($aid_empty || $value_empty) && !($aid_empty && $value_empty)) {
+      $errors[$field['field_name']][$langcode][$delta][] = array(
+        'error' => 'ledger_entry_invalid',
+        'message' => t('Account and value are both required.'),
+      );
+    }
+      
+    // Or, if both fields have a value...
+    else if (!$aid_empty && !$value_empty) {
+      
+      // Make sure the account is a valid account
+      $account = ledger_account_load($item['aid']);
+      if (empty($account->aid)) {
+        $errors[$field['field_name']][$langcode][$delta][] = array(
+          'error' => 'ledger_entry_invalid',
+          'message' => t('The account selected is not a valid account.'),
+        );
+      }
+      
+      // Make sure the value is a float value
+      if (!is_numeric($item['value'])) {
+        $errors[$field['field_name']][$langcode][$delta][] = array(
+          'error' => 'ledger_entry_invalid',
+          'message' => t('The transaction value must be a number.'),
+        );
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_error().
+ *
+ * @see ledger_entry_field_validate()
+ * @see form_error()
+ */
+function ledger_entry_field_widget_error($element, $error, $form, &$form_state) {
+  switch ($error['error']) {
+    case 'ledger_entry_invalid':
+      form_error($element, $error['message']);
+      break;
+  }
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function ledger_entry_field_is_empty($item, $field) {
+  return empty($item['aid']) && empty($item['value']);
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ *
+ * @see ledger_entry_field_formatter_view()
+ */
+function ledger_entry_field_formatter_info() {
+  return array(
+    'ledger_entry_default_formatter' => array(
+      'label' => t('Default'),
+      'field types' => array('ledger_entry'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ *
+ * @see ledger_entry_field_formatter_info()
+ */
+function ledger_entry_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  if ($display['type'] == 'ledger_entry_default_formatter') {
+    foreach ($items as $delta => $item) {
+      
+      // Load the account
+      $account = ledger_account_load($item['aid']);
+      
+      // Format the element
+      $element[$delta] = array(
+        '#type' => 'html_tag',
+        '#tag' => 'p',
+        '#value' => t('@account: @value', array('@account' => $account->name, '@value' => $item['value'])),
+      );
+    }
+  }
+  return $element;
+}
+
+/**
+ * Implements hook_field_widget_info().
+ *
+ * @see ledger_entry_field_widget_form()
+ */
+function ledger_entry_field_widget_info() {
+  return array(
+    'ledger_entry_default_widget' => array(
+      'label' => t('Ledger entry'),
+      'field types' => array('ledger_entry'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function ledger_entry_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  
+  $element['#delta'] = $delta;
+  
+  $element['aid'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Account ID',
+    '#default_value' => !empty($items[$delta]['aid']) ? $items[$delta]['aid'] : '',
+  );
+  
+  $element['value'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Transaction Value',
+    '#default_value' => !empty($items[$delta]['value']) ? $items[$delta]['value'] : '',
+  );
+   
+  // Link for removing the ledger entry
+  $element['remove'] = array(
+    '#name' => 'ledger_entry_' . $delta . '_remove',
+    '#type' => 'markup',
+    '#validate' => array(),
+    '#markup' => '<div class="ledger-entry-remove">Remove</div>',
+  );
+  
+  // Add JS to make the remove link work
+  drupal_add_js(drupal_get_path('module', 'ledger_entry') . '/js/ledger_entry_remove.js');
+  
+  return $element;
+}

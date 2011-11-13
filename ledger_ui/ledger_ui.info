@@ -1,5 +1,0 @@
-name = "Ledger UI"
-description = "Exposes a default UI for the Ledger through edit forms and default Views."
-core = 7.x
-package = "Accounting"
-dependencies[] = ledger

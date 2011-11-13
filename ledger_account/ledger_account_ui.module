@@ -1,0 +1,226 @@
+<?php
+
+/**
+ * @file
+ * Ledger Account UI
+ */
+
+/***************************************************************
+ * Drupal core hooks
+ ***************************************************************/
+
+/**
+ * Implements hook_menu().
+ */
+function ledger_account_ui_menu() {
+  $items = array();
+  
+  // Note: the following pages are defined by default Views:
+  //   /admin/ledger/accounts
+
+  // Create account
+  $items['admin/ledger/accounts/add'] = array(
+    'title' => 'Create a ledger account',
+    'description' => 'Create a new ledger account.',
+    'page callback' => 'ledger_account_ui_account_form_wrapper',
+    'page arguments' => array(entity_get_controller('ledger_account')->create()),
+    'access callback' => 'ledger_account_access',
+    'access arguments' => array('create'),
+    'weight' => 10,
+  );
+  
+  // Edit account
+  $items['admin/ledger/accounts/%ledger_account/edit'] = array(
+    'title' => 'Edit',
+    'page callback' => 'ledger_account_ui_account_form_wrapper',
+    'page arguments' => array(3),
+    'access callback' => 'ledger_account_access',
+    'access arguments' => array('update', 3),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 10,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+  );
+  
+  // Delete account
+  $items['admin/ledger/accounts/%ledger_account/delete'] = array(
+    'title' => 'Delete',
+    'page callback' => 'ledger_account_ui_account_form_wrapper',
+    'page arguments' => array(3),
+    'access callback' => 'ledger_account_access',
+    'access arguments' => array('update', 3),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 20,
+    'context' => MENU_CONTEXT_INLINE,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function ledger_account_ui_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  
+  // Add action link 'ledger/accounts/add' on 'ledger/accounts'.
+  if ($root_path == 'admin/ledger/accounts') {
+    $item = menu_get_item('admin/ledger/accounts/add');  // Load the menu item for the account add form
+    $item['localized_options']['query']['destination'] = current_path();  // Set the destination argument to the current path
+    if ($item['access']) {
+      $data['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
+    }
+  }
+}
+
+/***************************************************************
+ * Views hooks
+ ***************************************************************/
+
+/**
+ * Implements hook_views_api().
+ */
+function ledger_account_ui_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ledger_account_ui') . '/views',
+  );
+}
+
+/***************************************************************
+ * Page callbacks
+ ***************************************************************/
+
+/**
+ * Wrapper function for the ledger_ui_account_form that serves as a page callback.
+ */
+function ledger_account_ui_account_form_wrapper($account) {
+  
+  // Set the page title
+  drupal_set_title(ledger_account_title($account));
+  
+  // Create the breadcrumb for the page
+  $breadcrumb = array(
+    l(t('Home'), '<front>'),
+    l(t('Administration'), 'admin'),
+    l(t('Ledger'), 'admin/ledger'),
+    l(t('Accounts'), 'admin/ledger/accounts'),
+  );
+  drupal_set_breadcrumb($breadcrumb);
+  
+  // Display the ledger account add form.
+  return drupal_get_form('ledger_account_form', $account, 'add');
+}
+
+/***************************************************************
+ * Account entity form
+ ***************************************************************/
+
+/**
+ * Generates the ledger account editing form.
+ */
+function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
+  
+  // Save the account object to the $form_state.
+  $form_state['ledger_account'] = $account;
+  
+  // If it's a clone, add "(cloned)" to the end of the account name by default.
+  if ($op == 'clone') {
+    $account->name .= ' (cloned)';
+  }
+  
+  // Account name
+  $form['name'] = array(
+    '#title' => t('Account name'),
+    '#type' => 'textfield',
+    '#default_value' => $account->name,
+    '#description' => t('The name of the account.'),
+    '#required' => TRUE,
+    '#size' => 30,
+  );
+  
+  // Account description
+  $form['description'] = array(
+    '#title' => t('Description'),
+    '#type' => 'textfield',
+    '#default_value' => $account->description,
+    '#description' => t('A brief description of the account.'),
+    '#size' => 50,
+  );
+  
+  // Account type
+  $form['type'] = array(
+    '#title' => t('Account type'),
+    '#type' => 'textfield',
+    '#default_value' => $account->type,
+    '#description' => t('The account type.'),
+    '#required' => TRUE,
+    '#size' => 30,
+  );
+  
+  // Parent account ID
+  /**
+   * @todo
+   *   Dropdown of available accounts of the same account type.
+   */
+  $form['pid'] = array(
+    '#title' => t('Parent account ID'),
+    '#type' => 'textfield',
+    '#default_value' => $account->pid,
+    '#description' => t('The parent account\'s ID.'),
+    '#size' => 30,
+  );
+  
+  // Form actions
+  $form['actions'] = array('#type' => 'actions');
+  
+  // Submit button
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save account'),
+    '#weight' => 40,
+  );
+  
+  // If we're not adding or cloning an account, show the delete button.
+  if ($op != 'add' && $op != 'clone') {
+    $form['actions']['delete'] = array(
+      '#type' => 'submit',
+      '#value' => t('Delete account'),
+      '#weight' => 45,
+      '#limit_validation_errors' => array(),
+      '#submit' => array('ledger_account_form_submit_delete')
+    );
+  }
+  return $form;
+}
+
+/**
+ * Form API submit callback for the ledger account form.
+ */
+function ledger_account_form_submit(&$form, &$form_state) {
+  
+  // If the user is editing an account, load a fresh copy to merge changes to.
+  if ($form_state['ledger_account']->aid) {
+    $account = ledger_account_load($form_state['ledger_account']->aid);
+    $account->name = $form_state['values']['name'];
+    $account->description = $form_state['values']['description'];
+    $account->type = $form_state['values']['type'];
+    $account->pid = $form_state['values']['pid'];
+  }
+  
+  // If a new account is being created, build a new account object
+  else {
+    $account = ledger_account_new($form_state['values']);
+  }
+  
+  // Save and go back.
+  $account->save();
+}
+
+/**
+ * Form API submit callback for the ledger account delete button.
+ */
+function ledger_account_form_submit_delete(&$form, &$form_state) {
+  $form_state['redirect'] = 'admin/ledger/accounts/' . $form_state['ledger_account']->aid . '/delete';
+}
