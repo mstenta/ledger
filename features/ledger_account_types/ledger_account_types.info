@@ -1,0 +1,10 @@
+name = "Ledger Account Types"
+description = "Provides a set of basic ledger account types."
+core = 7.x
+package = "Ledger"
+dependencies[] = "ledger_account"
+features[ledger_account_type][] = "assets"
+features[ledger_account_type][] = "capital"
+features[ledger_account_type][] = "expenses"
+features[ledger_account_type][] = "income"
+features[ledger_account_type][] = "liabilities"

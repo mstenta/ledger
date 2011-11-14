@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Ledger Account Types feature.
+ */
+
+include_once('ledger_account_types.features.inc');
