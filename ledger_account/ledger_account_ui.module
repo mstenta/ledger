@@ -10,6 +10,38 @@
  ***************************************************************/
 
 /**
+ * Implements hook_entity_info_alter().
+ */
+function ledger_account_ui_entity_info_alter(&$entity_info) {
+  
+  // Enable the entity API's admin UI for the ledger account type
+  if (!empty($entity_info['ledger_account_type'])) {
+    $entity_info['ledger_account_type'] += array(
+      'access callback' => 'ledger_account_access',
+      'module' => 'ledger_account',
+      'admin ui' => array(
+        'path' => 'admin/ledger/settings/account-types',
+        'controller class' => 'EntityDefaultUIController',
+        'menu wildcard' => '%ledger_account_type',
+      ),
+    );
+  }
+  
+  // Enable the entity API's admin UI for each account type
+  foreach (ledger_account_get_types() as $type => $info) {
+    $entity_info['ledger_account']['bundles'][$type] = array(
+      'label' => $info->label,
+      'admin' => array(
+        'path' => 'admin/ledger/settings/account-types/%ledger_account_type',
+        'real path' => 'admin/ledger/settings/account-types/' . $type,
+        'bundle argument' => 4,
+        'access arguments' => array('administer ledger'),
+      ),
+    );
+  }
+}
+
+/**
  * Implements hook_menu().
  */
 function ledger_account_ui_menu() {
@@ -288,4 +320,58 @@ function ledger_account_delete_form_submit($form, &$form_state) {
   
   // Redirect
   $form_state['redirect'] = 'admin/ledger/accounts';
+}
+
+/***************************************************************
+ * Account entity type forms
+ ***************************************************************/
+
+/**
+ * Form callback: ledger account type edit form
+ */
+function ledger_account_type_form($form, &$form_state, $account_type, $op = 'edit') {
+  
+  if ($op == 'clone') {
+    $account_type->label .= ' (cloned)';
+    $account_type->name = '';
+  }
+  
+  // Label
+  $form['label'] = array(
+    '#title' => t('Label'),
+    '#type' => 'textfield',
+    '#default_value' => isset($account_type->label) ? $account_type->label : '',
+    '#description' => t('The human-readable name of this account type.'),
+    '#required' => TRUE,
+  );
+  
+  // Machine-readable type name.
+  $form['name'] = array(
+    '#type' => 'machine_name',
+    '#default_value' => isset($account_type->name) ? $account_type->name : '',
+    '#maxlength' => 32,
+    '#machine_name' => array(
+      'exists' => 'ledger_account_get_types',
+      'source' => array('name'),
+    ),
+    '#description' => t('A unique machine-readable name for this account type. It must only contain lowercase letters, numbers, and underscores.'),
+  );
+  
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save account type'),
+    '#weight' => 40,
+  );
+  
+  return $form;
+}
+
+/**
+ * Form API submit callback for the type form.
+ */
+function ledger_account_type_form_submit(&$form, &$form_state) {
+  $account_type = entity_ui_form_submit_build_entity($form, $form_state);
+  $account_type->save();
+  $form_state['redirect'] = 'admin/ledger/settings/account-types';
 }

@@ -14,18 +14,50 @@
  */
 function ledger_account_entity_info() {
   $entities['ledger_account'] = array(
-    'label' => t('Ledger Account'),
+    'label' => t('Account'),
+    'description' => t('A Ledger Account entity type.'),
     'entity class' => 'LedgerAccount',
     'controller class' => 'LedgerAccountController',
     'base table' => 'ledger_account',
     'fieldable' => TRUE,
     'entity keys' => array(
       'id' => 'aid',
+      'bundle' => 'name',
     ),
     'label callback' => 'entity_class_label',
     'uri callback' => 'entity_class_uri',
     'module' => 'ledger_account',
+    'bundles' => array(),
+    'bundle keys' => array(
+      'bundle' => 'name',
+    ),
   );
+  $entities['ledger_account_type'] = array(
+    'label' => t('Account Type'),
+    'entity class' => 'Entity',
+    'controller class' => 'EntityAPIControllerExportable',
+    'base table' => 'ledger_account_type',
+    'fieldable' => FALSE,
+    'bundle of' => 'ledger_account',
+    'exportable' => TRUE,
+    'entity keys' => array(
+      'id' => 'id',
+      'name' => 'name',
+      'label' => 'label',
+    ),
+  );
+  
+  // Add bundle info but bypass entity_load() as we cannot use it here.
+  $types = db_select('ledger_account_type', 'la')
+    ->fields('la')
+    ->execute()
+    ->fetchAllAssoc('name');
+  foreach ($types as $name => $type) {
+    $entities['ledger_account']['bundles'][$name] = array(
+      'label' => $type->label,
+    );
+  }
+  
   return $entities;
 }
 
@@ -82,7 +114,7 @@ class LedgerAccountController extends EntityAPIController {
    *   Values passed in.
    *
    * @return
-   *   A model object with all default fields initialized.
+   *   An account object with all default fields initialized.
    */
   public function create(array $values = array()) {
     
@@ -218,6 +250,35 @@ function ledger_account_get_properties($account, array $options, $name, $entity_
   if ($name == 'parent') {
     return $account->pid;
   }
+}
+
+/***************************************************************
+ * Account type functions.
+ ***************************************************************/
+
+/**
+ * Gets an array of all account types, keyed by the type name.
+ *
+ * @param $type_name
+ *   If set, the type with the given name is returned.
+ * @return
+ *   Depending whether $type_name is set, an array of account types or a single one.
+ */
+function ledger_account_get_types($type_name = NULL) {
+  $types = entity_load_multiple_by_name('ledger_account_type', isset($type_name) ? array($type_name) : FALSE);
+  return isset($type_name) ? reset($types) : $types;
+}
+
+/**
+ * Menu argument loader; Load a ledger account type by string.
+ *
+ * @param $name
+ *   The machine-readable name of a account type to load.
+ * @return
+ *   A account type array or FALSE if $name does not exist.
+ */
+function ledger_account_type_load($name) {
+  return ledger_account_get_types($name);
 }
 
 /***************************************************************

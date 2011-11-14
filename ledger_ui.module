@@ -25,6 +25,17 @@ function ledger_ui_menu() {
     'file' => 'system.admin.inc',
     'weight' => -7,
   );
+  
+  // Ledger Settings container
+  $items['admin/ledger/settings'] = array(
+    'title' => 'Settings',
+    'description' => 'Administer ledger settings',
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file path' => drupal_get_path('module', 'system'),
+    'file' => 'system.admin.inc',
+    'weight' => 100,
+  );
 
   return $items;
 }
