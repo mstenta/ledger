@@ -174,7 +174,6 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
     '#default_value' => $account->name,
     '#description' => t('The name of the account.'),
     '#required' => TRUE,
-    '#size' => 30,
   );
   
   // Account description
@@ -183,17 +182,17 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
     '#type' => 'textfield',
     '#default_value' => $account->description,
     '#description' => t('A brief description of the account.'),
-    '#size' => 50,
   );
   
   // Account type
+  $options = ledger_account_type_get_names();
   $form['type'] = array(
     '#title' => t('Account type'),
-    '#type' => 'textfield',
+    '#type' => 'select',
+    '#options' => $options,
     '#default_value' => $account->type,
     '#description' => t('The account type.'),
     '#required' => TRUE,
-    '#size' => 30,
   );
   
   // Parent account ID

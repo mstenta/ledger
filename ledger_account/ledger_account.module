@@ -257,6 +257,37 @@ function ledger_account_get_properties($account, array $options, $name, $entity_
  ***************************************************************/
 
 /**
+ * Menu argument loader; Load a ledger account type by string.
+ *
+ * @param $name
+ *   The machine-readable name of a account type to load.
+ * @return
+ *   A account type array or FALSE if $name does not exist.
+ */
+function ledger_account_type_load($name) {
+  return ledger_account_get_types($name);
+}
+
+/**
+ * Gets a single account label, based on it's machine name.
+ */
+function ledger_account_type_label($name) {
+  $type = ledger_account_get_types($name);
+  return $type->label;
+}
+
+/**
+ * Gets an array of all account type names, keyed by type name.
+ */
+function ledger_account_type_get_names() {
+  $types = array();
+  foreach (ledger_account_get_types() as $name => $type) {
+    $types[$name] = $type->label;
+  }
+  return $types;
+}
+
+/**
  * Gets an array of all account types, keyed by the type name.
  *
  * @param $type_name
@@ -269,17 +300,6 @@ function ledger_account_get_types($type_name = NULL) {
   return isset($type_name) ? reset($types) : $types;
 }
 
-/**
- * Menu argument loader; Load a ledger account type by string.
- *
- * @param $name
- *   The machine-readable name of a account type to load.
- * @return
- *   A account type array or FALSE if $name does not exist.
- */
-function ledger_account_type_load($name) {
-  return ledger_account_get_types($name);
-}
 
 /***************************************************************
  * Account form helper functions.

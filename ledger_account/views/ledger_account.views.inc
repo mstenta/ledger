@@ -12,6 +12,9 @@ function ledger_account_views_data_alter(&$data) {
   // Replace the account name field handler with one that provides a "Link this field to" option.
   $data['ledger_account']['name']['field']['handler'] = 'ledger_account_handler_field';
   
+  // Replace the field handler for the account type so that it uses the human-readable type.
+  $data['ledger_account']['type']['field']['handler'] = 'ledger_account_handler_field_account_type';
+  
   // Add field for account view link.
   $data['ledger_account']['view_account'] = array(
     'field' => array(

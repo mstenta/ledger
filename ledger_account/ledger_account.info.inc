@@ -46,10 +46,12 @@ function ledger_account_entity_property_info() {
     'schema field' => 'description',
   );
   $account['type'] = array(
+    'type' => 'token',
     'label' => t('Account type'),
     'description' => t('The type of the account.'),
     'setter callback' => 'entity_property_verbatim_set',
     'setter permission' => 'administer ledger',
+    'options list' => 'ledger_account_type_get_names',
     'required' => TRUE,
     'schema field' => 'type',
   );
