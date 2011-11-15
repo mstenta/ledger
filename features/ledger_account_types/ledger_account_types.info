@@ -1,5 +1,5 @@
 name = "Ledger Account Types"
-description = "Provides a set of basic ledger account types."
+description = "Provides a set of basic ledger account types: Assets, Capital, Expenses, Income, and Liabilities"
 core = 7.x
 package = "Ledger"
 dependencies[] = "ledger_account"
