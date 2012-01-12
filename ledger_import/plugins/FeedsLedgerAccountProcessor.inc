@@ -21,55 +21,36 @@ class FeedsLedgerAccountProcessor extends FeedsProcessor {
    * Creates a new account in memory and returns it.
    */
   protected function newEntity(FeedsSource $source) {
-    // $node = new stdClass();
-    // $node->type = $this->config['content_type'];
-    // $node->changed = REQUEST_TIME;
-    // $node->created = REQUEST_TIME;
-    // $node->language = LANGUAGE_NONE;
-    // node_object_prepare($node);
-    // // Populate properties that are set by node_object_prepare().
-    // $node->log = 'Created by FeedsNodeProcessor';
-    // $node->uid = $this->config['author'];
-    // return $node;
+    $account = ledger_account_new();
+    return $account;
   }
   
   /**
    * Loads an existing account.
    *
-   * If the update existing method is not FEEDS_UPDATE_EXISTING, only the account
-   * table will be loaded, foregoing the account_load API for better performance.
+   * If the update existing method is not FEEDS_UPDATE_EXISTING, a new ledger_account will be created, rather than loading the existing one.
    */
-  protected function entityLoad(FeedsSource $source, $nid) {
-    // if ($this->config['update_existing'] == FEEDS_UPDATE_EXISTING) {
-    //   $node = node_load($nid, NULL, TRUE);
-    // }
-    // else {
-    //   // We're replacing the existing node. Only save the absolutely necessary.
-    //   $node = db_query("SELECT created, nid, vid, type FROM {node} WHERE nid = :nid", array(':nid' => $nid))->fetchObject();
-    //   $node->uid = $this->config['author'];
-    // }
-    // node_object_prepare($node);
-    // // Populate properties that are set by node_object_prepare().
-    // if ($this->config['update_existing'] == FEEDS_UPDATE_EXISTING) {
-    //   $node->log = 'Updated by FeedsNodeProcessor';
-    // }
-    // else {
-    //   $node->log = 'Replaced by FeedsNodeProcessor';
-    // }
-    // return $node;
+  protected function entityLoad(FeedsSource $source, $aid) {
+    if ($this->config['update_existing'] == FEEDS_UPDATE_EXISTING) {
+      $account = ledger_account_load($aid);
+    }
+    else {
+      $account = ledger_account_new();
+    }
+    return $account;
   }
   
   /**
    * Save an account.
    */
-  public function entitySave($entity) {
-    // node_save($entity);
+  public function entitySave($account) {
+    ledger_account_save($account);
   }
   
   /**
    * Delete a series of accounts.
    */
-  protected function entityDeleteMultiple($nids) {
-    // node_delete_multiple($nids);
+  protected function entityDeleteMultiple($aids) {
+    ledger_account_delete_multiple($aids);
   }
 }
