@@ -61,11 +61,11 @@ function ledger_import_feeds_importer_default() {
   
   // Load up the feed definitions.
   $importers = array(
-    // 'ledger_import_gnucash',
+    'ledger_import_gnucash_accounts',  // GnuCash Accounts import
   );
   if (!empty($importers)) {
     foreach ($importers as $importer) {
-      require_once drupal_get_path('module', 'ledger_import') . '/includes/' . $importer . '.inc';
+      require_once drupal_get_path('module', 'ledger_import') . '/feeds/' . $importer . '.inc';
       if (!empty($feeds_importer)) {
         $export[$importer] = $feeds_importer;
       }
