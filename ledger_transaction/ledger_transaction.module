@@ -15,6 +15,7 @@
 function ledger_transaction_entity_info() {
   $entities['ledger_transaction'] = array(
     'label' => t('Transaction'),
+    'label plural' => t('Transactions'),
     'entity class' => 'LedgerTransaction',
     'controller class' => 'LedgerTransactionController',
     'base table' => 'ledger_transaction',
