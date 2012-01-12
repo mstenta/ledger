@@ -179,6 +179,29 @@ function ledger_transaction_access($op, $transaction = NULL, $user = NULL) {
 }
 
 /**
+ * Returns a title for the transaction.
+ *
+ * @param $transaction
+ *   A ledger transaction object.
+ *
+ * @return
+ *   A string that represents the transaction title.
+ */
+function ledger_transaction_title($transaction) {
+  return $transaction->description;
+}
+
+/**
+ * Returns an initialized transaction object.
+ *
+ * @return
+ *   A transaction object with all default fields initialized.
+ */
+function ledger_transaction_new($values = array()) {
+  return entity_get_controller('ledger_transaction')->create($values);
+}
+
+/**
  * Loads a transaction by ID.
  */
 function ledger_transaction_load($tid) {
@@ -207,26 +230,13 @@ function ledger_transaction_load_multiple($transaction_ids = array(), $condition
 }
 
 /**
- * Returns an initialized transaction object.
- *
- * @return
- *   A transaction object with all default fields initialized.
- */
-function ledger_transaction_new($values = array()) {
-  return entity_get_controller('ledger_transaction')->create($values);
-}
-
-/**
- * Returns a title for the transaction.
+ * Saves a transaction to the database.
  *
  * @param $transaction
- *   A ledger transaction object.
- *
- * @return
- *   A string that represents the transaction title.
+ *   The transaction object.
  */
-function ledger_transaction_title($transaction) {
-  return $transaction->description;
+function ledger_transaction_save($transaction) {
+  return $transaction->save();
 }
 
 /**

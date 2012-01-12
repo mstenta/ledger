@@ -156,6 +156,29 @@ function ledger_account_access($op, $account = NULL, $user = NULL) {
 }
 
 /**
+ * Returns a title for the account.
+ *
+ * @param $account
+ *   A ledger account object.
+ *
+ * @return
+ *   A string that represents the account title.
+ */
+function ledger_account_title($account) {
+  return $account->name;
+}
+
+/**
+ * Returns an initialized account object.
+ *
+ * @return
+ *   An account object with all default fields initialized.
+ */
+function ledger_account_new($values = array()) {
+  return entity_get_controller('ledger_account')->create($values);
+}
+
+/**
  * Loads an account by ID.
  */
 function ledger_account_load($aid) {
@@ -184,26 +207,13 @@ function ledger_account_load_multiple($account_ids = array(), $conditions = arra
 }
 
 /**
- * Returns an initialized account object.
- *
- * @return
- *   An account object with all default fields initialized.
- */
-function ledger_account_new($values = array()) {
-  return entity_get_controller('ledger_account')->create($values);
-}
-
-/**
- * Returns a title for the account.
+ * Saves an account to the database.
  *
  * @param $account
- *   A ledger account object.
- *
- * @return
- *   A string that represents the account title.
+ *   The account object.
  */
-function ledger_account_title($account) {
-  return $account->name;
+function ledger_account_save($account) {
+  return $account->save();
 }
 
 /**
