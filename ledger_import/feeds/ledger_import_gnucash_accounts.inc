@@ -9,28 +9,63 @@ $feeds_importer->config = array(
   'fetcher' => array(
     'plugin_key' => 'FeedsFileFetcher',
     'config' => array(
-      'allowed_extensions' => 'txt csv tsv xml opml',
-      'direct' => FALSE,
+      'allowed_extensions' => 'gnucash',
+      'direct' => 0,
     ),
   ),
   'parser' => array(
     'plugin_key' => 'FeedsXPathParserXML',
     'config' => array(
-      'sources' => array(),
-      'rawXML' => array(),
-      'context' => '',
+      'sources' => array(
+        'xpathparser:0' => 'act:id',
+        'xpathparser:1' => 'act:name',
+        'xpathparser:2' => 'act:description',
+        'xpathparser:3' => 'act:type',
+      ),
+      'rawXML' => array(
+        'xpathparser:0' => 0,
+        'xpathparser:1' => 0,
+        'xpathparser:2' => 0,
+        'xpathparser:3' => 0,
+      ),
+      'context' => '//gnc:account',
       'exp' => array(
-        'errors' => FALSE,
-        'tidy' => FALSE,
-        'debug' => array(),
-        'tidy_encoding' => 'UTF8',
+        'errors' => 0,
+        'debug' => array(
+          'context' => 0,
+          'xpathparser:0' => 0,
+          'xpathparser:1' => 0,
+          'xpathparser:2' => 0,
+          'xpathparser:3' => 0,
+        ),
       ),
     ),
   ),
   'processor' => array(
     'plugin_key' => 'FeedsLedgerAccountProcessor',
     'config' => array(
-      'mappings' => array(),
+      'mappings' => array(
+        0 => array(
+          'source' => 'xpathparser:0',
+          'target' => 'guid',
+          'unique' => 1,
+        ),
+        1 => array(
+          'source' => 'xpathparser:1',
+          'target' => 'name',
+          'unique' => FALSE,
+        ),
+        2 => array(
+          'source' => 'xpathparser:2',
+          'target' => 'description',
+          'unique' => FALSE,
+        ),
+        3 => array(
+          'source' => 'xpathparser:3',
+          'target' => 'type',
+          'unique' => FALSE,
+        ),
+      ),
       'update_existing' => 0,
       'input_format' => NULL,
     ),
