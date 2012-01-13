@@ -1,0 +1,7 @@
+name = "Ledger Import GnuCash"
+description = "Import accounts and transactions to Ledger from GnuCash."
+core = 7.x
+package = "Ledger"
+dependencies[] = ledger_import
+dependencies[] = feeds_xpathparser
+files[] = plugins/FeedsLedgerGnuCashAccountProcessor.inc

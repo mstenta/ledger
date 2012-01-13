@@ -45,7 +45,7 @@ $feeds_importer->config = array(
     ),
   ),
   'processor' => array(
-    'plugin_key' => 'FeedsLedgerAccountProcessor',
+    'plugin_key' => 'FeedsLedgerGnuCashAccountProcessor',
     'config' => array(
       'mappings' => array(
         0 => array(

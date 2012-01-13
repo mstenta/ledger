@@ -10,17 +10,6 @@
 *************************************************************************/
 
 /**
- * Implementation of hook_ctools_plugin_api().
- */
-function ledger_import_ctools_plugin_api() {
-  list($module, $api) = func_get_args();
-  if ($module == "feeds" && $api == "feeds_importer_default") {
-    return array("version" => 1);
-  }
-}
-
-
-/**
 * Implementation of hook_feeds_plugins().
 */
 function ledger_import_feeds_plugins() {
@@ -51,26 +40,4 @@ function ledger_import_feeds_plugins() {
   );
   
   return $info;
-}
-
-/**
- * Implementation of hook_feeds_importer_default().
- */
-function ledger_import_feeds_importer_default() {
-  $export = array();
-  
-  // Load up the feed definitions.
-  $importers = array(
-    'ledger_import_gnucash_accounts',  // GnuCash Accounts import
-  );
-  if (!empty($importers)) {
-    foreach ($importers as $importer) {
-      require_once drupal_get_path('module', 'ledger_import') . '/feeds/' . $importer . '.inc';
-      if (!empty($feeds_importer)) {
-        $export[$importer] = $feeds_importer;
-      }
-    }
-  }
-  
-  return $export;
 }

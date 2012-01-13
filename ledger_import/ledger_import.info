@@ -6,6 +6,5 @@ dependencies[] = ledger
 dependencies[] = ledger_account
 dependencies[] = ledger_transaction
 dependencies[] = feeds
-dependencies[] = feeds_xpathparser
 files[] = plugins/FeedsLedgerAccountProcessor.inc
 files[] = plugins/FeedsLedgerTransactionProcessor.inc
