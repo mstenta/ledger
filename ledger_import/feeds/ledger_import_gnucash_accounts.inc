@@ -9,7 +9,7 @@ $feeds_importer->config = array(
   'fetcher' => array(
     'plugin_key' => 'FeedsFileFetcher',
     'config' => array(
-      'allowed_extensions' => 'gnucash',
+      'allowed_extensions' => 'gnucash xml',
       'direct' => 0,
     ),
   ),
@@ -17,16 +17,18 @@ $feeds_importer->config = array(
     'plugin_key' => 'FeedsXPathParserXML',
     'config' => array(
       'sources' => array(
-        'xpathparser:0' => 'act:id',
+        'xpathparser:0' => 'act:id[@type="guid"]',
         'xpathparser:1' => 'act:name',
         'xpathparser:2' => 'act:description',
         'xpathparser:3' => 'act:type',
+        'xpathparser:4' => 'act:parent[@type="guid"]',
       ),
       'rawXML' => array(
         'xpathparser:0' => 0,
         'xpathparser:1' => 0,
         'xpathparser:2' => 0,
         'xpathparser:3' => 0,
+        'xpathparser:4' => 0,
       ),
       'context' => '//gnc:account',
       'exp' => array(
@@ -37,6 +39,7 @@ $feeds_importer->config = array(
           'xpathparser:1' => 0,
           'xpathparser:2' => 0,
           'xpathparser:3' => 0,
+          'xpathparser:4' => 0,
         ),
       ),
     ),
@@ -63,6 +66,11 @@ $feeds_importer->config = array(
         3 => array(
           'source' => 'xpathparser:3',
           'target' => 'type',
+          'unique' => FALSE,
+        ),
+        4 => array(
+          'source' => 'xpathparser:4',
+          'target' => 'pid',
           'unique' => FALSE,
         ),
       ),
