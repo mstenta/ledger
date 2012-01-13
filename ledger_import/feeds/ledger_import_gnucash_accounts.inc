@@ -66,8 +66,20 @@ $feeds_importer->config = array(
           'unique' => FALSE,
         ),
       ),
-      'update_existing' => 0,
+      'update_existing' => '0',
       'input_format' => NULL,
+      'account_type_mapping' => 'ASSET:assets
+BANK:assets
+CASH:assets
+CREDIT:liabilities
+EQUITY:capital
+EXPENSE:expenses
+INCOME:income
+LIABILITY:liabilities
+MUTUAL:assets
+PAYABLE:liabilities
+RECEIVABLE:assets
+STOCK:assets',
     ),
   ),
   'content_type' => '',
