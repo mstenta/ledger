@@ -281,7 +281,7 @@ function ledger_account_type_load($name) {
 }
 
 /**
- * Gets a single account label, based on it's machine name.
+ * Gets a single account type label, based on it's machine name.
  */
 function ledger_account_type_label($name) {
   $type = ledger_account_get_types($name);
