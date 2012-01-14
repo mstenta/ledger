@@ -121,13 +121,6 @@ class FeedsLedgerAccountProcessor extends FeedsProcessor {
     
     return $account_type_mapping;
   }
-  
-  /**
-   * Get mappings.
-   */
-  public function getMappings() {
-    return isset($this->config['mappings']) ? $this->config['mappings'] : array();
-  }
 
   /**
    * Declare possible mapping targets that this processor exposes.
