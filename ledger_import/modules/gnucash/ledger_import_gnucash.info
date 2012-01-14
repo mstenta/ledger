@@ -5,3 +5,4 @@ package = "Ledger"
 dependencies[] = ledger_import
 dependencies[] = feeds_xpathparser
 files[] = plugins/FeedsLedgerGnuCashAccountProcessor.inc
+files[] = plugins/FeedsLedgerGnuCashTransactionProcessor.inc
