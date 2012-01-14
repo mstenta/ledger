@@ -1,0 +1,131 @@
+<?php
+
+/**
+ * @file
+ * Ledger Import GnuCash
+ */
+
+/*************************************************************************
+* Core hooks
+*************************************************************************/
+
+/**
+ * Implements hoon_entity_presave().
+ */
+function ledger_import_gnucash_entity_presave($entity, $type) {
+  
+  // Create Ledger Entries on transactions during the import.
+  if ($type == 'ledger_transaction' && !empty($entity->ledger_entry_accounts) && !empty($entity->ledger_entry_values)) {
+    foreach ($entity->ledger_entry_accounts as $i => $guid) {
+      
+      // If a GUID is provided, attempt to look it up in the {feeds_item} table
+      if (!empty($guid)) {
+        $aid = db_query('SELECT entity_id FROM {feeds_item} WHERE guid=:guid', array(':guid' => $guid))->fetchField();
+        
+        // If an account isn't found, add it to "Unknown"
+        if (!$aid) {
+          
+          // If an "Unknown" account type doesn't exist, create it.
+          if (!ledger_account_type_get_names('unknown')) {
+            $account_type_unknown = entity_get_controller('ledger_account_type')->create();
+            $account_type_unknown->name = 'unknown';
+            $account_type_unknown->label = 'Unknown';
+            $account_type_unknown->save();
+          }
+          
+          // If "Unknown" account doesn't exist, create it.
+          $aid = db_query("SELECT aid FROM {ledger_account} WHERE name='Unknown'")->fetchField();
+          if (!$aid) {
+            $account_unknown = ledger_account_new();
+            $account_unknown->name = 'Unknown';
+            $account_unknown->type = 'unknown';
+            $account_unknown->save();
+            $aid = $account_unknown->aid;
+          }
+        }
+      }
+      
+      // Translate the value to a float.
+      // GnuCash formats values like "100000/100" for $1000
+      $value = str_replace('/100', '', $entity->ledger_entry_values[$i]);
+      $value = (float) $value / 100;
+      
+      // Add the data to the ledger_entry field on the transaction.
+      $entity->ledger_transaction_entry['und'][] = array(
+        'aid' => $aid,
+        'value' => $value,
+      );
+    }
+  }
+}
+
+/*************************************************************************
+* Contrib hooks
+*************************************************************************/
+
+/**
+ * Implements of hook_ctools_plugin_api().
+ */
+function ledger_import_gnucash_ctools_plugin_api() {
+  list($module, $api) = func_get_args();
+  if ($module == "feeds" && $api == "feeds_importer_default") {
+    return array("version" => 1);
+  }
+}
+
+
+/**
+* Implements of hook_feeds_plugins().
+*/
+function ledger_import_gnucash_feeds_plugins() {
+  $info = array();
+  
+  // Account processor
+  $info['FeedsLedgerGnuCashAccountProcessor'] = array(
+    'name' => 'Ledger GnuCash Account Processor',
+    'description' => 'Create Ledger Accounts from a GnuCash file.',
+    'handler' => array(
+      'parent' => 'FeedsLedgerAccountProcessor',
+      'class' => 'FeedsLedgerGnuCashAccountProcessor',
+      'file' => 'FeedsLedgerGnuCashAccountProcessor.inc',
+      'path' => drupal_get_path('module', 'ledger_import_gnucash') . '/plugins',
+    ),
+  );
+  
+  // Transaction processor
+  $info['FeedsLedgerGnuCashTransactionProcessor'] = array(
+    'name' => 'Ledger GnuCash Transaction Processor',
+    'description' => 'Create Ledger Transactions from a GnuCash file.',
+    'handler' => array(
+      'parent' => 'FeedsLedgerTransactionProcessor',
+      'class' => 'FeedsLedgerGnuCashTransactionProcessor',
+      'file' => 'FeedsLedgerGnuCashTransactionProcessor.inc',
+      'path' => drupal_get_path('module', 'ledger_import_gnucash') . '/plugins',
+    ),
+  );
+  
+  return $info;
+}
+
+/**
+ * Implements of hook_feeds_importer_default().
+ */
+function ledger_import_gnucash_feeds_importer_default() {
+  $export = array();
+  
+  // Load up the feed definitions.
+  $importers = array(
+    'ledger_import_gnucash_accounts',  // GnuCash Accounts import
+    'ledger_import_gnucash_transactions',  // GnuCash Transactions import
+  );
+  if (!empty($importers)) {
+    foreach ($importers as $importer) {
+      require_once drupal_get_path('module', 'ledger_import_gnucash') . '/' . $importer . '.inc';
+      if (!empty($feeds_importer)) {
+        $export[$importer] = $feeds_importer;
+      }
+    }
+  }
+  
+  return $export;
+}
