@@ -157,6 +157,8 @@ function ledger_account_access($op, $account = NULL, $user = NULL) {
 
 /**
  * Returns a title for the account.
+ * This is a recursive function that also returns the names of parent accounts.
+ * It includes logic to avoid infinite recursion.
  *
  * @param $account
  *   A ledger account object.
@@ -165,6 +167,34 @@ function ledger_account_access($op, $account = NULL, $user = NULL) {
  *   A string that represents the account title.
  */
 function ledger_account_title($account) {
+  
+  // A static array for storing the ids of parent accounts that are loaded recursively. This is used to ensure we don't enter a recursive loop.
+  static $parents = array();
+  
+  // Add the current account id to the list of parents. This prevents the account name from appearing twice in recursive accounts, which is not necessary, but hey why not?
+  $parents[] = $account->aid;
+  
+  // If the account has a parent, load it.
+  if ($account->pid) {
+    
+    // Check to see if the parent has been loaded previously. If so, don't continue.
+    if (!in_array($account->pid, $parents)) {
+      // Add the parent account id to the static array of ids.
+      $parents[] = $account->pid;
+
+      // Load the parent account and retrieve it's title (recursively).
+      $parent_account = ledger_account_load($account->pid);
+      $parent_title = ledger_account_title($parent_account);
+
+      // Return the account title along with its parents', separated by colons.
+      return $parent_title . ':' . $account->name;
+    }
+  }
+  
+  // Reset the static array of parent ids.
+  $parents = array();
+  
+  // Return the account name.
   return $account->name;
 }
 
