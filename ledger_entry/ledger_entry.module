@@ -121,7 +121,7 @@ function ledger_entry_field_formatter_view($entity_type, $entity, $field, $insta
       $element[$delta] = array(
         '#type' => 'html_tag',
         '#tag' => 'p',
-        '#value' => t('@account: @value', array('@account' => $account->name, '@value' => $item['value'])),
+        '#value' => t('@account: @value', array('@account' => ledger_account_title($account), '@value' => $item['value'])),
       );
     }
   }
