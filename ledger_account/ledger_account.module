@@ -132,6 +132,30 @@ class LedgerAccountController extends EntityAPIController {
     $account = parent::create($values);
     return $account;
   }
+  
+  /**
+   * Delete accounts.
+   *
+   * @param $transaction
+   *   Optionally a DatabaseTransaction object to use. Allows overrides to pass
+   *   in their transaction object.
+   */
+  public function delete($ids, DatabaseTransaction $transaction = NULL) {
+    
+    // If these accounts were parents to other accounts, we need to remove their IDs from the parent column in the database.
+    if (!empty($ids)) {
+      foreach ($ids as $id) {
+        db_update('ledger_account')
+          ->fields(array(
+            'pid' => 0,
+          ))
+          ->condition('pid', $id, '=')
+          ->execute();
+      }
+    }
+    
+    parent::delete($ids, $transaction);
+  }
 }
 
 /**
