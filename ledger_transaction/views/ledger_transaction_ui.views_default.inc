@@ -64,7 +64,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['empty']['area']['content'] = 'No transactions have been created yet.';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   $handler->display->display_options['empty']['area']['tokenize'] = 0;
-  /* Field: Ledger Transaction: Timestamp */
+  /* Field: Transaction: Timestamp */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'ledger_transaction';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
@@ -87,7 +87,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['timestamp']['hide_alter_empty'] = 0;
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'custom';
   $handler->display->display_options['fields']['timestamp']['custom_date_format'] = 'm/d/Y g:i a';
-  /* Field: Ledger Transaction: Description */
+  /* Field: Transaction: Description */
   $handler->display->display_options['fields']['description']['id'] = 'description';
   $handler->display->display_options['fields']['description']['table'] = 'ledger_transaction';
   $handler->display->display_options['fields']['description']['field'] = 'description';
@@ -109,10 +109,11 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['description']['empty_zero'] = 0;
   $handler->display->display_options['fields']['description']['hide_alter_empty'] = 0;
   $handler->display->display_options['fields']['description']['link_to_transaction'] = 'view';
-  /* Field: Ledger Transaction: Ledger Entries */
+  /* Field: Transaction: Ledger Entries */
   $handler->display->display_options['fields']['ledger_transaction_entry']['id'] = 'ledger_transaction_entry';
   $handler->display->display_options['fields']['ledger_transaction_entry']['table'] = 'field_data_ledger_transaction_entry';
   $handler->display->display_options['fields']['ledger_transaction_entry']['field'] = 'ledger_transaction_entry';
+  $handler->display->display_options['fields']['ledger_transaction_entry']['label'] = 'Transfers';
   $handler->display->display_options['fields']['ledger_transaction_entry']['alter']['alter_text'] = 0;
   $handler->display->display_options['fields']['ledger_transaction_entry']['alter']['make_link'] = 0;
   $handler->display->display_options['fields']['ledger_transaction_entry']['alter']['absolute'] = 0;
@@ -135,7 +136,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['ledger_transaction_entry']['delta_reversed'] = 0;
   $handler->display->display_options['fields']['ledger_transaction_entry']['multi_type'] = 'ul';
   $handler->display->display_options['fields']['ledger_transaction_entry']['field_api_classes'] = 0;
-  /* Field: Ledger Transaction: Link */
+  /* Field: Transaction: Link */
   $handler->display->display_options['fields']['view_transaction']['id'] = 'view_transaction';
   $handler->display->display_options['fields']['view_transaction']['table'] = 'ledger_transaction';
   $handler->display->display_options['fields']['view_transaction']['field'] = 'view_transaction';
@@ -156,7 +157,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['view_transaction']['hide_empty'] = 0;
   $handler->display->display_options['fields']['view_transaction']['empty_zero'] = 0;
   $handler->display->display_options['fields']['view_transaction']['hide_alter_empty'] = 0;
-  /* Field: Ledger Transaction: Edit link */
+  /* Field: Transaction: Edit link */
   $handler->display->display_options['fields']['edit_transaction']['id'] = 'edit_transaction';
   $handler->display->display_options['fields']['edit_transaction']['table'] = 'ledger_transaction';
   $handler->display->display_options['fields']['edit_transaction']['field'] = 'edit_transaction';
@@ -177,7 +178,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['edit_transaction']['hide_empty'] = 0;
   $handler->display->display_options['fields']['edit_transaction']['empty_zero'] = 0;
   $handler->display->display_options['fields']['edit_transaction']['hide_alter_empty'] = 0;
-  /* Field: Ledger Transaction: Delete link */
+  /* Field: Transaction: Delete link */
   $handler->display->display_options['fields']['delete_transaction']['id'] = 'delete_transaction';
   $handler->display->display_options['fields']['delete_transaction']['table'] = 'ledger_transaction';
   $handler->display->display_options['fields']['delete_transaction']['field'] = 'delete_transaction';
@@ -225,20 +226,37 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   $handler->display->display_options['empty']['area']['tokenize'] = 0;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Contextual filter: Ledger Transaction: Ledger Entries (ledger_transaction_entry:aid) */
+  /* Contextual filter: Transaction: Ledger Entries (ledger_transaction_entry:aid) */
   $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['id'] = 'ledger_transaction_entry_aid';
   $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['table'] = 'field_data_ledger_transaction_entry';
   $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['field'] = 'ledger_transaction_entry_aid';
   $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['default_action'] = 'empty';
   $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['title_enable'] = 1;
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['title'] = 'Transactions in account %1';
+  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['title'] = 'Transactions in %1';
   $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['breadcrumb_enable'] = 1;
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['breadcrumb'] = 'Account %1';
+  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['breadcrumb'] = '%1';
   $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['default_argument_type'] = 'fixed';
   $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['default_argument_skip_url'] = 0;
   $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['specify_validation'] = 1;
+  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['validate']['type'] = 'php';
+  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['validate_options']['code'] = '// Attempt to load the account object.
+  $account = ledger_account_load($argument);
+
+  // If the account exists, return TRUE.
+  if ($account) {
+
+    // Set the title used for substitution to the account name.
+    $handler->validated_title = ledger_account_title($account);
+    return TRUE;
+  }
+
+  // If the account doesn\'t exist, return FALSE.
+  else {
+    return FALSE;
+  }';
   $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['break_phrase'] = 0;
   $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['not'] = 0;
   $handler->display->display_options['path'] = 'admin/ledger/accounts/%/transactions';
