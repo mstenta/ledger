@@ -100,13 +100,13 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['empty']['area']['content'] = 'No accounts have been created yet.';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   $handler->display->display_options['empty']['area']['tokenize'] = 0;
-  /* Relationship: Ledger Account: Parent Account pid */
+  /* Relationship: Account: Parent Account pid */
   $handler->display->display_options['relationships']['parent']['id'] = 'parent';
   $handler->display->display_options['relationships']['parent']['table'] = 'ledger_account';
   $handler->display->display_options['relationships']['parent']['field'] = 'parent';
   $handler->display->display_options['relationships']['parent']['label'] = 'Parent Account';
   $handler->display->display_options['relationships']['parent']['required'] = 0;
-  /* Field: Ledger Account: Name */
+  /* Field: Account: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'ledger_account';
   $handler->display->display_options['fields']['name']['field'] = 'name';
@@ -128,7 +128,7 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['fields']['name']['empty_zero'] = 0;
   $handler->display->display_options['fields']['name']['hide_alter_empty'] = 0;
   $handler->display->display_options['fields']['name']['link_to_account'] = 'view';
-  /* Field: Ledger Account: Description */
+  /* Field: Account: Description */
   $handler->display->display_options['fields']['description']['id'] = 'description';
   $handler->display->display_options['fields']['description']['table'] = 'ledger_account';
   $handler->display->display_options['fields']['description']['field'] = 'description';
@@ -149,7 +149,7 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['fields']['description']['hide_empty'] = 0;
   $handler->display->display_options['fields']['description']['empty_zero'] = 0;
   $handler->display->display_options['fields']['description']['hide_alter_empty'] = 0;
-  /* Field: Ledger Account: Account type */
+  /* Field: Account: Account type */
   $handler->display->display_options['fields']['type']['id'] = 'type';
   $handler->display->display_options['fields']['type']['table'] = 'ledger_account';
   $handler->display->display_options['fields']['type']['field'] = 'type';
@@ -170,7 +170,7 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['fields']['type']['hide_empty'] = 0;
   $handler->display->display_options['fields']['type']['empty_zero'] = 0;
   $handler->display->display_options['fields']['type']['hide_alter_empty'] = 0;
-  /* Field: Ledger Account: Name */
+  /* Field: Account: Name */
   $handler->display->display_options['fields']['name_1']['id'] = 'name_1';
   $handler->display->display_options['fields']['name_1']['table'] = 'ledger_account';
   $handler->display->display_options['fields']['name_1']['field'] = 'name';
@@ -194,7 +194,7 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['fields']['name_1']['hide_empty'] = 0;
   $handler->display->display_options['fields']['name_1']['empty_zero'] = 0;
   $handler->display->display_options['fields']['name_1']['hide_alter_empty'] = 0;
-  /* Field: Ledger Account: Link */
+  /* Field: Account: Link */
   $handler->display->display_options['fields']['view_account']['id'] = 'view_account';
   $handler->display->display_options['fields']['view_account']['table'] = 'ledger_account';
   $handler->display->display_options['fields']['view_account']['field'] = 'view_account';
@@ -215,7 +215,7 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['fields']['view_account']['hide_empty'] = 0;
   $handler->display->display_options['fields']['view_account']['empty_zero'] = 0;
   $handler->display->display_options['fields']['view_account']['hide_alter_empty'] = 0;
-  /* Field: Ledger Account: Edit link */
+  /* Field: Account: Edit link */
   $handler->display->display_options['fields']['edit_account']['id'] = 'edit_account';
   $handler->display->display_options['fields']['edit_account']['table'] = 'ledger_account';
   $handler->display->display_options['fields']['edit_account']['field'] = 'edit_account';
@@ -236,7 +236,7 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['fields']['edit_account']['hide_empty'] = 0;
   $handler->display->display_options['fields']['edit_account']['empty_zero'] = 0;
   $handler->display->display_options['fields']['edit_account']['hide_alter_empty'] = 0;
-  /* Field: Ledger Account: Delete link */
+  /* Field: Account: Delete link */
   $handler->display->display_options['fields']['delete_account']['id'] = 'delete_account';
   $handler->display->display_options['fields']['delete_account']['table'] = 'ledger_account';
   $handler->display->display_options['fields']['delete_account']['field'] = 'delete_account';
@@ -257,6 +257,10 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['fields']['delete_account']['hide_empty'] = 0;
   $handler->display->display_options['fields']['delete_account']['empty_zero'] = 0;
   $handler->display->display_options['fields']['delete_account']['hide_alter_empty'] = 0;
+  /* Sort criterion: Account: Account type */
+  $handler->display->display_options['sorts']['type']['id'] = 'type';
+  $handler->display->display_options['sorts']['type']['table'] = 'ledger_account';
+  $handler->display->display_options['sorts']['type']['field'] = 'type';
 
   /* Display: All accounts (page) */
   $handler = $view->new_display('page', 'All accounts (page)', 'page');
