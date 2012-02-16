@@ -9,4 +9,5 @@ files[] = views/handlers/ledger_account_handler_field_account_type.inc
 files[] = views/handlers/ledger_account_handler_field_link_delete.inc
 files[] = views/handlers/ledger_account_handler_field_link_edit.inc
 files[] = views/handlers/ledger_account_handler_field_link.inc
+files[] = views/handlers/ledger_account_handler_field_operations.inc
 files[] = views/handlers/ledger_account_handler_field.inc

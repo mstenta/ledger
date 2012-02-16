@@ -38,4 +38,13 @@ function ledger_transaction_views_data_alter(&$data) {
       'handler' => 'ledger_transaction_handler_field_link_delete',
     ),
   );
+  
+  // Add a field for common transaction operations. This is just a combination of View, Edit, and Delete field above.
+  $data['ledger_transaction']['transaction_ops'] = array(
+    'field' => array(
+      'title' => t('Operations'),
+      'help' => t('Links to various transaction operations.'),
+      'handler' => 'ledger_transaction_handler_field_operations',
+    ),
+  );
 }

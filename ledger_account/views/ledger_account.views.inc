@@ -41,4 +41,13 @@ function ledger_account_views_data_alter(&$data) {
       'handler' => 'ledger_account_handler_field_link_delete',
     ),
   );
+  
+  // Add a field for common account operations. This is just a combination of View, Edit, and Delete field above.
+  $data['ledger_account']['account_ops'] = array(
+    'field' => array(
+      'title' => t('Operations'),
+      'help' => t('Links to various account operations.'),
+      'handler' => 'ledger_account_handler_field_operations',
+    ),
+  );
 }
