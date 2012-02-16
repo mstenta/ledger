@@ -42,13 +42,30 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['pager']['options']['expose']['items_per_page_options_all'] = 1;
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
-    'tid' => 'tid',
+    'timestamp' => 'timestamp',
+    'description' => 'description',
+    'ledger_transaction_entry' => 'ledger_transaction_entry',
+    'transaction_ops' => 'transaction_ops',
   );
-  $handler->display->display_options['style_options']['default'] = '-1';
+  $handler->display->display_options['style_options']['default'] = 'timestamp';
   $handler->display->display_options['style_options']['info'] = array(
-    'tid' => array(
-      'sortable' => 0,
+    'timestamp' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'desc',
+      'align' => '',
+      'separator' => '',
+    ),
+    'description' => array(
+      'sortable' => 1,
       'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+    ),
+    'ledger_transaction_entry' => array(
+      'align' => '',
+      'separator' => '',
+    ),
+    'transaction_ops' => array(
       'align' => '',
       'separator' => '',
     ),
