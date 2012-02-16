@@ -12,7 +12,7 @@ function ledger_transaction_views_data_alter(&$data) {
   // Replace the transaction description field handler with one that provides a "Link this field to" option.
   $data['ledger_transaction']['description']['field']['handler'] = 'ledger_transaction_handler_field';
   
-  // Add field for transaction view link.
+  // Add a field for transaction view link.
   $data['ledger_transaction']['view_transaction'] = array(
     'field' => array(
       'title' => t('Link'),
@@ -21,7 +21,7 @@ function ledger_transaction_views_data_alter(&$data) {
     ),
   );
   
-  // Add field for transaction edit link.
+  // Add a field for transaction edit link.
   $data['ledger_transaction']['edit_transaction'] = array(
     'field' => array(
       'title' => t('Edit link'),
@@ -30,7 +30,7 @@ function ledger_transaction_views_data_alter(&$data) {
     ),
   );
   
-  // Add field for transaction delete link.
+  // Add a field for transaction delete link.
   $data['ledger_transaction']['delete_transaction'] = array(
     'field' => array(
       'title' => t('Delete link'),

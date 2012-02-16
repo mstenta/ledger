@@ -15,7 +15,7 @@ function ledger_account_views_data_alter(&$data) {
   // Replace the field handler for the account type so that it uses the human-readable type.
   $data['ledger_account']['type']['field']['handler'] = 'ledger_account_handler_field_account_type';
   
-  // Add field for account view link.
+  // Add a field for account view link.
   $data['ledger_account']['view_account'] = array(
     'field' => array(
       'title' => t('Link'),
@@ -24,7 +24,7 @@ function ledger_account_views_data_alter(&$data) {
     ),
   );
   
-  // Add field for account edit link.
+  // Add a field for account edit link.
   $data['ledger_account']['edit_account'] = array(
     'field' => array(
       'title' => t('Edit link'),
@@ -33,7 +33,7 @@ function ledger_account_views_data_alter(&$data) {
     ),
   );
   
-  // Add field for account delete link.
+  // Add a field for account delete link.
   $data['ledger_account']['delete_account'] = array(
     'field' => array(
       'title' => t('Delete link'),
