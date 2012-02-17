@@ -255,12 +255,12 @@ function ledger_transaction_delete($tid) {
 /**
  * Deletes multiple transactions by ID.
  *
- * @param $aids
+ * @param $transaction_ids
  *   An array of transaction IDs to delete.
  *
  * @return
  *   TRUE on success, FALSE otherwise.
  */
-function ledger_transaction_delete_multiple($tids) {
-  return entity_get_controller('ledger_transaction')->delete($tids);
+function ledger_transaction_delete_multiple($transaction_ids) {
+  return entity_get_controller('ledger_transaction')->delete($transaction_ids);
 }
