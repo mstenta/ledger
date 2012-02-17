@@ -1,0 +1,237 @@
+<?php
+
+/**
+ * @file
+ * Ledger Account Entry
+ */
+
+/***************************************************************
+ * Drupal core hooks
+ ***************************************************************/
+
+/**
+ * Implements hook_entity_info().
+ */
+function ledger_account_entry_entity_info() {
+  $entities['ledger_account_entry'] = array(
+    'label' => t('Account Entry'),
+    'label plural' => t('Account Entries'),
+    'entity class' => 'LedgerAccountEntry',
+    'controller class' => 'LedgerAccountEntryController',
+    'base table' => 'ledger_account_entry',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'eid',
+    ),
+    'label callback' => 'entity_class_label',
+    'uri callback' => 'entity_class_uri',
+    'module' => 'ledger_account_entry',
+    'bundles' => array(
+      'ledger_account_entry' => array(
+        'label' => t('Account entry', array(), array('context' => 'a ledger account entry')),
+      ),
+    ),
+  );
+  return $entities;
+}
+
+/***************************************************************
+ * Views API hooks
+ ***************************************************************/
+
+/**
+ * Implements hook_views_api().
+ */
+function ledger_account_entry_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ledger_account_entry') . '/views',
+  );
+}
+
+/***************************************************************
+ * Ledger Account Entry class and functions
+ ***************************************************************/
+
+/**
+ * The class for LedgerAccountEntry entities.
+ */
+class LedgerAccountEntry extends Entity {
+  
+  public function __construct($values = array()) {
+    parent::__construct($values, 'ledger_account_entry');
+  }
+  
+  protected function defaultLabel() {
+    return t('@description', array('@description' => $this->description));
+  }
+  
+  protected function defaultUri() {
+    return array('path' => 'admin/ledger/account_entry/' . $this->eid);
+  }
+}
+
+/**
+ * The controller for LedgerAccountEntry entities
+ */
+class LedgerAccountEntryController extends EntityAPIController {
+  public function __construct($entityType) {
+    parent::__construct($entityType);
+  }
+
+  /**
+   * Create an account entry - we first set up the values that are specific
+   * to our ledger_account_entry schema but then also go through the EntityAPIController
+   * function.
+   * 
+   * @param $values
+   *   Values passed in.
+   *
+   * @return
+   *   A model object with all default fields initialized.
+   */
+  public function create(array $values = array()) {
+    
+    // Add values that are specific to our transaction
+    $values += array( 
+      'eid' => '',
+      'description' => '',
+      'aid' => 0,
+      'value' => 0,
+      'timestamp' => time(),  // Default to current time
+    );
+    
+    $account_entry = parent::create($values);
+    return $account_entry;
+  }
+}
+
+/**
+ * Access callback for ledger account entry.
+ *
+ * @todo
+ *   Expand this access function to check based on the operation being performed.
+ *   Also add ability to check a specific account entry entity.
+ *
+ * @param $op
+ *   The operation being performed. One of 'view', 'update', 'create', 'delete'
+ *   or just 'edit' (being the same as 'create' or 'update').
+ * @param $account_entry
+ *   Optionally a specific ledger account entry to check.
+ * @param $user
+ *   The user to check for. Leave it to NULL to check for the global user.
+ * @return boolean
+ *   Whether access is allowed or not.
+ */
+function ledger_account_entry_access($op, $account_entry = NULL, $user = NULL) {
+  return user_access('administer ledger', $user);
+}
+
+/**
+ * Returns a title for the account entry.
+ *
+ * @param $account_entry
+ *   A ledger account entry object.
+ *
+ * @return
+ *   A string that represents the account entry title.
+ */
+function ledger_account_entry_title($account_entry) {
+  return $account_entry->description;
+}
+
+/**
+ * Returns an initialized account entry object.
+ *
+ * @return
+ *   An account entry object with all default fields initialized.
+ */
+function ledger_account_entry_new($values = array()) {
+  return entity_get_controller('ledger_account_entry')->create($values);
+}
+
+/**
+ * Loads an account entry by ID.
+ */
+function ledger_account_entry_load($eid) {
+  $account_entries = ledger_account_entry_load_multiple(array($eid), array());
+  return $account_entries ? reset($account_entries) : FALSE;
+}
+
+/**
+ * Loads multiple account entries by ID or based on a set of matching conditions.
+ *
+ * @see entity_load()
+ *
+ * @param $account_entry_ids
+ *   An array of account entry IDs.
+ * @param $conditions
+ *   An array of conditions on the {ledger_account_entry} table in the form
+ *     'field' => $value.
+ * @param $reset
+ *   Whether to reset the internal account entry loading cache.
+ *
+ * @return
+ *   An array of account entry objects indexed by tid.
+ */
+function ledger_account_entry_load_multiple($account_entry_ids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('ledger_account_entry', $account_entry_ids, $conditions, $reset);
+}
+
+/**
+ * Saves an account entry to the database.
+ *
+ * @param $account_entry
+ *   The account entry object.
+ */
+function ledger_account_entry_save($account_entry) {
+  return $account_entry->save();
+}
+
+/**
+ * Deletes an account entry by ID.
+ *
+ * @param $eid
+ *   The ID of the account_entry to delete.
+ *
+ * @return
+ *   TRUE on success, FALSE otherwise.
+ */
+function ledger_account_entry_delete($eid) {
+  return ledger_account_entry_delete_multiple(array($eid));
+}
+
+/**
+ * Deletes multiple account_entries by ID.
+ *
+ * @param $account_entry_ids
+ *   An array of account entry IDs to delete.
+ *
+ * @return
+ *   TRUE on success, FALSE otherwise.
+ */
+function ledger_account_entry_delete_multiple($account_entry_ids) {
+  return entity_get_controller('ledger_transaction')->delete($account_entry_ids);
+}
+
+/***************************************************************
+ * Account entry entity properties get/set callbacks
+ ***************************************************************/
+
+/**
+ * Callback for setting Ledger Account Entry entity properties.
+ */
+function ledger_account_entry_set_properties($account_entry, $name, $value) {
+  if ($name == 'account') {
+    $account_entry->aid = $value;
+  }
+}
+
+/**
+ * Callback for getting Ledger Account Entry entity properties.
+ */
+function ledger_account_entry_get_properties($account_entry, array $options, $name, $entity_type) {
+  if ($name == 'account') {
+    return $account_entry->aid;
+  }
+}

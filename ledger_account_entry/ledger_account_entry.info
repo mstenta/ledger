@@ -1,0 +1,5 @@
+name = "Ledger Account Entry"
+description = "Defines the Ledger Account Entry entity type."
+core = 7.x
+package = "Ledger"
+dependencies[] = ledger_account
