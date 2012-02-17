@@ -30,9 +30,9 @@ class FeedsLedgerTransactionProcessor extends FeedsProcessor {
    *
    * If the update existing method is not FEEDS_UPDATE_EXISTING, a new ledger_transaction will be created, rather than loading the existing one.
    */
-  protected function entityLoad(FeedsSource $source, $aid) {
+  protected function entityLoad(FeedsSource $source, $tid) {
     if ($this->config['update_existing'] == FEEDS_UPDATE_EXISTING) {
-      $transaction = ledger_transaction_load($aid);
+      $transaction = ledger_transaction_load($tid);
     }
     else {
       $transaction = ledger_transaction_new();
@@ -82,9 +82,9 @@ class FeedsLedgerTransactionProcessor extends FeedsProcessor {
         'description' => t('The timestamp of the transaction.'),
         'optional_unique' => FALSE,
       ),
-      'splits' => array(
-        'name' => t('Ledger Entries'),
-        'description' => t('The inidividual ledger entries associated with the transaction.'),
+      'entries' => array(
+        'name' => t('Account Entries'),
+        'description' => t('The inidividual account entries associated with the transaction.'),
         'optional_unique' => FALSE,
       ),
     );
