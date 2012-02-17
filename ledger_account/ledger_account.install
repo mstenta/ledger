@@ -21,6 +21,7 @@ function ledger_account_schema() {
       'pid' => array(
         'description' => 'Parent account ID',
         'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
@@ -54,9 +55,10 @@ function ledger_account_schema() {
     'description' => 'Stores information about all defined ledger_account types.',
     'fields' => array(
       'id' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
         'description' => 'Primary Key: Unique ledger_account type ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
       ),
       'name' => array(
         'description' => 'The machine-readable name of this ledger_account type.',
@@ -75,7 +77,6 @@ function ledger_account_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'size' => 'tiny',
         'description' => 'The weight of this ledger_account type in relation to others.',
       ),
       'data' => array(
