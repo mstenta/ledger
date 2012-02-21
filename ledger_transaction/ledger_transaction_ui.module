@@ -57,8 +57,34 @@ function ledger_transaction_ui_menu() {
     'weight' => 20,
     'context' => MENU_CONTEXT_INLINE,
   );
-
+  
+  $items['admin/ledger/settings/transaction'] = array(
+    'title' => 'Transaction settings',
+    'description' => 'Configure general transaction settings, fields, and displays.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ledger_transaction_settings_form'),
+    'access arguments' => array('administer ledger'),
+  );
+  $items['admin/ledger/settings/transaction/settings'] = array(
+    'title' => 'Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  
   return $items;
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function ledger_transaction_ui_entity_info_alter(&$entity_info) {
+  
+  // Expose the fields UI for transactions.
+  $entity_info['ledger_transaction']['bundles']['ledger_transaction']['admin'] = array(
+    'path' => 'admin/ledger/settings/transaction',
+    'real path' => 'admin/ledger/settings/transaction',
+    'access arguments' => array('administer ledger'),
+  );
 }
 
 /**
@@ -120,6 +146,22 @@ function ledger_transaction_ui_transaction_form_wrapper($transaction, $op) {
 }
 
 /***************************************************************
+ * Transaction settings form
+ ***************************************************************/
+
+/**
+ * Form callback: ledger transaction settings form.
+ */
+function ledger_transaction_settings_form($form, &$form_state) {
+
+  // For now, just return a little description.
+  $form['description'] = array(
+    '#markup' => 'Use the "Fields" and "Display" tabs above to customize transactions',
+  );
+  return $form;
+}
+
+/***************************************************************
  * Transaction entity forms
  ***************************************************************/
 
@@ -138,12 +180,8 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     '#default_value' => $transaction->description,
     '#description' => t('A brief description of the transaction.'),
     '#required' => TRUE,
-    '#weight' => 0,
+    '#weight' => -10,
   );
-  
-  // Add the field related form elements.
-  $form_state['ledger_transaction'] = $transaction;
-  field_attach_form('ledger_transaction', $transaction, $form, $form_state);
   
   // Timestamp
   $form['timestamp'] = array(
@@ -152,7 +190,7 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     '#default_value' => date('Y-m-d H:i:s', $transaction->timestamp),
     '#description' => t('The timestamp of the transaction.'),
     '#required' => TRUE,
-    '#weight' => 10,
+    '#weight' => -5,
   );
   
   // Use the date_popup module if it's available.
@@ -164,6 +202,10 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
       '#date_timezone' => date_default_timezone(),
     );
   }
+  
+  // Add the field related form elements.
+  $form_state['ledger_transaction'] = $transaction;
+  field_attach_form('ledger_transaction', $transaction, $form, $form_state);
   
   // Form actions
   $form['actions'] = array('#type' => 'actions');

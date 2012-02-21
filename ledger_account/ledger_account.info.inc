@@ -18,6 +18,7 @@ function ledger_account_entity_property_info() {
     'type' => 'integer',
     'label' => t('Account ID'),
     'description' => t('The unique ID of the ledger account.'),
+    'setter permission' => 'administer ledger',
     'schema field' => 'aid',
   );
   $account['parent'] = array(
@@ -35,8 +36,8 @@ function ledger_account_entity_property_info() {
     'description' => t('The name of the account.'),
     'setter callback' => 'entity_property_verbatim_set',
     'setter permission' => 'administer ledger',
-    'schema field' => 'name',
     'required' => TRUE,
+    'schema field' => 'name',
   );
   $account['description'] = array(
     'label' => t('Description'),
