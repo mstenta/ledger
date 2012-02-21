@@ -37,17 +37,10 @@ function ledger_account_entry_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'timestamp' => array(
-        'description' => 'Timestamp of the account entry',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
     ),
     'primary key' => array('eid'),
     'indexes' => array(
       'aid' => array('aid'),
-      'timestamp' => array('timestamp'),
     ),
   );
   return $schema;

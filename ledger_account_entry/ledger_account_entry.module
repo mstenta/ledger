@@ -98,7 +98,6 @@ class LedgerAccountEntryController extends EntityAPIController {
       'description' => '',
       'aid' => 0,
       'value' => 0,
-      'timestamp' => time(),  // Default to current time
     );
     
     $account_entry = parent::create($values);

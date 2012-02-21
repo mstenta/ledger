@@ -48,15 +48,6 @@ function ledger_account_entry_entity_property_info() {
     'required' => TRUE,
     'schema field' => 'value',
   );
-  $account_entry['timestamp'] = array(
-    'type' => 'date',
-    'label' => t('Timestamp'),
-    'description' => t('The date the account entry was posted.'),
-    'setter callback' => 'entity_property_verbatim_set',
-    'setter permission' => 'administer ledger',
-    'required' => TRUE,
-    'schema field' => 'timestamp',
-  );
   
   return $info;
 }
