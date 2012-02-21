@@ -57,8 +57,34 @@ function ledger_transaction_ui_menu() {
     'weight' => 20,
     'context' => MENU_CONTEXT_INLINE,
   );
-
+  
+  $items['admin/ledger/settings/transaction'] = array(
+    'title' => 'Transaction settings',
+    'description' => 'Configure general transaction settings, fields, and displays.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ledger_transaction_settings_form'),
+    'access arguments' => array('administer ledger'),
+  );
+  $items['admin/ledger/settings/transaction/settings'] = array(
+    'title' => 'Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  
   return $items;
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function ledger_transaction_ui_entity_info_alter(&$entity_info) {
+  
+  // Expose the fields UI for transactions.
+  $entity_info['ledger_transaction']['bundles']['ledger_transaction']['admin'] = array(
+    'path' => 'admin/ledger/settings/transaction',
+    'real path' => 'admin/ledger/settings/transaction',
+    'access arguments' => array('administer ledger'),
+  );
 }
 
 /**
@@ -117,6 +143,22 @@ function ledger_transaction_ui_transaction_form_wrapper($transaction, $op) {
   } else {
     return drupal_get_form('ledger_transaction_form', $transaction, $op);
   }
+}
+
+/***************************************************************
+ * Transaction settings form
+ ***************************************************************/
+
+/**
+ * Form callback: ledger transaction settings form.
+ */
+function ledger_transaction_settings_form($form, &$form_state) {
+
+  // For now, just return a little description.
+  $form['description'] = array(
+    '#markup' => 'Use the "Fields" and "Display" tabs above to customize transactions',
+  );
+  return $form;
 }
 
 /***************************************************************
