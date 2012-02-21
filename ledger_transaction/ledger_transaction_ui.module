@@ -180,12 +180,8 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     '#default_value' => $transaction->description,
     '#description' => t('A brief description of the transaction.'),
     '#required' => TRUE,
-    '#weight' => 0,
+    '#weight' => -10,
   );
-  
-  // Add the field related form elements.
-  $form_state['ledger_transaction'] = $transaction;
-  field_attach_form('ledger_transaction', $transaction, $form, $form_state);
   
   // Timestamp
   $form['timestamp'] = array(
@@ -194,7 +190,7 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     '#default_value' => date('Y-m-d H:i:s', $transaction->timestamp),
     '#description' => t('The timestamp of the transaction.'),
     '#required' => TRUE,
-    '#weight' => 10,
+    '#weight' => -5,
   );
   
   // Use the date_popup module if it's available.
@@ -206,6 +202,10 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
       '#date_timezone' => date_default_timezone(),
     );
   }
+  
+  // Add the field related form elements.
+  $form_state['ledger_transaction'] = $transaction;
+  field_attach_form('ledger_transaction', $transaction, $form, $form_state);
   
   // Form actions
   $form['actions'] = array('#type' => 'actions');
