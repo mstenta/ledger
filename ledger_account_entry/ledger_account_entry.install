@@ -18,18 +18,25 @@ function ledger_account_entry_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
-      'description' => array(
-        'description' => 'Account entry description',
-        'type' => 'varchar',
-        'length' => '255',
-        'not null' => FALSE,
-      ),
       'aid' => array(
         'description' => 'Account ID',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
+      ),
+      'tid' => array(
+        'description' => 'Transaction ID',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'description' => array(
+        'description' => 'Account entry description',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
       ),
       'value' => array(
         'description' => 'Transaction value',
@@ -39,8 +46,19 @@ function ledger_account_entry_schema() {
       ),
     ),
     'primary key' => array('eid'),
+    'foreign keys' => array(
+      'account' => array(
+        'table' => 'ledger_account',
+        'columns' => array('aid' => 'aid'),
+      ),
+      'transaction' => array(
+        'table' => 'ledger_transaction',
+        'columns' => array('tid' => 'tid'),
+      ),
+    ),
     'indexes' => array(
       'aid' => array('aid'),
+      'tid' => array('tid'),
     ),
   );
   return $schema;
