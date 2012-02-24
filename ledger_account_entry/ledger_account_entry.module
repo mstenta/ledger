@@ -95,8 +95,9 @@ class LedgerAccountEntryController extends EntityAPIController {
     // Add values that are specific to our transaction
     $values += array( 
       'eid' => '',
-      'description' => '',
+      'tid' => 0,
       'aid' => 0,
+      'description' => '',
       'value' => 0,
     );
     
@@ -221,8 +222,13 @@ function ledger_account_entry_delete_multiple($account_entry_ids) {
  * Callback for setting Ledger Account Entry entity properties.
  */
 function ledger_account_entry_set_properties($account_entry, $name, $value) {
-  if ($name == 'account') {
-    $account_entry->aid = $value;
+  switch ($name) {
+    case 'account':
+      $account_entry->aid = $value;
+      break;
+    case 'transaction':
+      $account_entry->tid = $value;
+      break;
   }
 }
 
@@ -230,7 +236,10 @@ function ledger_account_entry_set_properties($account_entry, $name, $value) {
  * Callback for getting Ledger Account Entry entity properties.
  */
 function ledger_account_entry_get_properties($account_entry, array $options, $name, $entity_type) {
-  if ($name == 'account') {
-    return $account_entry->aid;
+  switch ($name) {
+    case 'account':
+      return $account_entry->aid;
+    case 'transaction':
+      return $account_entry->tid;
   }
 }
