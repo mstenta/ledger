@@ -10,13 +10,13 @@
 *************************************************************************/
 
 /**
- * Implements hoon_entity_presave().
+ * Implements hoon_entity_insert().
  */
-function ledger_import_gnucash_entity_presave($entity, $type) {
+function ledger_import_gnucash_entity_insert($entity, $type) {
   
-  // Create Ledger Entries on transactions during the import.
-  if ($type == 'ledger_transaction' && !empty($entity->ledger_entry_accounts) && !empty($entity->ledger_entry_values)) {
-    foreach ($entity->ledger_entry_accounts as $i => $guid) {
+  // Create Account entries for transactions during the import.
+  if ($type == 'ledger_transaction' && !empty($entity->ledger_account_entry_accounts) && !empty($entity->ledger_account_entry_values)) {
+    foreach ($entity->ledger_account_entry_accounts as $i => $guid) {
       
       // If a GUID is provided, attempt to look it up in the {feeds_item} table
       if (!empty($guid)) {
@@ -47,14 +47,15 @@ function ledger_import_gnucash_entity_presave($entity, $type) {
       
       // Translate the value to a float.
       // GnuCash formats values like "100000/100" for $1000
-      $value = str_replace('/100', '', $entity->ledger_entry_values[$i]);
+      $value = str_replace('/100', '', $entity->ledger_account_entry_values[$i]);
       $value = (float) $value / 100;
       
-      // Add the data to the ledger_entry field on the transaction.
-      $entity->ledger_transaction_entry['und'][] = array(
-        'aid' => $aid,
-        'value' => $value,
-      );
+      // Create an Account entry entity.
+      $account_entry = ledger_account_entry_new();
+      $account_entry->tid = $entity->tid;
+      $account_entry->aid = $aid;
+      $account_entry->value = $value;
+      $account_entry->save();
     }
   }
 }

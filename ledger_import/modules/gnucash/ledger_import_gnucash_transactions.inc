@@ -65,12 +65,12 @@ $feeds_importer->config = array(
         ),
         3 => array(
           'source' => 'xpathparser:3',
-          'target' => 'ledger_entry_accounts',
+          'target' => 'ledger_account_entry_accounts',
           'unique' => FALSE,
         ),
         4 => array(
           'source' => 'xpathparser:4',
-          'target' => 'ledger_entry_values',
+          'target' => 'ledger_account_entry_values',
           'unique' => FALSE,
         ),
       ),

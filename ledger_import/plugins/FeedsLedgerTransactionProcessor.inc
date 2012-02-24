@@ -51,6 +51,13 @@ class FeedsLedgerTransactionProcessor extends FeedsProcessor {
    * Delete a series of transactions.
    */
   protected function entityDeleteMultiple($tids) {
+    
+    // Delete all account entries associated with the transanctions.
+    if (!empty($tids)) {
+      db_query('DELETE FROM {ledger_account_entry} WHERE tid IN (' . implode(',', $tids) . ')');
+    }
+    
+    // Delete the transactions
     ledger_transaction_delete_multiple($tids);
   }
   
@@ -78,12 +85,12 @@ class FeedsLedgerTransactionProcessor extends FeedsProcessor {
         'optional_unique' => FALSE,
       ),
       'timestamp' => array(
-        'name' => t('Transaction Timestamp'),
+        'name' => t('Transaction timestamp'),
         'description' => t('The timestamp of the transaction.'),
         'optional_unique' => FALSE,
       ),
       'entries' => array(
-        'name' => t('Account Entries'),
+        'name' => t('Account entries'),
         'description' => t('The inidividual account entries associated with the transaction.'),
         'optional_unique' => FALSE,
       ),
