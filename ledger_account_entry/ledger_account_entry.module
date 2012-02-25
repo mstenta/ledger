@@ -211,7 +211,7 @@ function ledger_account_entry_delete($eid) {
  *   TRUE on success, FALSE otherwise.
  */
 function ledger_account_entry_delete_multiple($account_entry_ids) {
-  return entity_get_controller('ledger_transaction')->delete($account_entry_ids);
+  return entity_get_controller('ledger_account_entry')->delete($account_entry_ids);
 }
 
 /***************************************************************
