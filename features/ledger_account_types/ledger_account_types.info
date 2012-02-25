@@ -1,4 +1,4 @@
-name = "Ledger Account Types"
+name = "Account Types"
 description = "Provides a set of basic ledger account types: Assets, Capital, Expenses, Income, and Liabilities"
 core = 7.x
 package = "Ledger"
