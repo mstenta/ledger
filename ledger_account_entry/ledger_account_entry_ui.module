@@ -56,7 +56,13 @@ function ledger_account_entry_ui_manager($element, &$form_state) {
   
   // Add in the default values, if there are any.
   if (!empty($element['#default_value'])) {
-    $account_entries += $element['#default_value'];
+    foreach ($element['#default_value'] as $account_entry) {
+      
+      // Don't add account entries that have been marked for deletion.
+      if (empty($form_state['remove_account_entries']) || !in_array($account_entry->eid, $form_state['remove_account_entries'])) {
+        $account_entries[$account_entry->eid] = $account_entry;
+      }
+    }
   }
   
   // If the user clicked "Add account entry", add blank entries for those.
@@ -259,8 +265,8 @@ function ledger_account_entry_ui_manager_remove($form, &$form_state) {
         // If the account entry has an id (if it exists in the database)...
         if ($row['account_entry']->eid) {
           
-          // Delete the entity.
-          ledger_account_entry_delete($row['account_entry']->eid);
+          // Flag the account entry for deletion.
+          $form_state['remove_account_entries'][] = $key;
         }
         
         // Or, if it's a temporary account_entry that hasn't been saved yet...
@@ -282,14 +288,18 @@ function ledger_account_entry_ui_manager_remove($form, &$form_state) {
  * 
  * Saves account entry entities to the database.
  * 
- * Note that this function is not called directly by the manager element.
- * It must be called in the parent form's submit function, and passed the values of the manager and transaction.
+ * Note that this function is not called directly by the manager element itself.
+ * It must be called from the submit function of the form that uses it, and passed 
+ * the $form, $form_state, and a $parents array that describes the path to the element in the form.
  */
-function ledger_account_entry_manager_submit($form_values, $transaction) {
+function ledger_account_entry_manager_submit($form, &$form_state, $parents) {
+  
+  // Figure out which values belong to the account entry manager, using our handy-dandy recursive reference helper function!
+  $manager_values = _ledger_account_entry_ui_manager_parent($form_state['values'], $parents);
   
   // Loop through the manager rows.
-  if (!empty($form_values['rows'])){
-    foreach ($form_values['rows'] as $row) {
+  if (!empty($manager_values['rows'])){
+    foreach ($manager_values['rows'] as $row) {
       
       // Store the account entry in an easier-to-read variable.
       $account_entry = $row['account_entry'];
@@ -309,6 +319,11 @@ function ledger_account_entry_manager_submit($form_values, $transaction) {
         ledger_account_entry_save($account_entry);
       }
     }
+  }
+  
+  // If there are account entries do delete, delete them.
+  if (!empty($form_state['remove_account_entries'])) {
+    ledger_account_entry_delete_multiple($form_state['remove_account_entries']);
   }
 }
 
