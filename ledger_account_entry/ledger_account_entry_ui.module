@@ -217,8 +217,8 @@ function ledger_account_entry_ui_manager_validate($element, &$form_state) {
 function ledger_account_entry_ui_manager_add($form, &$form_state) {
   
   // Grab a reference to the account entry manager element and values, using our handy-dandy recursive reference helper function!
-  $manager_element = _ledger_account_entry_ui_manager_parent($form, $form_state['triggering_element']['#parents']);
-  $manager_values = _ledger_account_entry_ui_manager_parent($form_state['values'], $form_state['triggering_element']['#parents']);
+  $manager_element = _ledger_account_entry_ui_manager_parent($form, $form_state['triggering_element']['#parents'], 1);
+  $manager_values = _ledger_account_entry_ui_manager_parent($form_state['values'], $form_state['triggering_element']['#parents'], 1);
   
   // Generate a unique random 6-digit hex string to use as the new account entry's array key.
   do {
@@ -247,7 +247,7 @@ function ledger_account_entry_ui_manager_add($form, &$form_state) {
 function ledger_account_entry_ui_manager_remove($form, &$form_state) {
   
   // Figure out which values belong to the account entry manager, using our handy-dandy recursive reference helper function!
-  $manager_values = _ledger_account_entry_ui_manager_parent($form_state['values'], $form_state['triggering_element']['#parents']);
+  $manager_values = _ledger_account_entry_ui_manager_parent($form_state['values'], $form_state['triggering_element']['#parents'], 1);
   
   // Loop through the manager's rows.
   if (!empty($manager_values['rows'])) {
@@ -320,7 +320,7 @@ function ledger_account_entry_manager_submit($form_values, $transaction) {
  * Account entry manager ajax callback.
  */
 function ledger_account_entry_ui_manager_ajax($form, $form_state) {
-  return _ledger_account_entry_ui_manager_parent($form, $form_state['triggering_element']['#parents']);
+  return _ledger_account_entry_ui_manager_parent($form, $form_state['triggering_element']['#parents'], 1);
 }
 
 /***************************************************************
@@ -339,6 +339,7 @@ function ledger_account_entry_ui_manager_ajax($form, $form_state) {
  * It takes 2 arguments:
  * @param $form_data - Either a $form or $form_state['values'] containing the account entry manager data (the form element, or the returned values, respectively).
  * @param $parents - The #parents array (usually from a form state), which will be used for recusively drilling into $element to find the manager element's data.
+ * @param $trim - How many items should be trimmed off the end of the $parents array before processing.
  * 
  * @return - Returns a reference to the manager's data inside $element.
  * 
@@ -347,10 +348,10 @@ function ledger_account_entry_ui_manager_ajax($form, $form_state) {
  * @see ledger_account_entry_ui_manager_remove()
  * @see ledger_account_entry_ui_manager_ajax()
  */
-function _ledger_account_entry_ui_manager_parent(&$form_data, $parents) {
+function _ledger_account_entry_ui_manager_parent(&$form_data, $parents, $trim=0) {
   
-  // Count the number of parents.
-  $parent_count = count($parents);
+  // Trim items off the end of the $parents array.
+  $parents = array_slice($parents, 0, count($parents) - $trim);
   
   // Store the return value as a reference to the $form_data.
   $reference =& $form_data;
@@ -358,13 +359,9 @@ function _ledger_account_entry_ui_manager_parent(&$form_data, $parents) {
   // Loop through the parents.
   if (!empty($parents)) {
     foreach ($parents as $key => $parent) {
-      
-      // The last parent is the 
-      if ($key != $parent_count - 1) {
         
-        // Set the reference one level deeper.
-        $reference =& $form_data[$parent];
-      }
+      // Set the reference one level deeper.
+      $reference =& $form_data[$parent];
     }
   }
   return $reference;
