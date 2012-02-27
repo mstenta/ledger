@@ -14,17 +14,11 @@
  */
 function ledger_account_entry_ui_element_info() {
   return array(
-    'ledger_account_entry' => array(
-      '#input' => TRUE,
-      '#tree' => TRUE,
-      '#process' => array('ledger_account_entry_ui_element'),
-      '#element_validate' => array('ledger_account_entry_ui_element_validate'),
-      '#theme_wrappers' => array('form_element'),
-    ),
     'ledger_account_entry_manager' => array(
       '#input' => TRUE,
       '#tree' => TRUE,
       '#process' => array('ledger_account_entry_ui_manager'),
+      '#element_validate' => array('ledger_account_entry_ui_manager_validate'),
       '#theme' => array('ledger_account_entry_manager'),
       '#theme_wrappers' => array('form_element'),
     ),
@@ -44,110 +38,7 @@ function ledger_account_entry_ui_theme($existing, $type, $theme, $path) {
 }
 
 /***************************************************************
- * ledger_account_entry form element
- ***************************************************************/
-
-/**
- * Generates form elements for an account entry.
- */
-function ledger_account_entry_ui_element($element, &$form_state) {
-  
-  // Load the default value, if available.
-  if (!empty($element['#default_value'])) {
-    $account_entry = $element['#default_value'];
-  } else {
-    $account_entry = ledger_account_entry_new();
-  }
-  
-  // Store the original account entry for later comparison.
-  $element['account_entry'] = array(
-    '#type' => 'value',
-    '#value' => $account_entry,
-  );
-  
-  // Select checkbox
-  $element['select'] = array(
-    '#type' => 'checkbox',
-    
-    /**
-     * Make sure this is always unchecked by default.
-     * You would think #default_value alone would work for this, but when an entry is removed via AJAX it
-     * seems to pass the check on to the next item in the list, presumably because the $i counter changes.
-     * Oddly enough, setting #value to FALSE fixes this, despite #value not being a valid element on checkbox
-     * form elements (according to the API). Go figure.
-     */
-    '#default_value' => FALSE,
-    '#value' => FALSE,
-  );
-  
-  // Description
-  $element['description'] = array(
-    '#type' => 'textfield',
-    '#default_value' => $account_entry->description,
-  );
-  
-  // Account select list
-  $element['aid'] = array(
-    '#type' => 'select',
-    '#options' => ledger_account_select_options(),
-    '#default_value' => $account_entry->aid,
-  );
-  
-  // Calculate the in/out values of the account.
-  $in = '';
-  $out = '';
-  if ($account_entry->value > 0) {
-    $in = $account_entry->value;
-  } else {
-    $out = abs($account_entry->value);
-  }
-  
-  // Value that went into the account
-  $element['in'] = array(
-    '#type' => 'textfield',
-    '#default_value' => $in,
-    '#size' => 10,
-  );
-  
-  // Value that went out of the account
-  $element['out'] = array(
-    '#type' => 'textfield',
-    '#default_value' => $out,
-    '#size' => 10,
-  );
-  
-  return $element;
-}
-
-/**
- * Ledger account entry element validation.
- */
-function ledger_account_entry_ui_element_validate($element, &$form_state) {
-  
-  // Calculate the value of the account entry by adding the "in" and "out" fields.
-  $value = 0 + $element['#value']['in'] - $element['#value']['out'];
-  
-  // Skip validation if this is a new account entry, and none of the values are filled in (it will simply be discarded).
-  if (!$element['#default_value']->eid && empty($element['#value']['aid']) && !$value) {
-    return;
-  }
-  
-  // Build the element name from the parents array.
-  $element_name = implode('][', $element['#array_parents']);
-  
-  // Make sure the entry has an account.
-  if (empty($element['#value']['aid'])) {
-    form_set_error($element_name, 'Account entry must specify an account.');
-  }
-  
-  // Make sure the entry has a value.
-  if (!$value) {
-    form_set_error($element_name, 'Account entry must have a value.');
-  }
-}
-
-/***************************************************************
- * ledger_account_entry_manager form element
+ * Element callbacks
  ***************************************************************/
 
 /**
@@ -180,11 +71,62 @@ function ledger_account_entry_ui_manager($element, &$form_state) {
       // the account entry will have a unique 6-digit hex code in its 'add' property. Use that so we can remove it easily
       // if the user clicks "Remove". Otherwise, use the account entry id.
       $key = (!empty($account_entry->add)) ? $account_entry->add : $account_entry->eid;
-      
-      // Build the field elements for the individual account entry.
-      $element['rows'][$key] = array(
-        '#type' => 'ledger_account_entry',
-        '#default_value' => $account_entry,
+
+      // Store the original account entry for later comparison.
+      $element['rows'][$key]['account_entry'] = array(
+        '#type' => 'value',
+        '#value' => $account_entry,
+      );
+
+      // Select checkbox
+      $element['rows'][$key]['select'] = array(
+        '#type' => 'checkbox',
+
+        /**
+         * Make sure this is always unchecked by default.
+         * You would think #default_value alone would work for this, but when an entry is removed via AJAX it
+         * seems to pass the check on to the next item in the list, presumably because the $i counter changes.
+         * Oddly enough, setting #value to FALSE fixes this, despite #value not being a valid element on checkbox
+         * form elements (according to the API). Go figure.
+         */
+        '#default_value' => FALSE,
+        '#value' => FALSE,
+      );
+
+      // Description
+      $element['rows'][$key]['description'] = array(
+        '#type' => 'textfield',
+        '#default_value' => $account_entry->description,
+      );
+
+      // Account select list
+      $element['rows'][$key]['aid'] = array(
+        '#type' => 'select',
+        '#options' => ledger_account_select_options(),
+        '#default_value' => $account_entry->aid,
+      );
+
+      // Calculate the in/out values of the account.
+      $in = '';
+      $out = '';
+      if ($account_entry->value > 0) {
+        $in = $account_entry->value;
+      } else {
+        $out = abs($account_entry->value);
+      }
+
+      // Value that went into the account
+      $element['rows'][$key]['in'] = array(
+        '#type' => 'textfield',
+        '#default_value' => $in,
+        '#size' => 10,
+      );
+
+      // Value that went out of the account
+      $element['rows'][$key]['out'] = array(
+        '#type' => 'textfield',
+        '#default_value' => $out,
+        '#size' => 10,
       );
     }
   }
@@ -215,6 +157,38 @@ function ledger_account_entry_ui_manager($element, &$form_state) {
   }
   
   return $element;
+}
+
+
+/**
+ * Ledger account entry manager validation.
+ */
+function ledger_account_entry_ui_manager_validate($element, &$form_state) {
+  
+  // Loop through all the account entries.
+  foreach (element_children($element['rows']) as $key) {
+    
+    // Calculate the value of the account entry by adding the "in" and "out" fields.
+    $value = 0 + $element['#value']['rows'][$key]['in'] - $element['#value']['rows'][$key]['out'];
+    
+    // Skip validation if this is a new account entry, and none of the values are filled in (it will simply be discarded).
+    if (!$element['rows'][$key]['account_entry']['#value']->eid && empty($element['#value']['rows'][$key]['aid']) && !$value) {
+      return;
+    }
+    
+    // Build the element name from the parents array.
+    $element_name = implode('][', $element['rows'][$key]['#array_parents']);
+    
+    // Make sure the entry has an account.
+    if (empty($element['#value']['rows'][$key]['aid'])) {
+      form_set_error($element_name, 'Account entry must specify an account.');
+    }
+    
+    // Make sure the entry has a value.
+    if (!$value) {
+      form_set_error($element_name, 'Account entry must have a value.');
+    }
+  }
 }
 
 /**
