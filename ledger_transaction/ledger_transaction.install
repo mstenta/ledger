@@ -44,6 +44,6 @@ function ledger_transaction_schema() {
  */
 function ledger_transaction_uninstall() {
 
-  // Delete any field instances attached to the account and transaction types.
+  // Delete any field instances attached to the transaction types.
   ledger_delete_instances('ledger_transaction');
 }

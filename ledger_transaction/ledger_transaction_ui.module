@@ -93,7 +93,7 @@ function ledger_transaction_ui_entity_info_alter(&$entity_info) {
 function ledger_transaction_ui_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   
   // Add action link 'ledger/transactions/add' on 'ledger/transactions'.
-  if ($root_path == 'admin/ledger/transactions' || $root_path == 'admin/ledger/accounts/%') {
+  if ($root_path == 'admin/ledger/transactions') {
     $item = menu_get_item('admin/ledger/transactions/add');  // Load the menu item for the transaction add form
     $item['localized_options']['query']['destination'] = current_path();  // Set the destination argument to the current path
     if ($item['access']) {
@@ -313,10 +313,10 @@ function ledger_transaction_delete_form($form, &$form_state, $transaction) {
  */
 function ledger_transaction_delete_form_submit($form, &$form_state) {
   
-  // Get the account object from the $form_state.
+  // Get the transaction object from the $form_state.
   $transaction = $form_state['ledger_transaction'];
   
-  // Delete the account and log the results.
+  // Delete the transaction and log the results.
   /**
    * @todo:
    *   Make this check to see if the deletion succeeded, like Drupal Commerce does.
