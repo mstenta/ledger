@@ -22,8 +22,8 @@ function ledger_account_entry_entity_property_info() {
     'schema field' => 'eid',
   );
   $account_entry['transaction'] = array(
-    'type' => 'integer',
-    'label' => t('Account entry - transaction'),
+    'type' => 'ledger_transaction',
+    'label' => t('Transaction'),
     'description' => t('The transaction that the entry is posted to.'),
     'getter callback' => 'ledger_account_entry_get_properties',
     'setter callback' => 'ledger_account_entry_set_properties',
@@ -32,8 +32,8 @@ function ledger_account_entry_entity_property_info() {
     'schema field' => 'tid',
   );
   $account_entry['account'] = array(
-    'type' => 'integer',
-    'label' => t('Account entry - account'),
+    'type' => 'ledger_account',
+    'label' => t('Account'),
     'description' => t('The account that the entry is posted to.'),
     'getter callback' => 'ledger_account_entry_get_properties',
     'setter callback' => 'ledger_account_entry_set_properties',
@@ -50,8 +50,8 @@ function ledger_account_entry_entity_property_info() {
     'schema field' => 'description',
   );
   $account_entry['value'] = array(
-    'type' => 'float',
-    'label' => t('Account Entry - Value'),
+    'type' => 'decimal',
+    'label' => t('Value'),
     'description' => t('The value of the account entry.'),
     'setter callback' => 'entity_property_verbatim_set',
     'setter permission' => 'administer ledger',

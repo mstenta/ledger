@@ -14,8 +14,8 @@
  */
 function ledger_account_entry_entity_info() {
   $entities['ledger_account_entry'] = array(
-    'label' => t('Account Entry'),
-    'label plural' => t('Account Entries'),
+    'label' => t('Account entry'),
+    'label plural' => t('Account entries'),
     'entity class' => 'LedgerAccountEntry',
     'controller class' => 'LedgerAccountEntryController',
     'base table' => 'ledger_account_entry',
