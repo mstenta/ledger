@@ -1,0 +1,5 @@
+name = "Account Entry UI"
+description = "Exposes default UI elements for managing ledger account entries."
+core = 7.x
+package = "Ledger"
+dependencies[] = ledger_account_entry
