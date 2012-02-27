@@ -21,6 +21,7 @@ function ledger_account_entry_ui_element_info() {
       '#element_validate' => array('ledger_account_entry_ui_manager_validate'),
       '#theme' => array('ledger_account_entry_manager'),
       '#theme_wrappers' => array('form_element'),
+      '#transaction_id' => 0,  // This is a special attribute for storing the transaction id of the account entries.
     ),
   );
 }
@@ -215,7 +216,8 @@ function ledger_account_entry_ui_manager_validate($element, &$form_state) {
  */
 function ledger_account_entry_ui_manager_add($form, &$form_state) {
   
-  // Figure out which values belong to the account entry manager, using our handy-dandy recursive reference helper function!
+  // Grab a reference to the account entry manager element and values, using our handy-dandy recursive reference helper function!
+  $manager_element = _ledger_account_entry_ui_manager_parent($form, $form_state['triggering_element']['#parents']);
   $manager_values = _ledger_account_entry_ui_manager_parent($form_state['values'], $form_state['triggering_element']['#parents']);
   
   // Generate a unique random 6-digit hex string to use as the new account entry's array key.
@@ -228,6 +230,7 @@ function ledger_account_entry_ui_manager_add($form, &$form_state) {
   // @see ledger_account_entry_ui_manager()
   $account_entry = ledger_account_entry_new();
   $account_entry->add = $key;
+  $account_entry->tid = $manager_element['#transaction_id'];
   
   // Add the new account entry to the form state.
   $form_state['add_account_entries'][$key] = $account_entry;
@@ -301,13 +304,6 @@ function ledger_account_entry_manager_submit($form_values, $transaction) {
         $account_entry->description = $row['description'];
         $account_entry->aid = $row['aid'];
         $account_entry->value = $value;
-        
-        // If this is a new account entry...
-        if (!$account_entry->eid) {
-
-          // Set the transaction id.
-          $account_entry->tid = $transaction->tid;
-        }
         
         // Save it.
         ledger_account_entry_save($account_entry);
