@@ -88,16 +88,6 @@ function ledger_account_entry_ui_manager($element, &$form_state) {
       // Select checkbox
       $element['rows'][$key]['select'] = array(
         '#type' => 'checkbox',
-
-        /**
-         * Make sure this is always unchecked by default.
-         * You would think #default_value alone would work for this, but when an entry is removed via AJAX it
-         * seems to pass the check on to the next item in the list, presumably because the $i counter changes.
-         * Oddly enough, setting #value to FALSE fixes this, despite #value not being a valid element on checkbox
-         * form elements (according to the API). Go figure.
-         */
-        '#default_value' => FALSE,
-        '#value' => FALSE,
       );
 
       // Description
@@ -118,7 +108,7 @@ function ledger_account_entry_ui_manager($element, &$form_state) {
       $out = '';
       if ($account_entry->value > 0) {
         $in = $account_entry->value;
-      } else {
+      } else if ($account_entry->value < 0) {
         $out = abs($account_entry->value);
       }
 
@@ -176,41 +166,43 @@ function ledger_account_entry_ui_manager_validate($element, &$form_state) {
   $manager_balance = 0;
   
   // Loop through all the account entries.
-  foreach (element_children($element['rows']) as $key) {
-    
-    // Calculate the value of the account entry by adding the "in" and "out" fields.
-    $value = 0 + $element['#value']['rows'][$key]['in'] - $element['#value']['rows'][$key]['out'];
-    
-    // Add the value to the running manager balance.
-    $manager_balance += $value;
-    
-    // Skip validation if this is a new account entry, and none of the values are filled in (it will simply be discarded).
-    if (!$element['rows'][$key]['account_entry']['#value']->eid && empty($element['#value']['rows'][$key]['aid']) && !$value) {
-      return;
+  if (!empty($element['rows'])) {
+    foreach (element_children($element['rows']) as $key) {
+
+      // Calculate the value of the account entry by adding the "in" and "out" fields.
+      $value = 0 + $element['#value']['rows'][$key]['in'] - $element['#value']['rows'][$key]['out'];
+
+      // Add the value to the running manager balance.
+      $manager_balance += $value;
+
+      // Skip validation if this is a new account entry, and none of the values are filled in (it will simply be discarded).
+      if (!$element['rows'][$key]['account_entry']['#value']->eid && empty($element['#value']['rows'][$key]['aid']) && !$value) {
+        continue;
+      }
+
+      // Build the element name from the parents array.
+      $element_name = implode('][', $element['rows'][$key]['#array_parents']);
+
+      // Make sure the entry has an account.
+      if (empty($element['#value']['rows'][$key]['aid'])) {
+        form_set_error($element_name, 'Account entry must specify an account.');
+      }
+
+      // Make sure the entry has a value.
+      if (!$value) {
+        form_set_error($element_name, 'Account entry must have a value.');
+      }
     }
-    
-    // Build the element name from the parents array.
-    $element_name = implode('][', $element['rows'][$key]['#array_parents']);
-    
-    // Make sure the entry has an account.
-    if (empty($element['#value']['rows'][$key]['aid'])) {
-      form_set_error($element_name, 'Account entry must specify an account.');
-    }
-    
-    // Make sure the entry has a value.
-    if (!$value) {
-      form_set_error($element_name, 'Account entry must have a value.');
-    }
-  }
-  
-  // Make sure the overall balance of the manager is zero.
-  if ($manager_balance) {
-    
-    // Don't check this if the user is simply adding/removing account entries.
-    if ($form_state['triggering_element']['#value'] != 'Add account entry' && $form_state['triggering_element']['#value'] != 'Remove') {
-      
-      // Notify the user that their account entries don't balance.
-      form_set_error(implode('][', $element['rows'][$key]['#array_parents']), 'The account entries do not balance. Please add/remove entries so the Increase and Decrease columns add up to zero.');
+
+    // Make sure the overall balance of the manager is zero.
+    if ($manager_balance) {
+
+      // Don't check this if the user is simply adding/removing account entries.
+      if ($form_state['triggering_element']['#value'] != 'Add account entry' && $form_state['triggering_element']['#value'] != 'Remove') {
+
+        // Notify the user that their account entries don't balance.
+        form_set_error(implode('][', $element['#array_parents']), 'The account entries do not balance. Please add/remove entries so the Increase and Decrease columns add up to zero.');
+      }
     }
   }
 }
