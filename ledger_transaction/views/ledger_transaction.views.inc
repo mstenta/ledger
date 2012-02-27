@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Ledger Transaction UI Views data.
+ * Ledger Transaction Views data.
  */
 
 /**
