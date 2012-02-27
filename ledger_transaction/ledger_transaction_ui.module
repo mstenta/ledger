@@ -211,7 +211,7 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
   }
   $transaction->account_entries = ledger_account_entry_load_multiple($account_entry_ids);
   
-  // Account entries manager
+  // Add the account entries manager element and submit function.
   $form['account_entries'] = array(
     '#type' => 'ledger_account_entry_manager',
     '#title' => t('Account entries'),
@@ -275,6 +275,9 @@ function ledger_transaction_form_submit(&$form, &$form_state) {
   
   // Save.
   $transaction->save();
+  
+  // Execute the Account Entry Manager submit function.
+  ledger_account_entry_manager_submit($form_state['values']['account_entries'], $transaction);
   
   // Provide a default redirect.
   $form_state['redirect'] = 'admin/ledger/transactions';

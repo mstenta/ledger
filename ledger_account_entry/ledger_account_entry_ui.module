@@ -274,6 +274,48 @@ function ledger_account_entry_ui_manager_remove($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
 }
 
+/**
+ * Submit function for the account entry manager.
+ * 
+ * Saves account entry entities to the database.
+ * 
+ * Note that this function is not called directly by the manager element.
+ * It must be called in the parent form's submit function, and passed the values of the manager and transaction.
+ */
+function ledger_account_entry_manager_submit($form_values, $transaction) {
+  
+  // Loop through the manager rows.
+  if (!empty($form_values['rows'])){
+    foreach ($form_values['rows'] as $row) {
+      
+      // Store the account entry in an easier-to-read variable.
+      $account_entry = $row['account_entry'];
+      
+      // Calculate the account entry value by adding the "in" and "out" fields
+      $value = 0 + $row['in'] - $row['out'];
+      
+      // Compare the form values to the original account entry to see if a save is necessary.
+      if ($account_entry->description != $row['description'] || $account_entry->aid != $row['aid'] || $account_entry->value != $value) {
+        
+        // Update the values in the original account entry and save it.
+        $account_entry->description = $row['description'];
+        $account_entry->aid = $row['aid'];
+        $account_entry->value = $value;
+        
+        // If this is a new account entry...
+        if (!$account_entry->eid) {
+
+          // Set the transaction id.
+          $account_entry->tid = $transaction->tid;
+        }
+        
+        // Save it.
+        ledger_account_entry_save($account_entry);
+      }
+    }
+  }
+}
+
 /***************************************************************
  * AJAX callback
  ***************************************************************/
