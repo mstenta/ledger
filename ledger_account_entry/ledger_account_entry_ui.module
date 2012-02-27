@@ -165,11 +165,17 @@ function ledger_account_entry_ui_manager($element, &$form_state) {
  */
 function ledger_account_entry_ui_manager_validate($element, &$form_state) {
   
+  // Keep a running tally of the overall manager balance.
+  $manager_balance = 0;
+  
   // Loop through all the account entries.
   foreach (element_children($element['rows']) as $key) {
     
     // Calculate the value of the account entry by adding the "in" and "out" fields.
     $value = 0 + $element['#value']['rows'][$key]['in'] - $element['#value']['rows'][$key]['out'];
+    
+    // Add the value to the running manager balance.
+    $manager_balance += $value;
     
     // Skip validation if this is a new account entry, and none of the values are filled in (it will simply be discarded).
     if (!$element['rows'][$key]['account_entry']['#value']->eid && empty($element['#value']['rows'][$key]['aid']) && !$value) {
@@ -187,6 +193,17 @@ function ledger_account_entry_ui_manager_validate($element, &$form_state) {
     // Make sure the entry has a value.
     if (!$value) {
       form_set_error($element_name, 'Account entry must have a value.');
+    }
+  }
+  
+  // Make sure the overall balance of the manager is zero.
+  if ($manager_balance) {
+    
+    // Don't check this if the user is simply adding/removing account entries.
+    if ($form_state['triggering_element']['#value'] != 'Add account entry' && $form_state['triggering_element']['#value'] != 'Remove') {
+      
+      // Notify the user that their account entries don't balance.
+      form_set_error(implode('][', $element['rows'][$key]['#array_parents']), 'The account entries do not balance. Please add/remove entries so the Increase and Decrease columns add up to zero.');
     }
   }
 }
