@@ -18,6 +18,7 @@ function ledger_account_entry_ui_element_info() {
       '#input' => TRUE,
       '#tree' => TRUE,
       '#process' => array('ledger_account_entry_ui_element'),
+      '#element_validate' => array('ledger_account_entry_ui_element_validate'),
       '#theme_wrappers' => array('form_element'),
     ),
     'ledger_account_entry_manager' => array(
@@ -116,6 +117,26 @@ function ledger_account_entry_ui_element($element, &$form_state) {
   );
   
   return $element;
+}
+
+/**
+ * Ledger account entry element validation.
+ */
+function ledger_account_entry_ui_element_validate($element, &$form_state) {
+  
+  // Build the element name from the parents array.
+  $element_name = implode('][', $element['#array_parents']);
+  
+  // Make sure the entry has an account.
+  if (empty($element['#value']['aid'])) {
+    form_set_error($element_name, 'Account entry must specify an account.');
+  }
+  
+  // Make sure the entry has a value.
+  $value = 0 + $element['#value']['in'] - $element['#value']['out'];
+  if (!$value) {
+    form_set_error($element_name, 'Account entry must have a value.');
+  }
 }
 
 /***************************************************************
