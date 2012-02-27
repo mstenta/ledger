@@ -124,6 +124,14 @@ function ledger_account_entry_ui_element($element, &$form_state) {
  */
 function ledger_account_entry_ui_element_validate($element, &$form_state) {
   
+  // Calculate the value of the account entry by adding the "in" and "out" fields.
+  $value = 0 + $element['#value']['in'] - $element['#value']['out'];
+  
+  // Skip validation if this is a new account entry, and none of the values are filled in (it will simply be discarded).
+  if (!$element['#default_value']->eid && empty($element['#value']['aid']) && !$value) {
+    return;
+  }
+  
   // Build the element name from the parents array.
   $element_name = implode('][', $element['#array_parents']);
   
@@ -133,7 +141,6 @@ function ledger_account_entry_ui_element_validate($element, &$form_state) {
   }
   
   // Make sure the entry has a value.
-  $value = 0 + $element['#value']['in'] - $element['#value']['out'];
   if (!$value) {
     form_set_error($element_name, 'Account entry must have a value.');
   }
