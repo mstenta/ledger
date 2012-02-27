@@ -3,3 +3,5 @@ description = "Defines the Ledger Account Entry entity type."
 core = 7.x
 package = "Ledger"
 dependencies[] = ledger_account
+
+files[] = views/handlers/ledger_account_entry_handler_field_value.inc
