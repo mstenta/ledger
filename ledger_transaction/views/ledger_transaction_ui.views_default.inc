@@ -44,7 +44,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['style_options']['columns'] = array(
     'timestamp' => 'timestamp',
     'description' => 'description',
-    'ledger_transaction_entry' => 'ledger_transaction_entry',
+    'value' => 'value',
     'transaction_ops' => 'transaction_ops',
   );
   $handler->display->display_options['style_options']['default'] = 'timestamp';
@@ -61,7 +61,9 @@ function ledger_transaction_ui_views_default_views() {
       'align' => '',
       'separator' => '',
     ),
-    'ledger_transaction_entry' => array(
+    'value' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
     ),
@@ -72,6 +74,7 @@ function ledger_transaction_ui_views_default_views() {
   );
   $handler->display->display_options['style_options']['override'] = 1;
   $handler->display->display_options['style_options']['sticky'] = 0;
+  $handler->display->display_options['style_options']['order'] = 'desc';
   $handler->display->display_options['style_options']['empty_table'] = 0;
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
@@ -126,33 +129,6 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['description']['empty_zero'] = 0;
   $handler->display->display_options['fields']['description']['hide_alter_empty'] = 0;
   $handler->display->display_options['fields']['description']['link_to_transaction'] = 'view';
-  /* Field: Transaction: Ledger Entries */
-  $handler->display->display_options['fields']['ledger_transaction_entry']['id'] = 'ledger_transaction_entry';
-  $handler->display->display_options['fields']['ledger_transaction_entry']['table'] = 'field_data_ledger_transaction_entry';
-  $handler->display->display_options['fields']['ledger_transaction_entry']['field'] = 'ledger_transaction_entry';
-  $handler->display->display_options['fields']['ledger_transaction_entry']['label'] = 'Transfers';
-  $handler->display->display_options['fields']['ledger_transaction_entry']['alter']['alter_text'] = 0;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['alter']['make_link'] = 0;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['alter']['external'] = 0;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['alter']['replace_spaces'] = 0;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['alter']['trim_whitespace'] = 0;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['alter']['nl2br'] = 0;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['alter']['word_boundary'] = 1;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['alter']['ellipsis'] = 1;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['alter']['strip_tags'] = 0;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['alter']['trim'] = 0;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['alter']['html'] = 0;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['element_label_colon'] = 1;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['element_default_classes'] = 1;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['hide_alter_empty'] = 0;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['group_rows'] = 1;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['delta_offset'] = '0';
-  $handler->display->display_options['fields']['ledger_transaction_entry']['delta_reversed'] = 0;
-  $handler->display->display_options['fields']['ledger_transaction_entry']['multi_type'] = 'ul';
-  $handler->display->display_options['fields']['ledger_transaction_entry']['field_api_classes'] = 0;
   /* Field: Transaction: Operations */
   $handler->display->display_options['fields']['transaction_ops']['id'] = 'transaction_ops';
   $handler->display->display_options['fields']['transaction_ops']['table'] = 'ledger_transaction';
@@ -200,24 +176,123 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['empty']['area']['content'] = 'No transactions in this account.';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   $handler->display->display_options['empty']['area']['tokenize'] = 0;
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Transaction: Account entry */
+  $handler->display->display_options['relationships']['ledger_account_entry_tid']['id'] = 'ledger_account_entry_tid';
+  $handler->display->display_options['relationships']['ledger_account_entry_tid']['table'] = 'ledger_transaction';
+  $handler->display->display_options['relationships']['ledger_account_entry_tid']['field'] = 'ledger_account_entry_tid';
+  $handler->display->display_options['relationships']['ledger_account_entry_tid']['required'] = 0;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Transaction: Timestamp */
+  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['table'] = 'ledger_transaction';
+  $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['timestamp']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['timestamp']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['timestamp']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['timestamp']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['timestamp']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['timestamp']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['timestamp']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['timestamp']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['timestamp']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['timestamp']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['timestamp']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['timestamp']['element_label_colon'] = 1;
+  $handler->display->display_options['fields']['timestamp']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['timestamp']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['timestamp']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['timestamp']['hide_alter_empty'] = 0;
+  $handler->display->display_options['fields']['timestamp']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['timestamp']['custom_date_format'] = 'm/d/Y g:i a';
+  /* Field: Transaction: Description */
+  $handler->display->display_options['fields']['description']['id'] = 'description';
+  $handler->display->display_options['fields']['description']['table'] = 'ledger_transaction';
+  $handler->display->display_options['fields']['description']['field'] = 'description';
+  $handler->display->display_options['fields']['description']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['description']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['description']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['description']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['description']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['description']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['description']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['description']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['description']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['description']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['description']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['description']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['description']['element_label_colon'] = 1;
+  $handler->display->display_options['fields']['description']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['description']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['description']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['description']['hide_alter_empty'] = 0;
+  $handler->display->display_options['fields']['description']['link_to_transaction'] = 'view';
+  /* Field: Account entry: Value */
+  $handler->display->display_options['fields']['value']['id'] = 'value';
+  $handler->display->display_options['fields']['value']['table'] = 'ledger_account_entry';
+  $handler->display->display_options['fields']['value']['field'] = 'value';
+  $handler->display->display_options['fields']['value']['relationship'] = 'ledger_account_entry_tid';
+  $handler->display->display_options['fields']['value']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['value']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['value']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['value']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['value']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['value']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['value']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['value']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['value']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['value']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['value']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['value']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['value']['element_label_colon'] = 1;
+  $handler->display->display_options['fields']['value']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['value']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['value']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['value']['hide_alter_empty'] = 0;
+  $handler->display->display_options['fields']['value']['set_precision'] = 1;
+  $handler->display->display_options['fields']['value']['precision'] = '2';
+  $handler->display->display_options['fields']['value']['format_plural'] = 0;
+  /* Field: Transaction: Operations */
+  $handler->display->display_options['fields']['transaction_ops']['id'] = 'transaction_ops';
+  $handler->display->display_options['fields']['transaction_ops']['table'] = 'ledger_transaction';
+  $handler->display->display_options['fields']['transaction_ops']['field'] = 'transaction_ops';
+  $handler->display->display_options['fields']['transaction_ops']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['transaction_ops']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['transaction_ops']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['transaction_ops']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['transaction_ops']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['transaction_ops']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['transaction_ops']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['transaction_ops']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['transaction_ops']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['transaction_ops']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['transaction_ops']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['transaction_ops']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['transaction_ops']['element_label_colon'] = 1;
+  $handler->display->display_options['fields']['transaction_ops']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['transaction_ops']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['transaction_ops']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['transaction_ops']['hide_alter_empty'] = 0;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Contextual filter: Transaction: Ledger Entries (ledger_transaction_entry:aid) */
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['id'] = 'ledger_transaction_entry_aid';
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['table'] = 'field_data_ledger_transaction_entry';
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['field'] = 'ledger_transaction_entry_aid';
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['default_action'] = 'empty';
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['title_enable'] = 1;
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['title'] = 'Transactions in %1';
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['breadcrumb_enable'] = 1;
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['breadcrumb'] = '%1';
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['default_argument_skip_url'] = 0;
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['specify_validation'] = 1;
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['validate']['type'] = 'php';
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['validate_options']['code'] = '// Attempt to load the account object.
+  /* Contextual filter: Account entry: Account aid */
+  $handler->display->display_options['arguments']['account']['id'] = 'account';
+  $handler->display->display_options['arguments']['account']['table'] = 'ledger_account_entry';
+  $handler->display->display_options['arguments']['account']['field'] = 'account';
+  $handler->display->display_options['arguments']['account']['relationship'] = 'ledger_account_entry_tid';
+  $handler->display->display_options['arguments']['account']['default_action'] = 'not found';
+  $handler->display->display_options['arguments']['account']['title_enable'] = 1;
+  $handler->display->display_options['arguments']['account']['title'] = 'Transactions in %1';
+  $handler->display->display_options['arguments']['account']['breadcrumb_enable'] = 1;
+  $handler->display->display_options['arguments']['account']['breadcrumb'] = '%1';
+  $handler->display->display_options['arguments']['account']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['account']['default_argument_skip_url'] = 0;
+  $handler->display->display_options['arguments']['account']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['account']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['account']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['account']['specify_validation'] = 1;
+  $handler->display->display_options['arguments']['account']['validate']['type'] = 'php';
+  $handler->display->display_options['arguments']['account']['validate_options']['code'] = '// Attempt to load the account object.
   $account = ledger_account_load($argument);
 
   // If the account exists, return TRUE.
@@ -232,8 +307,8 @@ function ledger_transaction_ui_views_default_views() {
   else {
     return FALSE;
   }';
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['break_phrase'] = 0;
-  $handler->display->display_options['arguments']['ledger_transaction_entry_aid']['not'] = 0;
+  $handler->display->display_options['arguments']['account']['break_phrase'] = 0;
+  $handler->display->display_options['arguments']['account']['not'] = 0;
   $handler->display->display_options['path'] = 'admin/ledger/accounts/%/transactions';
   $handler->display->display_options['menu']['type'] = 'default tab';
   $handler->display->display_options['menu']['title'] = 'Transactions';
