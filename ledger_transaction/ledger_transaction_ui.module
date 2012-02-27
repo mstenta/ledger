@@ -203,7 +203,22 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     );
   }
   
-  // Add the field related form elements.
+  // Load the account entries associated with this transaction.
+  $account_entry_ids = array();
+  $result = db_query('SELECT eid FROM {ledger_account_entry} WHERE tid = :tid', array(':tid' => $transaction->tid));
+  foreach ($result as $record) {
+    $account_entry_ids[] = $record->eid;
+  }
+  $transaction->account_entries = ledger_account_entry_load_multiple($account_entry_ids);
+  
+  // Account entries manager
+  $form['account_entries'] = array(
+    '#type' => 'ledger_account_entry_manager',
+    '#title' => t('Account entries'),
+    '#default_value' => $transaction->account_entries,
+  );
+  
+  // Add the Field API elements.
   $form_state['ledger_transaction'] = $transaction;
   field_attach_form('ledger_transaction', $transaction, $form, $form_state);
   
