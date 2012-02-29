@@ -6,25 +6,25 @@
  */
 
 /*************************************************************************
-* Core hooks
-*************************************************************************/
+ * Core hooks
+ *************************************************************************/
 
 /**
  * Implements hoon_entity_insert().
  */
 function ledger_import_gnucash_entity_insert($entity, $type) {
-  
+
   // Create Account entries for transactions during the import.
   if ($type == 'ledger_transaction' && !empty($entity->ledger_account_entry_accounts) && !empty($entity->ledger_account_entry_values)) {
     foreach ($entity->ledger_account_entry_accounts as $i => $guid) {
-      
+
       // If a GUID is provided, attempt to look it up in the {feeds_item} table
       if (!empty($guid)) {
         $aid = db_query('SELECT entity_id FROM {feeds_item} WHERE guid=:guid', array(':guid' => $guid))->fetchField();
-        
+
         // If an account isn't found, add it to "Unknown"
         if (!$aid) {
-          
+
           // If an "Unknown" account type doesn't exist, create it.
           if (!ledger_account_type_get_names('unknown')) {
             $account_type_unknown = entity_get_controller('ledger_account_type')->create();
@@ -32,7 +32,7 @@ function ledger_import_gnucash_entity_insert($entity, $type) {
             $account_type_unknown->label = 'Unknown';
             $account_type_unknown->save();
           }
-          
+
           // If "Unknown" account doesn't exist, create it.
           $aid = db_query("SELECT aid FROM {ledger_account} WHERE name='Unknown'")->fetchField();
           if (!$aid) {
@@ -44,12 +44,12 @@ function ledger_import_gnucash_entity_insert($entity, $type) {
           }
         }
       }
-      
+
       // Translate the value to a float.
       // GnuCash formats values like "100000/100" for $1000
       $value = str_replace('/100', '', $entity->ledger_account_entry_values[$i]);
       $value = (float) $value / 100;
-      
+
       // Create an Account entry entity.
       $account_entry = ledger_account_entry_new();
       $account_entry->tid = $entity->tid;
@@ -61,8 +61,8 @@ function ledger_import_gnucash_entity_insert($entity, $type) {
 }
 
 /*************************************************************************
-* Contrib hooks
-*************************************************************************/
+ * Contrib hooks
+ *************************************************************************/
 
 /**
  * Implements of hook_ctools_plugin_api().
@@ -76,11 +76,11 @@ function ledger_import_gnucash_ctools_plugin_api() {
 
 
 /**
-* Implements of hook_feeds_plugins().
-*/
+ * Implements of hook_feeds_plugins().
+ */
 function ledger_import_gnucash_feeds_plugins() {
   $info = array();
-  
+
   // Account processor
   $info['FeedsLedgerGnuCashAccountProcessor'] = array(
     'name' => 'Ledger GnuCash Account Processor',
@@ -92,7 +92,7 @@ function ledger_import_gnucash_feeds_plugins() {
       'path' => drupal_get_path('module', 'ledger_import_gnucash') . '/plugins',
     ),
   );
-  
+
   // Transaction processor
   $info['FeedsLedgerGnuCashTransactionProcessor'] = array(
     'name' => 'Ledger GnuCash Transaction Processor',
@@ -104,7 +104,7 @@ function ledger_import_gnucash_feeds_plugins() {
       'path' => drupal_get_path('module', 'ledger_import_gnucash') . '/plugins',
     ),
   );
-  
+
   return $info;
 }
 
@@ -113,7 +113,7 @@ function ledger_import_gnucash_feeds_plugins() {
  */
 function ledger_import_gnucash_feeds_importer_default() {
   $export = array();
-  
+
   // Load up the feed definitions.
   $importers = array(
     'ledger_import_gnucash_accounts',  // GnuCash Accounts import
@@ -127,6 +127,6 @@ function ledger_import_gnucash_feeds_importer_default() {
       }
     }
   }
-  
+
   return $export;
 }

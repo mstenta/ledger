@@ -57,15 +57,15 @@ function ledger_account_entry_views_api() {
  * The class for LedgerAccountEntry entities.
  */
 class LedgerAccountEntry extends Entity {
-  
+
   public function __construct($values = array()) {
     parent::__construct($values, 'ledger_account_entry');
   }
-  
+
   protected function defaultLabel() {
     return t('@description', array('@description' => $this->description));
   }
-  
+
   protected function defaultUri() {
     return array('path' => 'admin/ledger/account_entry/' . $this->eid);
   }
@@ -83,7 +83,7 @@ class LedgerAccountEntryController extends EntityAPIController {
    * Create an account entry - we first set up the values that are specific
    * to our ledger_account_entry schema but then also go through the EntityAPIController
    * function.
-   * 
+   *
    * @param $values
    *   Values passed in.
    *
@@ -91,16 +91,16 @@ class LedgerAccountEntryController extends EntityAPIController {
    *   A model object with all default fields initialized.
    */
   public function create(array $values = array()) {
-    
+
     // Add values that are specific to our transaction
-    $values += array( 
+    $values += array(
       'eid' => '',
       'tid' => 0,
       'aid' => 0,
       'description' => '',
       'value' => 0,
     );
-    
+
     $account_entry = parent::create($values);
     return $account_entry;
   }

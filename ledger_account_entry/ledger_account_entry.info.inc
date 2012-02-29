@@ -13,7 +13,7 @@ function ledger_account_entry_entity_property_info() {
 
   // Add meta-data about the account entry properties.
   $account_entry = &$info['ledger_account_entry']['properties'];
-  
+
   $account_entry['eid'] = array(
     'type' => 'integer',
     'label' => t('Account entry ID'),
@@ -58,6 +58,6 @@ function ledger_account_entry_entity_property_info() {
     'required' => TRUE,
     'schema field' => 'value',
   );
-  
+
   return $info;
 }

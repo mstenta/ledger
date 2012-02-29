@@ -14,7 +14,7 @@
  */
 function ledger_ui_menu() {
   $items = array();
-  
+
   // Top level "Ledger" container.
   $items['admin/ledger'] = array(
     'title' => 'Ledger',
@@ -25,7 +25,7 @@ function ledger_ui_menu() {
     'file' => 'system.admin.inc',
     'weight' => -7,
   );
-  
+
   // Ledger Settings container
   $items['admin/ledger/settings'] = array(
     'title' => 'Settings',

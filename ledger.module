@@ -43,7 +43,7 @@ function ledger_account_permission() {
  *   Boolean indicating whether or not the field was activated.
  */
 function ledger_activate_field($field_name) {
-  
+
   // Set it to active via a query because field_update_field() does
   // not work on inactive fields.
   $updated = db_update('field_config')
@@ -70,7 +70,7 @@ function ledger_activate_field($field_name) {
  * @see commerce_delete_field()
  */
 function ledger_delete_fields($type) {
-  
+
   // Read the fields for any active or inactive field of the specified type.
   foreach (field_read_fields(array('type' => $type), array('include_inactive' => TRUE)) as $field_name => $field) {
     ledger_delete_field($field_name);
@@ -88,10 +88,10 @@ function ledger_delete_fields($type) {
  *   The name of the field to enable and delete.
  */
 function ledger_delete_field($field_name) {
-  
+
   // In case the field is inactive, first activate it.
   ledger_activate_field($field_name);
-  
+
   // Delete the field.
   field_delete_field($field_name);
 }
@@ -107,7 +107,7 @@ function ledger_delete_field($field_name) {
  *   entity type.
  */
 function ledger_delete_instances($entity_type, $bundle = NULL) {
-  
+
   // Prepare a parameters array to load the specified instances.
   $params = array(
     'entity_type' => $entity_type,
@@ -132,7 +132,7 @@ function ledger_delete_instances($entity_type, $bundle = NULL) {
  *   The field instance info array to be deleted.
  */
 function ledger_delete_instance($instance) {
-  
+
   // First activate the instance's field if necessary.
   $field_name = $instance['field_name'];
   $activated = ledger_activate_field($field_name);

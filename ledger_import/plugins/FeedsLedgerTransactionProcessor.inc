@@ -16,7 +16,7 @@ class FeedsLedgerTransactionProcessor extends FeedsProcessor {
   public function entityType() {
     return 'ledger_transaction';
   }
-  
+
   /**
    * Creates a new transaction in memory and returns it.
    */
@@ -24,7 +24,7 @@ class FeedsLedgerTransactionProcessor extends FeedsProcessor {
     $transaction = ledger_transaction_new();
     return $transaction;
   }
-  
+
   /**
    * Loads an existing transaction.
    *
@@ -39,28 +39,28 @@ class FeedsLedgerTransactionProcessor extends FeedsProcessor {
     }
     return $transaction;
   }
-  
+
   /**
    * Save a transaction.
    */
   public function entitySave($transaction) {
     ledger_transaction_save($transaction);
   }
-  
+
   /**
    * Delete a series of transactions.
    */
   protected function entityDeleteMultiple($tids) {
-    
+
     // Delete all account entries associated with the transanctions.
     if (!empty($tids)) {
       db_query('DELETE FROM {ledger_account_entry} WHERE tid IN (' . implode(',', $tids) . ')');
     }
-    
+
     // Delete the transactions
     ledger_transaction_delete_multiple($tids);
   }
-  
+
   /**
    * Declare possible mapping targets that this processor exposes.
    *

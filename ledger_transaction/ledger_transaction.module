@@ -57,15 +57,15 @@ function ledger_transaction_views_api() {
  * The class for LedgerTransaction entities.
  */
 class LedgerTransaction extends Entity {
-  
+
   public function __construct($values = array()) {
     parent::__construct($values, 'ledger_transaction');
   }
-  
+
   protected function defaultLabel() {
     return t('@description', array('@description' => $this->description));
   }
-  
+
   protected function defaultUri() {
     return array('path' => 'admin/ledger/transactions/' . $this->tid);
   }
@@ -83,7 +83,7 @@ class LedgerTransactionController extends EntityAPIController {
    * Create a transaction - we first set up the values that are specific
    * to our ledger_transaction schema but then also go through the EntityAPIController
    * function.
-   * 
+   *
    * @param $values
    *   Values passed in.
    *
@@ -91,14 +91,14 @@ class LedgerTransactionController extends EntityAPIController {
    *   A model object with all default fields initialized.
    */
   public function create(array $values = array()) {
-    
+
     // Add values that are specific to our transaction
-    $values += array( 
+    $values += array(
       'tid' => '',
       'description' => '',
       'timestamp' => time(),  // Default to current time
     );
-    
+
     $transaction = parent::create($values);
     return $transaction;
   }

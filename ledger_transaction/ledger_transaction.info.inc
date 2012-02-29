@@ -13,7 +13,7 @@ function ledger_transaction_entity_property_info() {
 
   // Add meta-data about the transaction properties.
   $transaction = &$info['ledger_transaction']['properties'];
-  
+
   $transaction['tid'] = array(
     'type' => 'integer',
     'label' => t('Transaction ID'),
@@ -38,6 +38,6 @@ function ledger_transaction_entity_property_info() {
     'required' => TRUE,
     'schema field' => 'timestamp',
   );
-  
+
   return $info;
 }

@@ -10,7 +10,7 @@
  */
 function ledger_account_entity_property_info() {
   $info = array();
-  
+
   // Add meta-data about the account properties.
   $account = &$info['ledger_account']['properties'];
 
@@ -56,6 +56,6 @@ function ledger_account_entity_property_info() {
     'required' => TRUE,
     'schema field' => 'type',
   );
-  
+
   return $info;
 }

@@ -9,7 +9,7 @@
  */
 function ledger_account_ui_views_default_views() {
   $views = array();
-  
+
   /**
    * Begin ledger_accounts view.
    */
@@ -289,8 +289,8 @@ function ledger_account_ui_views_default_views() {
   /**
    * End ledger_accounts view.
    */
-  
+
   $views[$view->name] = $view;
-  
+
   return $views;
 }

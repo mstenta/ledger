@@ -9,7 +9,7 @@
  */
 function ledger_transaction_ui_views_default_views() {
   $views = array();
-  
+
   /**
    * Begin ledger_transactions view.
    */
@@ -356,8 +356,8 @@ function ledger_transaction_ui_views_default_views() {
   /**
    * End ledger_transactions view.
    */
-  
+
   $views[$view->name] = $view;
-  
+
   return $views;
 }

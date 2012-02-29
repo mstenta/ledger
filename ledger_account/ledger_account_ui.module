@@ -13,7 +13,7 @@
  * Implements hook_entity_info_alter().
  */
 function ledger_account_ui_entity_info_alter(&$entity_info) {
-  
+
   // Enable the entity API's admin UI for the ledger account type
   if (!empty($entity_info['ledger_account_type'])) {
     $entity_info['ledger_account_type'] += array(
@@ -26,7 +26,7 @@ function ledger_account_ui_entity_info_alter(&$entity_info) {
       ),
     );
   }
-  
+
   // Enable the entity API's admin UI for each account type
   foreach (ledger_account_get_types() as $type => $info) {
     $entity_info['ledger_account']['bundles'][$type] = array(
@@ -46,7 +46,7 @@ function ledger_account_ui_entity_info_alter(&$entity_info) {
  */
 function ledger_account_ui_menu() {
   $items = array();
-  
+
   // Note: the following pages are defined by default Views:
   //   /admin/ledger/accounts
 
@@ -60,7 +60,7 @@ function ledger_account_ui_menu() {
     'access arguments' => array('create'),
     'weight' => 10,
   );
-  
+
   // Edit account
   $items['admin/ledger/accounts/%ledger_account/edit'] = array(
     'title' => 'Edit',
@@ -72,7 +72,7 @@ function ledger_account_ui_menu() {
     'weight' => 10,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
-  
+
   // Delete account
   $items['admin/ledger/accounts/%ledger_account/delete'] = array(
     'title' => 'Delete',
@@ -92,7 +92,7 @@ function ledger_account_ui_menu() {
  * Implements hook_menu_local_tasks_alter().
  */
 function ledger_account_ui_menu_local_tasks_alter(&$data, $router_item, $root_path) {
-  
+
   // Add action link 'ledger/accounts/add' on 'ledger/accounts'.
   if ($root_path == 'admin/ledger/accounts') {
     $item = menu_get_item('admin/ledger/accounts/add');  // Load the menu item for the account add form
@@ -128,10 +128,10 @@ function ledger_account_ui_views_api() {
  * Wrapper function for the ledger_ui_account_form that serves as a page callback.
  */
 function ledger_account_ui_account_form_wrapper($account, $op) {
-  
+
   // Set the page title
   drupal_set_title(ledger_account_title($account));
-  
+
   // Create the breadcrumb for the page
   $breadcrumb = array(
     l(t('Home'), '<front>'),
@@ -140,11 +140,12 @@ function ledger_account_ui_account_form_wrapper($account, $op) {
     l(t('Accounts'), 'admin/ledger/accounts'),
   );
   drupal_set_breadcrumb($breadcrumb);
-  
+
   // Display the ledger account form.
   if ($op == 'delete') {
     return drupal_get_form('ledger_account_delete_form', $account);
-  } else {
+  }
+  else {
     return drupal_get_form('ledger_account_form', $account, $op);
   }
 }
@@ -157,16 +158,16 @@ function ledger_account_ui_account_form_wrapper($account, $op) {
  * Form callback: ledger account edit form.
  */
 function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
-  
+
   // Save the account object to the $form_state.
   $form_state['ledger_account'] = $account;
-  
+
   // Account id
   $form['aid'] = array(
     '#type' => 'hidden',
     '#default_value' => $account->aid,
   );
-  
+
   // Account name
   $form['name'] = array(
     '#title' => t('Account name'),
@@ -175,7 +176,7 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
     '#description' => t('The name of the account.'),
     '#required' => TRUE,
   );
-  
+
   // Account description
   $form['description'] = array(
     '#title' => t('Description'),
@@ -183,7 +184,7 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
     '#default_value' => $account->description,
     '#description' => t('A brief description of the account.'),
   );
-  
+
   // Account type
   $options = ledger_account_type_get_names();
   $form['type'] = array(
@@ -194,7 +195,7 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
     '#description' => t('The account type.'),
     '#required' => TRUE,
   );
-  
+
   // Parent account ID
   $form['pid'] = array(
     '#title' => t('Parent account'),
@@ -203,17 +204,17 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
     '#default_value' => $account->pid,
     '#description' => t('The account\'s parent account.'),
   );
-  
+
   // Form actions
   $form['actions'] = array('#type' => 'actions');
-  
+
   // Submit button
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save account'),
     '#weight' => 40,
   );
-  
+
   return $form;
 }
 
@@ -221,18 +222,18 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
  * Validate callback for ledger_account_form().
  */
 function ledger_account_form_validate(&$form, &$form_state) {
-  
+
   // Make sure the parent account ID is a valid account.
   $pid = $form_state['values']['pid'];
   if (!empty($pid)) {
-    
+
     // An account cannot be it's own parent.
     if ($pid == $form_state['values']['aid']) {
       form_set_error('pid', 'An account cannot be its own parent.');
     }
-    
+
     else {
-      
+
       // Load the parent account
       $parent_account = ledger_account_load($pid);
 
@@ -248,7 +249,7 @@ function ledger_account_form_validate(&$form, &$form_state) {
  * Submit callback for ledger_account_form().
  */
 function ledger_account_form_submit(&$form, &$form_state) {
-  
+
   // If the user is editing an account, load a fresh copy to merge changes to.
   if ($form_state['ledger_account']->aid) {
     $account = ledger_account_load($form_state['ledger_account']->aid);
@@ -257,15 +258,15 @@ function ledger_account_form_submit(&$form, &$form_state) {
     $account->type = $form_state['values']['type'];
     $account->pid = $form_state['values']['pid'];
   }
-  
+
   // If a new account is being created, build a new account object.
   else {
     $account = ledger_account_new($form_state['values']);
   }
-  
+
   // Save.
   $account->save();
-  
+
   // Provide a default redirect.
   $form_state['redirect'] = 'admin/ledger/accounts';
 }
@@ -282,10 +283,10 @@ function ledger_account_form_submit(&$form, &$form_state) {
  * @see confirm_form()
  */
 function ledger_account_delete_form($form, &$form_state, $account) {
-  
+
   // Save the account object to the $form_state.
   $form_state['ledger_account'] = $account;
-  
+
   // Confirm form
   $form = confirm_form($form,
     t('Are you sure you want to delete the account "@name"?', array('@name' => $account->name)),
@@ -302,10 +303,10 @@ function ledger_account_delete_form($form, &$form_state, $account) {
  * Submit callback for ledger_account_delete_form().
  */
 function ledger_account_delete_form_submit($form, &$form_state) {
-  
+
   // Get the account object from the $form_state.
   $account = $form_state['ledger_account'];
-  
+
   // Delete the account and log the results.
   /**
    * @todo:
@@ -316,7 +317,7 @@ function ledger_account_delete_form_submit($form, &$form_state) {
   ledger_account_delete($account->aid);
   drupal_set_message(t('Account "@name" has been deleted.', array('@name' => $account->name)));
   watchdog('ledger_account', 'Deleted account "@name."', array('@name' => $account->name), WATCHDOG_NOTICE);
-  
+
   // Redirect
   $form_state['redirect'] = 'admin/ledger/accounts';
 }
@@ -329,12 +330,12 @@ function ledger_account_delete_form_submit($form, &$form_state) {
  * Form callback: ledger account type edit form
  */
 function ledger_account_type_form($form, &$form_state, $account_type, $op = 'edit') {
-  
+
   if ($op == 'clone') {
     $account_type->label .= ' (cloned)';
     $account_type->name = '';
   }
-  
+
   // Label
   $form['label'] = array(
     '#title' => t('Label'),
@@ -343,7 +344,7 @@ function ledger_account_type_form($form, &$form_state, $account_type, $op = 'edi
     '#description' => t('The human-readable name of this account type.'),
     '#required' => TRUE,
   );
-  
+
   // Machine-readable type name.
   $form['name'] = array(
     '#type' => 'machine_name',
@@ -355,14 +356,14 @@ function ledger_account_type_form($form, &$form_state, $account_type, $op = 'edi
     ),
     '#description' => t('A unique machine-readable name for this account type. It must only contain lowercase letters, numbers, and underscores.'),
   );
-  
+
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save account type'),
     '#weight' => 40,
   );
-  
+
   return $form;
 }
 

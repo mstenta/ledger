@@ -6,15 +6,15 @@
  */
 
 /*************************************************************************
-* Contrib hooks
-*************************************************************************/
+ * Contrib hooks
+ *************************************************************************/
 
 /**
-* Implementation of hook_feeds_plugins().
-*/
+ * Implements hook_feeds_plugins().
+ */
 function ledger_import_feeds_plugins() {
   $info = array();
-  
+
   // Account processor
   $info['FeedsLedgerAccountProcessor'] = array(
     'name' => 'Ledger Account Processor',
@@ -26,7 +26,7 @@ function ledger_import_feeds_plugins() {
       'path' => drupal_get_path('module', 'ledger_import') . '/plugins',
     ),
   );
-  
+
   // Transaction processor
   $info['FeedsLedgerTransactionProcessor'] = array(
     'name' => 'Ledger Transaction Processor',
@@ -38,6 +38,6 @@ function ledger_import_feeds_plugins() {
       'path' => drupal_get_path('module', 'ledger_import') . '/plugins',
     ),
   );
-  
+
   return $info;
 }
