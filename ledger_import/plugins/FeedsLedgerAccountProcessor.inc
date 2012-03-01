@@ -203,7 +203,7 @@ class FeedsLedgerAccountProcessor extends FeedsProcessor {
           }
 
           // Report to the user that the type was not found.
-          drupal_set_message(t('The account type "' . $value . '" does not exist in Ledger. The imported account "' . $target_item->name . '" has been set to type: "Unknown"'), 'warning');
+          drupal_set_message(t('The account type "@type" does not exist in Ledger. The imported account "@name" has been set to type: "Unknown"', array('@type' => $value, '@name' => $target_item->name)), 'warning');
 
           // Set the type to 'unknown'.
           $target_item->type = 'unknown';
