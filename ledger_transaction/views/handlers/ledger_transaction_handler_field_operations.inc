@@ -28,8 +28,8 @@ class ledger_transaction_handler_field_operations extends ledger_transaction_han
 
     // Define the operations to include.
     $ops = array(
-      l('Edit', 'admin/ledger/transactions/' . $transaction->tid . '/edit'),
-      l('Delete', 'admin/ledger/transactions/' . $transaction->tid . '/delete'),
+      l(t('Edit'), 'admin/ledger/transactions/' . $transaction->tid . '/edit'),
+      l(t('Delete'), 'admin/ledger/transactions/' . $transaction->tid . '/delete'),
     );
 
     // Assemble the list of operations.
