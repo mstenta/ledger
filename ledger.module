@@ -7,7 +7,7 @@
 
 /***************************************************************
  * Drupal hooks
- ***************************************************************/
+ * **************************************************************/
 
 /**
  * Implements hook_permission().
@@ -15,7 +15,7 @@
 function ledger_account_permission() {
   return array(
     'administer ledger' => array(
-      'title' => t('Administer Ledger'), 
+      'title' => t('Administer Ledger'),
       'description' => t('Administer all ledger accounts and transactions.'),
     ),
   );
@@ -26,7 +26,7 @@ function ledger_account_permission() {
  * This code is copied directly (and minimally modified) from
  * the illustrious Commerce module (commerce.module version 7.x-1.0
  * line 104-222).
- ***************************************************************/
+ * **************************************************************/
 
 /**
  * Attempts to directly activate a field that was disabled due to its module
