@@ -55,7 +55,7 @@ function ledger_account_ui_menu() {
     'title' => 'Create a ledger account',
     'description' => 'Create a new ledger account.',
     'page callback' => 'ledger_account_ui_account_form_wrapper',
-    'page arguments' => array(entity_get_controller('ledger_account')->create(), 3),
+    'page arguments' => array(NULL, 3),
     'access callback' => 'ledger_account_access',
     'access arguments' => array('create'),
     'weight' => 10,
@@ -128,6 +128,11 @@ function ledger_account_ui_views_api() {
  * Wrapper function for the ledger_ui_account_form that serves as a page callback.
  */
 function ledger_account_ui_account_form_wrapper($account, $op) {
+
+  // If an account isn't provided, create a new one.
+  if (!$account) {
+    $account = ledger_account_new();
+  }
 
   // Set the page title
   drupal_set_title(ledger_account_title($account));

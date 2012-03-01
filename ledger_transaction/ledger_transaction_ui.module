@@ -24,7 +24,7 @@ function ledger_transaction_ui_menu() {
     'title' => 'Record a ledger transaction',
     'description' => 'Record a new transaction in the ledger.',
     'page callback' => 'ledger_transaction_ui_transaction_form_wrapper',
-    'page arguments' => array(entity_get_controller('ledger_transaction')->create(), 3),
+    'page arguments' => array(NULL, 3),
     'access callback' => 'ledger_transaction_access',
     'access arguments' => array('create'),
     'weight' => 10,
@@ -127,6 +127,11 @@ function ledger_transaction_ui_views_api() {
  * Wrapper function for the ledger_ui_transaction_form that serves as a page callback.
  */
 function ledger_transaction_ui_transaction_form_wrapper($transaction, $op) {
+
+  // If a transaction isn't provided, create a new one.
+  if (!$transaction) {
+    $transaction = ledger_transaction_new();
+  }
 
   // Create the breadcrumb for the page
   $breadcrumb = array(
