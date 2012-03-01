@@ -102,6 +102,26 @@ class LedgerTransactionController extends EntityAPIController {
     $transaction = parent::create($values);
     return $transaction;
   }
+
+  /**
+   * Delete transactions
+   *
+   * @param $ids
+   *   Array of transaction ids.
+   * @param $transaction
+   *   Optionally a DatabaseTransaction object to use. Allows overrides to pass
+   *   in their transaction object.
+   */
+  public function delete($ids, DatabaseTransaction $transaction = NULL) {
+
+    // Delete all account entries associated with the transanctions.
+    if (!empty($ids)) {
+      db_query('DELETE FROM {ledger_account_entry} WHERE tid IN (' . implode(',', $ids) . ')');
+    }
+
+    // Call the parent class's delete() function to delete the transaction entities from the database.
+    parent::delete($ids, $transaction);
+  }
 }
 
 /**

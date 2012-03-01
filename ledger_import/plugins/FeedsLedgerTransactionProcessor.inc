@@ -51,13 +51,6 @@ class FeedsLedgerTransactionProcessor extends FeedsProcessor {
    * Delete a series of transactions.
    */
   protected function entityDeleteMultiple($tids) {
-
-    // Delete all account entries associated with the transanctions.
-    if (!empty($tids)) {
-      db_query('DELETE FROM {ledger_account_entry} WHERE tid IN (' . implode(',', $tids) . ')');
-    }
-
-    // Delete the transactions
     ledger_transaction_delete_multiple($tids);
   }
 
