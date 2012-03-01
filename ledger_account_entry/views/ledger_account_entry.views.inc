@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file
  * Ledger Account Entry Views data.
  */
 

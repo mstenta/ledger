@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file
  * Ledger Transaction Views data.
  */
 

@@ -2,10 +2,6 @@
 
 /**
  * @file
- * Contains the basic account field handler.
- */
-
-/**
  * Field handler to provide simple renderer that allows linking to an account.
  */
 class ledger_account_handler_field extends views_handler_field {

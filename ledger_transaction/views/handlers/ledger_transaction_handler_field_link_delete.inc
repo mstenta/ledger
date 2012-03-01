@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file
  * Field handler to present a link to delete a transaction.
  */
 class ledger_transaction_handler_field_link_delete extends ledger_transaction_handler_field_link {

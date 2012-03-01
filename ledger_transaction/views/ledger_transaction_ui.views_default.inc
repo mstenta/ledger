@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file
  * Views for the default ledger Transaction UI.
  */
 

@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file
  * Field handler to present a link to delete an account.
  */
 class ledger_account_handler_field_link_delete extends ledger_account_handler_field_link {

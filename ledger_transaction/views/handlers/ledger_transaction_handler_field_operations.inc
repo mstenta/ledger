@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file
  * Field handler to present a list of links to transaction operations.
  */
 class ledger_transaction_handler_field_operations extends ledger_transaction_handler_field_link {
