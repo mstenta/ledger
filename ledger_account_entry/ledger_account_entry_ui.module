@@ -21,7 +21,6 @@ function ledger_account_entry_ui_element_info() {
       '#element_validate' => array('ledger_account_entry_ui_manager_validate'),
       '#theme' => array('ledger_account_entry_manager'),
       '#theme_wrappers' => array('form_element'),
-      '#transaction_id' => 0,  // This is a special attribute for storing the transaction id of the account entries.
     ),
   );
 }
@@ -229,7 +228,6 @@ function ledger_account_entry_ui_manager_add($form, &$form_state) {
   // @see ledger_account_entry_ui_manager()
   $account_entry = ledger_account_entry_new();
   $account_entry->add = $key;
-  $account_entry->tid = $manager_element['#transaction_id'];
 
   // Add the new account entry to the form state.
   $form_state['add_account_entries'][$key] = $account_entry;
@@ -285,7 +283,7 @@ function ledger_account_entry_ui_manager_remove($form, &$form_state) {
  * It must be called from the submit function of the form that uses it, and passed
  * the $form, $form_state, and a $parents array that describes the path to the element in the form.
  */
-function ledger_account_entry_manager_submit($form, &$form_state, $parents) {
+function ledger_account_entry_manager_submit($form, &$form_state, $parents, $transaction) {
 
   // Figure out which values belong to the account entry manager, using our handy-dandy recursive reference helper function!
   $manager_values = _ledger_account_entry_ui_manager_parent($form_state['values'], $parents);
@@ -299,6 +297,11 @@ function ledger_account_entry_manager_submit($form, &$form_state, $parents) {
 
       // Calculate the account entry value by adding the "in" and "out" fields
       $value = 0 + $row['in'] - $row['out'];
+
+      // Add the transaction id, if one doesn't already exist.
+      if (empty($account_entry->tid) && !empty($transaction->tid)) {
+        $account_entry->tid = $transaction->tid;
+      }
 
       // Compare the form values to the original account entry to see if a save is necessary.
       if ($account_entry->description != $row['description'] || $account_entry->aid != $row['aid'] || $account_entry->value != $value) {

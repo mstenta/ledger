@@ -217,7 +217,6 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     '#type' => 'ledger_account_entry_manager',
     '#title' => t('Account entries'),
     '#default_value' => $transaction->account_entries,
-    '#transaction_id' => $transaction->tid,
   );
 
   // Add the Field API elements.
@@ -279,7 +278,7 @@ function ledger_transaction_form_submit(&$form, &$form_state) {
   $transaction->save();
 
   // Execute the Account Entry Manager submit function.
-  ledger_account_entry_manager_submit($form, $form_state, array('account_entries'));
+  ledger_account_entry_manager_submit($form, $form_state, array('account_entries'), $transaction);
 
   // Provide a default redirect.
   $form_state['redirect'] = 'admin/ledger/transactions';
