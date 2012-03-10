@@ -7,3 +7,4 @@ dependencies[] = ledger_account_entry
 dependencies[] = ledger_transaction
 dependencies[] = ledger_ui
 dependencies[] = ledger_account_entry_ui
+dependencies[] = views
