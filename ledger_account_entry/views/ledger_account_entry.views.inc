@@ -29,4 +29,16 @@ function ledger_account_entry_views_data_alter(&$data) {
       'float' => TRUE,
     ),
   );
+
+  // Replace the ledger_account_entry value field handler with out own extended handler.
+  $data['ledger_account_entry']['value']['field']['handler'] = 'ledger_account_entry_handler_field_value';
+
+  // Add a field for displaying the running account balance at the time of an account entry.
+  $data['ledger_account_entry']['account_balance'] = array(
+    'field' => array(
+      'title' => t('Running account balance'),
+      'help' => t('Display the running balance of the account at the time of an account entry.'),
+      'handler' => 'ledger_account_entry_handler_field_account_balance',
+    ),
+  );
 }
