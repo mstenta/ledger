@@ -39,6 +39,7 @@ function ledger_account_entry_views_data_alter(&$data) {
       'title' => t('Running account balance'),
       'help' => t('Display the running balance of the account at the time of an account entry.'),
       'handler' => 'ledger_account_entry_handler_field_account_balance',
+      'float' => TRUE,
     ),
   );
 }
