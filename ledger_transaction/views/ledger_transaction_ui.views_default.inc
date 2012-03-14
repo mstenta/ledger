@@ -21,7 +21,7 @@ function ledger_transaction_ui_views_default_views() {
   $view->base_table = 'ledger_transaction';
   $view->human_name = 'Ledger Transactions';
   $view->core = 7;
-  $view->api_version = '3.0-alpha1';
+  $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
   /* Display: Master */
@@ -175,6 +175,57 @@ function ledger_transaction_ui_views_default_views() {
   /* Display: Transactions by account (page) */
   $handler = $view->new_display('page', 'Transactions by account (page)', 'page_1');
   $handler->display->display_options['display_description'] = 'Page displaying all transactions in a given account.';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'timestamp' => 'timestamp',
+    'description' => 'description',
+    'value' => 'value',
+    'value_1' => 'value_1',
+    'transaction_ops' => 'transaction_ops',
+  );
+  $handler->display->display_options['style_options']['default'] = 'timestamp';
+  $handler->display->display_options['style_options']['info'] = array(
+    'timestamp' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'desc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'description' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'value' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'value_1' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'transaction_ops' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
+  $handler->display->display_options['style_options']['override'] = 1;
+  $handler->display->display_options['style_options']['sticky'] = 0;
+  $handler->display->display_options['style_options']['empty_table'] = 0;
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['empty'] = FALSE;
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
@@ -186,10 +237,10 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['empty']['area']['tokenize'] = 0;
   $handler->display->display_options['defaults']['relationships'] = FALSE;
   /* Relationship: Transaction: Account entry */
-  $handler->display->display_options['relationships']['ledger_account_entry_tid']['id'] = 'ledger_account_entry_tid';
-  $handler->display->display_options['relationships']['ledger_account_entry_tid']['table'] = 'ledger_transaction';
-  $handler->display->display_options['relationships']['ledger_account_entry_tid']['field'] = 'ledger_account_entry_tid';
-  $handler->display->display_options['relationships']['ledger_account_entry_tid']['required'] = 0;
+  $handler->display->display_options['relationships']['ledger_account_entry']['id'] = 'ledger_account_entry';
+  $handler->display->display_options['relationships']['ledger_account_entry']['table'] = 'ledger_transaction';
+  $handler->display->display_options['relationships']['ledger_account_entry']['field'] = 'ledger_account_entry';
+  $handler->display->display_options['relationships']['ledger_account_entry']['required'] = 0;
   $handler->display->display_options['defaults']['fields'] = FALSE;
   /* Field: Transaction: Timestamp */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
@@ -240,7 +291,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['value']['id'] = 'value';
   $handler->display->display_options['fields']['value']['table'] = 'ledger_account_entry';
   $handler->display->display_options['fields']['value']['field'] = 'value';
-  $handler->display->display_options['fields']['value']['relationship'] = 'ledger_account_entry_tid';
+  $handler->display->display_options['fields']['value']['relationship'] = 'ledger_account_entry';
   $handler->display->display_options['fields']['value']['label'] = 'Increase';
   $handler->display->display_options['fields']['value']['alter']['alter_text'] = 0;
   $handler->display->display_options['fields']['value']['alter']['make_link'] = 0;
@@ -251,6 +302,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['value']['alter']['nl2br'] = 0;
   $handler->display->display_options['fields']['value']['alter']['word_boundary'] = 1;
   $handler->display->display_options['fields']['value']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['value']['alter']['more_link'] = 0;
   $handler->display->display_options['fields']['value']['alter']['strip_tags'] = 0;
   $handler->display->display_options['fields']['value']['alter']['trim'] = 0;
   $handler->display->display_options['fields']['value']['alter']['html'] = 0;
@@ -258,7 +310,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['value']['element_default_classes'] = 1;
   $handler->display->display_options['fields']['value']['hide_empty'] = 0;
   $handler->display->display_options['fields']['value']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['value']['hide_alter_empty'] = 0;
+  $handler->display->display_options['fields']['value']['hide_alter_empty'] = 1;
   $handler->display->display_options['fields']['value']['set_precision'] = 1;
   $handler->display->display_options['fields']['value']['precision'] = '2';
   $handler->display->display_options['fields']['value']['format_plural'] = 0;
@@ -267,7 +319,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['value_1']['id'] = 'value_1';
   $handler->display->display_options['fields']['value_1']['table'] = 'ledger_account_entry';
   $handler->display->display_options['fields']['value_1']['field'] = 'value';
-  $handler->display->display_options['fields']['value_1']['relationship'] = 'ledger_account_entry_tid';
+  $handler->display->display_options['fields']['value_1']['relationship'] = 'ledger_account_entry';
   $handler->display->display_options['fields']['value_1']['label'] = 'Decrease';
   $handler->display->display_options['fields']['value_1']['alter']['alter_text'] = 0;
   $handler->display->display_options['fields']['value_1']['alter']['make_link'] = 0;
@@ -278,6 +330,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['value_1']['alter']['nl2br'] = 0;
   $handler->display->display_options['fields']['value_1']['alter']['word_boundary'] = 1;
   $handler->display->display_options['fields']['value_1']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['value_1']['alter']['more_link'] = 0;
   $handler->display->display_options['fields']['value_1']['alter']['strip_tags'] = 0;
   $handler->display->display_options['fields']['value_1']['alter']['trim'] = 0;
   $handler->display->display_options['fields']['value_1']['alter']['html'] = 0;
@@ -285,7 +338,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['value_1']['element_default_classes'] = 1;
   $handler->display->display_options['fields']['value_1']['hide_empty'] = 0;
   $handler->display->display_options['fields']['value_1']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['value_1']['hide_alter_empty'] = 0;
+  $handler->display->display_options['fields']['value_1']['hide_alter_empty'] = 1;
   $handler->display->display_options['fields']['value_1']['set_precision'] = 1;
   $handler->display->display_options['fields']['value_1']['precision'] = '2';
   $handler->display->display_options['fields']['value_1']['format_plural'] = 0;
@@ -316,7 +369,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['arguments']['account']['id'] = 'account';
   $handler->display->display_options['arguments']['account']['table'] = 'ledger_account_entry';
   $handler->display->display_options['arguments']['account']['field'] = 'account';
-  $handler->display->display_options['arguments']['account']['relationship'] = 'ledger_account_entry_tid';
+  $handler->display->display_options['arguments']['account']['relationship'] = 'ledger_account_entry';
   $handler->display->display_options['arguments']['account']['default_action'] = 'not found';
   $handler->display->display_options['arguments']['account']['title_enable'] = 1;
   $handler->display->display_options['arguments']['account']['title'] = 'Transactions in %1';

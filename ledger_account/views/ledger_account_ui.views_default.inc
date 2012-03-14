@@ -21,7 +21,7 @@ function ledger_account_ui_views_default_views() {
   $view->base_table = 'ledger_account';
   $view->human_name = 'Ledger Accounts';
   $view->core = 7;
-  $view->api_version = '3.0-alpha1';
+  $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
   /* Display: Master */
@@ -106,10 +106,10 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['relationships']['parent']['label'] = 'Parent Account';
   $handler->display->display_options['relationships']['parent']['required'] = 0;
   /* Relationship: Account: Account entry */
-  $handler->display->display_options['relationships']['ledger_account_entry_aid']['id'] = 'ledger_account_entry_aid';
-  $handler->display->display_options['relationships']['ledger_account_entry_aid']['table'] = 'ledger_account';
-  $handler->display->display_options['relationships']['ledger_account_entry_aid']['field'] = 'ledger_account_entry_aid';
-  $handler->display->display_options['relationships']['ledger_account_entry_aid']['required'] = 0;
+  $handler->display->display_options['relationships']['ledger_account_entry']['id'] = 'ledger_account_entry';
+  $handler->display->display_options['relationships']['ledger_account_entry']['table'] = 'ledger_account';
+  $handler->display->display_options['relationships']['ledger_account_entry']['field'] = 'ledger_account_entry';
+  $handler->display->display_options['relationships']['ledger_account_entry']['required'] = 0;
   /* Field: Account: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'ledger_account';
@@ -202,7 +202,7 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['fields']['value']['id'] = 'value';
   $handler->display->display_options['fields']['value']['table'] = 'ledger_account_entry';
   $handler->display->display_options['fields']['value']['field'] = 'value';
-  $handler->display->display_options['fields']['value']['relationship'] = 'ledger_account_entry_aid';
+  $handler->display->display_options['fields']['value']['relationship'] = 'ledger_account_entry';
   $handler->display->display_options['fields']['value']['group_type'] = 'sum';
   $handler->display->display_options['fields']['value']['label'] = 'Balance';
   $handler->display->display_options['fields']['value']['alter']['alter_text'] = 0;
@@ -214,6 +214,7 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['fields']['value']['alter']['nl2br'] = 0;
   $handler->display->display_options['fields']['value']['alter']['word_boundary'] = 1;
   $handler->display->display_options['fields']['value']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['value']['alter']['more_link'] = 0;
   $handler->display->display_options['fields']['value']['alter']['strip_tags'] = 0;
   $handler->display->display_options['fields']['value']['alter']['trim'] = 0;
   $handler->display->display_options['fields']['value']['alter']['html'] = 0;
@@ -221,7 +222,7 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['fields']['value']['element_default_classes'] = 1;
   $handler->display->display_options['fields']['value']['hide_empty'] = 0;
   $handler->display->display_options['fields']['value']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['value']['hide_alter_empty'] = 0;
+  $handler->display->display_options['fields']['value']['hide_alter_empty'] = 1;
   $handler->display->display_options['fields']['value']['set_precision'] = 1;
   $handler->display->display_options['fields']['value']['precision'] = '2';
   $handler->display->display_options['fields']['value']['format_plural'] = 0;
