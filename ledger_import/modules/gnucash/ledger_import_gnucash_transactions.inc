@@ -24,7 +24,7 @@ $feeds_importer->config = array(
       'sources' => array(
         'xpathparser:0' => 'trn:id[@type="guid"]',
         'xpathparser:1' => 'trn:description',
-        'xpathparser:2' => 'trn:date-entered/ts:date',
+        'xpathparser:2' => 'trn:date-posted/ts:date',
         'xpathparser:3' => 'trn:splits/trn:split/split:account[@type="guid"]',
         'xpathparser:4' => 'trn:splits/trn:split/split:value',
       ),
