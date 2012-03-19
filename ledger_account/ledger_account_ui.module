@@ -54,12 +54,23 @@ function ledger_account_ui_menu() {
   $items['admin/ledger/accounts/add'] = array(
     'title' => 'Create a ledger account',
     'description' => 'Create a new ledger account.',
-    'page callback' => 'ledger_account_ui_account_form_wrapper',
-    'page arguments' => array(NULL, 3),
+    'page callback' => 'ledger_account_ui_add_page',
     'access callback' => 'ledger_account_access',
     'access arguments' => array('create'),
-    'weight' => 10,
   );
+
+  // Account add forms for each account type
+  foreach (ledger_account_get_types() as $account_type) {
+    $items['admin/ledger/accounts/add/' . $account_type->type] = array(
+      'title' => $account_type->label,
+      'title callback' => 'check_plain',
+      'page callback' => 'ledger_account_ui_account_form_wrapper',
+      'page arguments' => array(NULL, 'create', $account_type->type),
+      'access callback' => 'ledger_account_access',
+      'access arguments' => array('create'),
+      'weight' => 10,
+    );
+  }
 
   // Edit account
   $items['admin/ledger/accounts/%ledger_account/edit'] = array(
@@ -125,13 +136,28 @@ function ledger_account_ui_views_api() {
  * *************************************************************/
 
 /**
+ * Page that displays a list of all Account Types that may be created.
+ * This is copied (and minimally modified) from node.pages.inc.
+ */
+function ledger_account_ui_add_page() {
+  $item = menu_get_item();
+  $content = system_admin_menu_block($item);
+  // Bypass the listing page if only one content type is available.
+  if (count($content) == 1) {
+    $item = array_shift($content);
+    drupal_goto($item['href']);
+  }
+  return theme('node_add_list', array('content' => $content));
+}
+
+/**
  * Wrapper function for the ledger_ui_account_form that serves as a page callback.
  */
-function ledger_account_ui_account_form_wrapper($account, $op) {
+function ledger_account_ui_account_form_wrapper($account, $op, $type=NULL) {
 
   // If an account isn't provided, create a new one.
   if (!$account) {
-    $account = ledger_account_new();
+    $account = ledger_account_new(array('type' => $type));
   }
 
   // Set the page title
@@ -173,6 +199,12 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
     '#default_value' => $account->aid,
   );
 
+  // Bundle type
+  $form['type'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $account->type,
+  );
+
   // Account name
   $form['name'] = array(
     '#title' => t('Account name'),
@@ -188,17 +220,6 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
     '#type' => 'textfield',
     '#default_value' => $account->description,
     '#description' => t('A brief description of the account.'),
-  );
-
-  // Account type
-  $options = ledger_account_type_get_names();
-  $form['type'] = array(
-    '#title' => t('Account type'),
-    '#type' => 'select',
-    '#options' => $options,
-    '#default_value' => $account->type,
-    '#description' => t('The account type.'),
-    '#required' => TRUE,
   );
 
   // Parent account ID
@@ -220,6 +241,9 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
     '#weight' => 40,
   );
 
+  // Add the Field API elements.
+  field_attach_form('ledger_account', $account, $form, $form_state);
+
   return $form;
 }
 
@@ -227,6 +251,9 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
  * Validate callback for ledger_account_form().
  */
 function ledger_account_form_validate(&$form, &$form_state) {
+
+  // Load account object from $form_state
+  $account = $form_state['ledger_account'];
 
   // Make sure the parent account ID is a valid account.
   $pid = $form_state['values']['pid'];
@@ -248,6 +275,9 @@ function ledger_account_form_validate(&$form, &$form_state) {
       }
     }
   }
+
+  // Notify field widgets to validate their data.
+  field_attach_form_validate('ledger_account', $account, $form, $form_state);
 }
 
 /**
@@ -268,6 +298,9 @@ function ledger_account_form_submit(&$form, &$form_state) {
   else {
     $account = ledger_account_new($form_state['values']);
   }
+
+  // Save any associated entity field data
+  field_attach_submit('ledger_account', $account, $form, $form_state);
 
   // Save the account.
   ledger_account_save($account);
@@ -338,7 +371,7 @@ function ledger_account_type_form($form, &$form_state, $account_type, $op = 'edi
 
   if ($op == 'clone') {
     $account_type->label .= ' (cloned)';
-    $account_type->name = '';
+    $account_type->type = '';
   }
 
   // Label
@@ -351,13 +384,13 @@ function ledger_account_type_form($form, &$form_state, $account_type, $op = 'edi
   );
 
   // Machine-readable type name.
-  $form['name'] = array(
+  $form['type'] = array(
     '#type' => 'machine_name',
-    '#default_value' => isset($account_type->name) ? $account_type->name : '',
+    '#default_value' => isset($account_type->type) ? $account_type->type : '',
     '#maxlength' => 32,
     '#machine_name' => array(
       'exists' => 'ledger_account_get_types',
-      'source' => array('name'),
+      'source' => array('type'),
     ),
     '#description' => t('A unique machine-readable name for this account type. It must only contain lowercase letters, numbers, and underscores.'),
   );

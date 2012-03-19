@@ -60,7 +60,7 @@ function ledger_account_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
-      'name' => array(
+      'type' => array(
         'description' => 'The machine-readable name of this ledger_account type.',
         'type' => 'varchar',
         'length' => 32,
@@ -90,7 +90,7 @@ function ledger_account_schema() {
     ) + entity_exportable_schema_fields(),
     'primary key' => array('id'),
     'unique keys' => array(
-      'name' => array('name'),
+      'type' => array('type'),
     ),
   );
   return $schema;

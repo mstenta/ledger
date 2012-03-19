@@ -196,8 +196,8 @@ class FeedsLedgerAccountProcessor extends FeedsProcessor {
 
           // Create an 'unknown' type, if one doesn't already exist.
           if (empty($types['unknown'])) {
-            $account_type_unknown->name = 'unknown';
             $account_type_unknown = ledger_account_type_new();
+            $account_type_unknown->type = 'unknown';
             $account_type_unknown->label = 'Unknown';
             ledger_account_type_save($account_type_unknown);
           }

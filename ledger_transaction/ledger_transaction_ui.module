@@ -225,7 +225,6 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
   );
 
   // Add the Field API elements.
-  $form_state['ledger_transaction'] = $transaction;
   field_attach_form('ledger_transaction', $transaction, $form, $form_state);
 
   // Form actions
