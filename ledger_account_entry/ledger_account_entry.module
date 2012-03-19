@@ -213,33 +213,3 @@ function ledger_account_entry_delete($eid) {
 function ledger_account_entry_delete_multiple($account_entry_ids) {
   return entity_get_controller('ledger_account_entry')->delete($account_entry_ids);
 }
-
-/***************************************************************
- * Account entry entity properties get/set callbacks
- * *************************************************************/
-
-/**
- * Callback for setting Ledger Account Entry entity properties.
- */
-function ledger_account_entry_set_properties($account_entry, $name, $value) {
-  switch ($name) {
-    case 'account':
-      $account_entry->aid = $value;
-      break;
-    case 'transaction':
-      $account_entry->tid = $value;
-      break;
-  }
-}
-
-/**
- * Callback for getting Ledger Account Entry entity properties.
- */
-function ledger_account_entry_get_properties($account_entry, array $options, $name, $entity_type) {
-  switch ($name) {
-    case 'account':
-      return $account_entry->aid;
-    case 'transaction':
-      return $account_entry->tid;
-  }
-}

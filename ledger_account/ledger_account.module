@@ -298,28 +298,6 @@ function ledger_account_delete_multiple($aids) {
 }
 
 /***************************************************************
- * Account entity properties get/set callbacks
- * *************************************************************/
-
-/**
- * Callback for setting Ledger Account entity properties.
- */
-function ledger_account_set_properties($account, $name, $value) {
-  if ($name == 'parent') {
-    $account->pid = $value;
-  }
-}
-
-/**
- * Callback for getting Ledger Account entity properties.
- */
-function ledger_account_get_properties($account, array $options, $name, $entity_type) {
-  if ($name == 'parent') {
-    return $account->pid;
-  }
-}
-
-/***************************************************************
  * Account type functions.
  * *************************************************************/
 

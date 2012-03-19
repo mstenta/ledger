@@ -21,25 +21,23 @@ function ledger_account_entry_entity_property_info() {
     'setter permission' => 'administer ledger',
     'schema field' => 'eid',
   );
-  $account_entry['transaction'] = array(
-    'type' => 'ledger_transaction',
-    'label' => t('Transaction'),
-    'description' => t('The transaction that the entry is posted to.'),
-    'getter callback' => 'ledger_account_entry_get_properties',
-    'setter callback' => 'ledger_account_entry_set_properties',
-    'setter permission' => 'administer ledger',
-    'required' => TRUE,
-    'schema field' => 'tid',
-  );
   $account_entry['account'] = array(
     'type' => 'ledger_account',
     'label' => t('Account'),
     'description' => t('The account that the entry is posted to.'),
-    'getter callback' => 'ledger_account_entry_get_properties',
-    'setter callback' => 'ledger_account_entry_set_properties',
+    'setter callback' => 'entity_property_verbatim_set',
     'setter permission' => 'administer ledger',
     'required' => TRUE,
     'schema field' => 'aid',
+  );
+  $account_entry['transaction'] = array(
+    'type' => 'ledger_transaction',
+    'label' => t('Transaction'),
+    'description' => t('The transaction that the entry is posted to.'),
+    'setter callback' => 'entity_property_verbatim_set',
+    'setter permission' => 'administer ledger',
+    'required' => TRUE,
+    'schema field' => 'tid',
   );
   $account_entry['description'] = array(
     'label' => t('Description'),
