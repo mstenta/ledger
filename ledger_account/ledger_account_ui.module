@@ -269,8 +269,8 @@ function ledger_account_form_submit(&$form, &$form_state) {
     $account = ledger_account_new($form_state['values']);
   }
 
-  // Save.
-  $account->save();
+  // Save the account.
+  ledger_account_save($account);
 
   // Provide a default redirect.
   $form_state['redirect'] = 'admin/ledger/accounts';
@@ -376,7 +376,7 @@ function ledger_account_type_form($form, &$form_state, $account_type, $op = 'edi
  * Form API submit callback for the type form.
  */
 function ledger_account_type_form_submit(&$form, &$form_state) {
-  $account_type = entity_ui_form_submit_build_entity($form, $form_state);
-  $account_type->save();
+  $account_type = ledger_account_type_new($form_state['values']);
+  ledger_account_type_save($account_type);
   $form_state['redirect'] = 'admin/ledger/settings/account-types';
 }

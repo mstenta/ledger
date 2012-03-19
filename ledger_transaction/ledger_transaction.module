@@ -203,7 +203,7 @@ function ledger_transaction_load_multiple($transaction_ids = array(), $condition
  *   The transaction object.
  */
 function ledger_transaction_save($transaction) {
-  return $transaction->save();
+  return entity_get_controller('ledger_transaction')->save($transaction);
 }
 
 /**

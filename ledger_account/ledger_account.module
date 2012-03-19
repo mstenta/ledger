@@ -38,7 +38,7 @@ function ledger_account_entity_info() {
     'label plural' => t('Account types'),
     'description' => t('A Ledger account type.'),
     'entity class' => 'Entity',
-    'controller class' => 'EntityAPIControllerExportable',
+    'controller class' => 'LedgerAccountTypeController',
     'base table' => 'ledger_account_type',
     'fieldable' => FALSE,
     'bundle of' => 'ledger_account',
@@ -51,8 +51,8 @@ function ledger_account_entity_info() {
   );
 
   // Add bundle info but bypass entity_load() as we cannot use it here.
-  $types = db_select('ledger_account_type', 'la')
-    ->fields('la')
+  $types = db_select('ledger_account_type', 'at')
+    ->fields('at')
     ->execute()
     ->fetchAllAssoc('name');
   foreach ($types as $name => $type) {
@@ -137,11 +137,11 @@ class LedgerAccountController extends EntityAPIController {
   /**
    * Delete accounts.
    *
-   * @param $transaction
+   * @param $db_transaction
    *   Optionally a DatabaseTransaction object to use. Allows overrides to pass
    *   in their transaction object.
    */
-  public function delete($ids, DatabaseTransaction $transaction = NULL) {
+  public function delete($ids, DatabaseTransaction $db_transaction = NULL) {
 
     // If these accounts were parents to other accounts, we need to remove their IDs from the parent column in the database.
     if (!empty($ids)) {
@@ -155,7 +155,7 @@ class LedgerAccountController extends EntityAPIController {
       }
     }
 
-    parent::delete($ids, $transaction);
+    parent::delete($ids, $db_transaction);
   }
 }
 
@@ -268,7 +268,7 @@ function ledger_account_load_multiple($account_ids = array(), $conditions = arra
  *   The account object.
  */
 function ledger_account_save($account) {
-  return $account->save();
+  return entity_get_controller('ledger_account')->save($account);
 }
 
 /**
@@ -298,8 +298,51 @@ function ledger_account_delete_multiple($aids) {
 }
 
 /***************************************************************
- * Account type functions.
+ * Account type class and functions.
  * *************************************************************/
+
+/**
+ * The controller for LedgerAccount entities
+ */
+class LedgerAccountTypeController extends EntityAPIControllerExportable {
+  public function __construct($entityType) {
+    parent::__construct($entityType);
+  }
+
+  /**
+   * Create an account type - we first set up the values that are specific
+   * to our ledger_account_type schema but then also go through the EntityAPIController
+   * function.
+   *
+   * @param $values
+   *   Values passed in.
+   *
+   * @return
+   *   An account type object with all default fields initialized.
+   */
+  public function create(array $values = array()) {
+
+    // Add values that are specific to our account
+    $values += array(
+      'id' => '',
+      'type' => '',
+      'label' => '',
+    );
+
+    $account_type = parent::create($values);
+    return $account_type;
+  }
+}
+
+/**
+ * Returns an initialized account type object.
+ *
+ * @return
+ *   An account type object with all default fields initialized.
+ */
+function ledger_account_type_new($values = array()) {
+  return entity_get_controller('ledger_account_type')->create($values);
+}
 
 /**
  * Menu argument loader; Load a ledger account type by string.
@@ -311,6 +354,16 @@ function ledger_account_delete_multiple($aids) {
  */
 function ledger_account_type_load($name) {
   return ledger_account_get_types($name);
+}
+
+/**
+ * Saves an account type to the database.
+ *
+ * @param $account_type
+ *   The account type object.
+ */
+function ledger_account_type_save($account_type) {
+  return entity_get_controller('ledger_account_type')->save($account_type);
 }
 
 /**

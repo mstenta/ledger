@@ -280,7 +280,7 @@ function ledger_transaction_form_submit(&$form, &$form_state) {
   field_attach_submit('ledger_transaction', $transaction, $form, $form_state);
 
   // Save.
-  $transaction->save();
+  ledger_transaction_save($transaction);
 
   // Execute the Account Entry Manager submit function.
   ledger_account_entry_manager_submit($form, $form_state, array('account_entries'), $transaction);

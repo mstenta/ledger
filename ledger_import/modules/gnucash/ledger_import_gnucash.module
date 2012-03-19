@@ -27,10 +27,10 @@ function ledger_import_gnucash_entity_insert($entity, $type) {
 
           // If an "Unknown" account type doesn't exist, create it.
           if (!ledger_account_type_get_names('unknown')) {
-            $account_type_unknown = entity_get_controller('ledger_account_type')->create();
             $account_type_unknown->name = 'unknown';
+            $account_type_unknown = ledger_account_type_new();
             $account_type_unknown->label = 'Unknown';
-            $account_type_unknown->save();
+            ledger_account_type_save($account_type_unknown);
           }
 
           // If "Unknown" account doesn't exist, create it.
@@ -39,7 +39,7 @@ function ledger_import_gnucash_entity_insert($entity, $type) {
             $account_unknown = ledger_account_new();
             $account_unknown->name = 'Unknown';
             $account_unknown->type = 'unknown';
-            $account_unknown->save();
+            ledger_account_save($account_unknown);
             $aid = $account_unknown->aid;
           }
         }
@@ -55,7 +55,7 @@ function ledger_import_gnucash_entity_insert($entity, $type) {
       $account_entry->tid = $entity->tid;
       $account_entry->aid = $aid;
       $account_entry->value = $value;
-      $account_entry->save();
+      ledger_account_entry_save($account_entry);
     }
   }
 }

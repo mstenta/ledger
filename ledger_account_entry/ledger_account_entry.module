@@ -185,7 +185,7 @@ function ledger_account_entry_load_multiple($account_entry_ids = array(), $condi
  *   The account entry object.
  */
 function ledger_account_entry_save($account_entry) {
-  return $account_entry->save();
+  return entity_get_controller('ledger_account_entry')->save($account_entry);
 }
 
 /**
