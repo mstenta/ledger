@@ -1,0 +1,93 @@
+<?php
+
+/**
+ * @file
+ * Ledger Budget install
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function ledger_budget_schema() {
+  $schema['ledger_budget'] = array(
+    'description' => 'Ledger budgets',
+    'fields' => array(
+      'bid' => array(
+        'description' => 'Budget ID',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'budget_aid' => array(
+        'description' => 'Budget Account ID',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'target_aid' => array(
+        'description' => 'Target Account ID',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'value' => array(
+        'description' => 'Transaction value',
+        'type' => 'float',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'effective' => array(
+        'description' => 'Timestamp for when the budget takes effect',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => NULL,
+      ),
+      'expires' => array(
+        'description' => 'Timestamp for when the budget expires',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => NULL,
+      ),
+      // Trying to model: Repeat Every X months … etc
+      // Not sure if this is the best way to represent repeat intervals
+      'repeat_every' => array(
+        'description' => 'Repeat every X repeat_units',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'repeat_unit' => array(
+        'description' => 'The repeat unit ( year, month, week, day )',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+      ),
+      'description' => array(
+        'description' => 'Budget description',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+        'default' => 'month',
+      ),
+    ),
+    'primary key' => array('bid'),
+    'indexes' => array(
+      'budget_aid' => array('budget_aid'),
+      'target_aid' => array('target_aid'),
+      'effective' => array('effective'),
+      'expires' => array('expires'),      
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ledger_budget_uninstall() {
+
+  // Delete any field instances attached to the transaction types.
+  ledger_delete_instances('ledger_budget');
+}

@@ -1,0 +1,219 @@
+<?php
+
+/**
+ * @file
+ * Ledger Budget
+ */
+
+/***************************************************************
+ * Drupal core hooks
+ **************************************************************/
+
+/**
+ * Implements hook_entity_info().
+ */
+function ledger_budget_entity_info() {
+  $entities['ledger_budget'] = array(
+    'label' => t('Budget'),
+    'label plural' => t('Budgets'),
+    'entity class' => 'LedgerBudget',
+    'controller class' => 'LedgerBudgetController',
+    'base table' => 'ledger_budget',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'bid',
+    ),
+    'label callback' => 'entity_class_label',
+    'uri callback' => 'entity_class_uri',
+    'module' => 'ledger_budget',
+    'bundles' => array(
+      'ledger_budget' => array(
+        'label' => t('Budget', array(), array('context' => 'a ledger budget')),
+      ),
+    ),
+  );
+  return $entities;
+}
+
+/***************************************************************
+ * Views API hooks
+ **************************************************************/
+
+/**
+ * Implements hook_views_api().
+ */
+//function ledger_budget_views_api() {
+//  return array(
+//    'api' => 3,
+//    'path' => drupal_get_path('module', 'ledger_budget') . '/views',
+//  );
+//}
+
+/***************************************************************
+ * Ledger Budget class and functions
+ **************************************************************/
+
+/**
+ * The class for LedgerBudget entities.
+ */
+class LedgerBudget extends Entity {
+
+  public function __construct($values = array()) {
+    parent::__construct($values, 'ledger_budget');
+  }
+
+  protected function defaultLabel() {
+    return t('@description', array('@description' => $this->description));
+  }
+
+  protected function defaultUri() {
+    return array('path' => 'admin/ledger/budgets/' . $this->bid);
+  }
+}
+
+/**
+ * The controller for LedgerBudget entities
+ */
+class LedgerBudgetController extends EntityAPIController {
+//  public function __construct($entityType) {
+//    parent::__construct($entityType);
+//  }
+
+  /**
+   * Create a budget - we first set up the values that are specific
+   * to our ledger_budget schema but then also go through the EntityAPIController
+   * function.
+   *
+   * @param $values
+   *   Values passed in.
+   *
+   * @return
+   *   A model object with all default fields initialized.
+   */
+  public function create(array $values = array()) {
+
+    // Add values that are specific to our budget
+    $values += array(
+      'bid' => '',
+      'budget_aid' => 0,
+      'target_aid' => 0,
+      'value' => 0,
+      'effective' => time(),  // Default to current time
+      'expires' => time() + ( 365 * 24 * 3600 ), // One year from now
+      'repeat_every' => 1,
+      'repeat_unit' => 'month',
+      'description' => '',
+    );
+
+    $budget = parent::create($values);
+    return $budget;
+  }
+}
+
+/**
+ * Access callback for ledger budget.
+ *
+ * @todo
+ *   Expand this access function to check based on the operation being performed.
+ *   Also add ability to check a specific budget entity.
+ *
+ * @param $op
+ *   The operation being performed. One of 'view', 'update', 'create', 'delete'
+ *   or just 'edit' (being the same as 'create' or 'update').
+ * @param $budget
+ *   Optionally a specific ledger budget to check.
+ * @param $user
+ *   The user to check for. Leave it to NULL to check for the global user.
+ * @return boolean
+ *   Whether access is allowed or not.
+ */
+function ledger_budget_access($op, $budget = NULL, $user = NULL) {
+  return user_access('administer ledger', $user);
+}
+
+/**
+ * Returns a title for the budget.
+ *
+ * @param $budget
+ *   A ledger budget object.
+ *
+ * @return
+ *   A string that represents the budget title.
+ */
+function ledger_budget_title($budget) {
+  return $budget->description;
+}
+
+/**
+ * Returns an initialized budget object.
+ *
+ * @return
+ *   A budget object with all default fields initialized.
+ */
+function ledger_budget_new($values = array()) {
+  return entity_get_controller('ledger_budget')->create($values);
+}
+
+/**
+ * Loads a budget by ID.
+ */
+function ledger_budget_load($bid) {
+  $budgets = ledger_budget_load_multiple(array($bid), array());
+  return $budgets ? reset($budgets) : FALSE;
+}
+
+/**
+ * Loads multiple budgets by ID or based on a set of matching conditions.
+ *
+ * @see entity_load()
+ *
+ * @param $budget_ids
+ *   An array of budget IDs.
+ * @param $conditions
+ *   An array of conditions on the {ledger_budget} table in the form
+ *     'field' => $value.
+ * @param $reset
+ *   Whether to reset the internal budget loading cache.
+ *
+ * @return
+ *   An array of budget objects indexed by bid.
+ */
+function ledger_budget_load_multiple($budget_ids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('ledger_budget', $budget_ids, $conditions, $reset);
+}
+
+/**
+ * Saves a budget to the database.
+ *
+ * @param $budget
+ *   The budget object.
+ */
+function ledger_budget_save($budget) {
+  return entity_get_controller('ledger_budget')->save($budget);
+}
+
+/**
+ * Deletes a budget by ID.
+ *
+ * @param $bid
+ *   The ID of the budget to delete.
+ *
+ * @return
+ *   TRUE on success, FALSE otherwise.
+ */
+function ledger_budget_delete($bid) {
+  return ledger_budget_delete_multiple(array($bid));
+}
+
+/**
+ * Deletes multiple budgets by ID.
+ *
+ * @param $budget_ids
+ *   An array of budget IDs to delete.
+ *
+ * @return
+ *   TRUE on success, FALSE otherwise.
+ */
+function ledger_budget_delete_multiple($budget_ids) {
+  return entity_get_controller('ledger_budget')->delete($budget_ids);
+}

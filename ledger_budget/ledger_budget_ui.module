@@ -1,0 +1,365 @@
+<?php
+
+/**
+ * @file
+ * Ledger Budget UI
+ */
+
+/***************************************************************
+ * Drupal core hooks
+ **************************************************************/
+
+/**
+ * Implements hook_menu().
+ */
+function ledger_budget_ui_menu() {
+  $items = array();
+
+  // Note: the following pages are defined by default Views:
+  //   /admin/ledger/budgets
+
+  // Create budget
+  $items['admin/ledger/budgets/add'] = array(
+    'title' => 'Add a budget',
+    'description' => 'Add a new budget',
+    'page callback' => 'ledger_budget_ui_budget_form_wrapper',
+    'page arguments' => array(NULL, 3),
+    'access callback' => 'ledger_budget_access',
+    'access arguments' => array('create'),
+    'weight' => 10,
+  );
+
+  // Edit budget
+  $items['admin/ledger/budgets/%ledger_budget'] = array(
+    'title callback' => 'ledger_budget_title',
+    'title arguments' => array(3),
+    'page callback' => 'ledger_budget_ui_budget_form_wrapper',
+    'page arguments' => array(3, 4),
+    'access callback' => 'ledger_budget_access',
+    'access arguments' => array('update', 3),
+  );
+  $items['admin/ledger/budgets/%ledger_budget/edit'] = array(
+    'title' => 'Edit',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 0,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+  );
+
+  // Delete budget
+  $items['admin/ledger/budgets/%ledger_budget/delete'] = array(
+    'title' => 'Delete',
+    'page callback' => 'ledger_budget_ui_budget_form_wrapper',
+    'page arguments' => array(3, 4),
+    'access callback' => 'ledger_budget_access',
+    'access arguments' => array('delete', 3),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 20,
+    'context' => MENU_CONTEXT_INLINE,
+  );
+
+  $items['admin/ledger/settings/budget'] = array(
+    'title' => 'Budget settings',
+    'description' => 'Configure general budget settings, fields, and displays.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ledger_budget_settings_form'),
+    'access arguments' => array('administer ledger'),
+  );
+  $items['admin/ledger/settings/budget/settings'] = array(
+    'title' => 'Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function ledger_budget_ui_entity_info_alter(&$entity_info) {
+
+  // Expose the fields UI for budgets.
+  $entity_info['ledger_budget']['bundles']['ledger_budget']['admin'] = array(
+    'path' => 'admin/ledger/settings/budget',
+    'real path' => 'admin/ledger/settings/budget',
+    'access arguments' => array('administer ledger'),
+  );
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function ledger_budget_ui_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+
+  // Add action link 'ledger/budgets/add' on 'ledger/budgets'.
+  if ($root_path == 'admin/ledger/budgets') {
+    $item = menu_get_item('admin/ledger/budgets/add');  // Load the menu item for the budget add form
+    $item['localized_options']['query']['destination'] = current_path();  // Set the destination argument to the current path
+    if ($item['access']) {
+      $data['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
+    }
+  }
+}
+
+/***************************************************************
+ * Views hooks
+ **************************************************************/
+
+/**
+ * Implements hook_views_api().
+ */
+function ledger_budget_ui_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ledger_budget_ui') . '/views',
+  );
+}
+
+/***************************************************************
+ * Page callbacks
+ **************************************************************/
+
+/**
+ * Wrapper function for the ledger_ui_budget_form that serves as a page callback.
+ */
+function ledger_budget_ui_budget_form_wrapper($budget, $op) {
+
+  // If a budget isn't provided, create a new one.
+  if (!$budget) {
+    $budget = ledger_budget_new();
+  }
+
+  // Create the breadcrumb for the page
+  $breadcrumb = array(
+    l(t('Home'), '<front>'),
+    l(t('Administration'), 'admin'),
+    l(t('Ledger'), 'admin/ledger'),
+    l(t('Budgets'), 'admin/ledger/budgets'),
+  );
+  drupal_set_breadcrumb($breadcrumb);
+
+  // Display the ledger budget form.
+  if ($op == 'delete') {
+    return drupal_get_form('ledger_budget_delete_form', $budget);
+  }
+  else {
+    return drupal_get_form('ledger_budget_form', $budget, $op);
+  }
+}
+
+/***************************************************************
+ * Budget settings form
+ **************************************************************/
+
+/**
+ * Form callback: ledger budget settings form.
+ */
+function ledger_budget_settings_form($form, &$form_state) {
+
+  // For now, just return a little description.
+  $form['description'] = array(
+    '#markup' => 'Use the "Fields" and "Display" tabs above to customize budgets',
+  );
+  return $form;
+}
+
+/***************************************************************
+ * Budget entity forms
+ **************************************************************/
+
+/**
+ * Form callback: ledger budget edit form.
+ */
+function ledger_budget_form($form, &$form_state, $budget, $op = 'edit') {
+
+  // Save the budget object to the $form_state.
+  //$form_state['ledger_budget'] = $budget;
+  
+  // Effective Date
+  $form['effective'] = array(
+    '#title' => t('Effective'),
+    '#type' => 'textfield',
+    '#default_value' => date('Y-m-d H:i:s', $budget->effective),
+    '#description' => t('Timestamp for when the budget takes effect'),
+  );
+
+  // Expire Date
+  $form['expires'] = array(
+    '#title' => t('Expires'),
+    '#type' => 'textfield',
+    '#default_value' => date('Y-m-d H:i:s', $budget->expires),
+    '#description' => t('Timestamp for when the budget expires'),
+  );
+  
+  $form['budget_aid'] = array(
+    '#type' => 'select',
+    '#title' => t('Budget Account ID'),
+    '#description' => t('The account ID of the budget account'),
+    '#options' => ledger_account_select_options(),
+    '#default_value' => $budget->budget_aid,
+  );
+  
+  $form['target_aid'] = array(
+    '#type' => 'select',
+    '#title' => t('Target Account ID'),
+    '#description' => t('The account ID of the target account'),
+    '#options' => ledger_account_select_options(),
+    '#default_value' => $budget->target_aid,
+  );
+
+  // Value
+  $form['value'] = array(
+    '#title' => t('Budget Value'),
+    '#type' => 'textfield',
+    '#default_value' => $budget->value,
+    '#required' => TRUE,
+  );
+
+  // Every
+  $form['repeat_every'] = array(
+    '#title' => t('Repeat every'),
+    '#type' => 'textfield',
+    '#default_value' => $budget->repeat_every,
+    '#required' => TRUE,
+  );
+  
+  // Repeat Unit
+  $form['repeat_unit'] = array(
+    '#title' => t('Repeat unit'),
+    '#type' => 'select',
+    '#default_value' => $budget->repeat_unit,
+    '#required' => TRUE,
+    '#options' => array(
+      'year' => t('Years'),
+      'month' => t('Months'),
+      'week' => t('Weeks'),
+      'day' => t('Days'),
+    ),
+  );
+
+  // Budget description
+  $form['description'] = array(
+    '#title' => t('Description'),
+    '#type' => 'textfield',
+    '#default_value' => $budget->description,
+    '#description' => t('A brief description of the budget.'),
+  );
+
+  // Use the date_popup module if it's available.
+  if (module_exists('date_popup')) {
+    $form['effective']['#type'] = 'date_popup';
+    $form['effective'] += array(
+      '#date_format' => 'Y-m-d H:i:s',
+      '#date_type' => DATE_UNIX,
+      '#date_timezone' => date_default_timezone(),
+    );
+    $form['expires']['#type'] = 'date_popup';
+    $form['expires'] += array(
+      '#date_format' => 'Y-m-d H:i:s',
+      '#date_type' => DATE_UNIX,
+      '#date_timezone' => date_default_timezone(),
+    );    
+  }
+ 
+  // Add the Field API elements.
+  field_attach_form('ledger_budget', $budget, $form, $form_state);
+
+  // Form actions
+  $form['actions'] = array('#type' => 'actions');
+
+  // Submit button
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save budget'),
+    '#weight' => 40,
+  );
+
+  return $form;
+}
+
+/**
+ * Validate callback for ledger_budget_form().
+ */
+function ledger_budget_form_validate(&$form, &$form_state) {
+
+  // Load budget object from $form_state
+  //$budget = $form_state['ledger_budget'];
+  $budget = (object)$form_state['values'];  
+  
+  $timestamps = array('effective', 'expires');
+  
+  // Convert the timestamp to unix-style and validate
+  foreach($timestamps as $timestamp){
+  $form_state['values'][$timestamp] = strtotime($form_state['values'][$timestamp]);
+    if ($form_state['values'][$timestamp] === FALSE) {
+      form_set_error($timestamp, 'Invalid timestamp.');
+    }
+  }
+
+  // Notify field widgets to validate their data.
+  field_attach_form_validate('ledger_budget', $budget, $form, $form_state);
+}
+
+/**
+ * Submit callback for ledger_budget_form().
+ */
+function ledger_budget_form_submit(&$form, &$form_state) { 
+  $budget = (object) $form_state['values'];
+  field_attach_submit('budget', $budget, $form, $form_state);
+  $budget = ledger_budget_save($budget);
+  $form_state['redirect'] = 'admin/ledger/budgets';
+}
+
+/**
+ * Form callback: confirmation form for deleting a budget.
+ *
+ * @param $budget
+ *   The budget object to delete through the form.
+ *
+ * @return
+ *   The form array to confirm deletion..
+ *
+ * @see confirm_form()
+ */
+function ledger_budget_delete_form($form, &$form_state, $budget) {
+
+  // Save the budget object to the $form_state.
+  $form_state['ledger_budget'] = $budget;
+
+  // Confirm form
+  $form = confirm_form($form,
+    t('Are you sure you want to delete the budget "@description"?', array('@description' => $budget->description)),
+    '',
+    '<p>' . t('Deleting this budget cannot be undone.') . '</p>',
+    t('Delete'),
+    t('Cancel'),
+    'confirm'
+  );
+  return $form;
+}
+
+/**
+ * Submit callback for ledger_budget_delete_form().
+ */
+function ledger_budget_delete_form_submit($form, &$form_state) {
+
+  // Get the budget object from the $form_state.
+  $budget = $form_state['ledger_budget'];
+
+  // Delete the budget and log the results.
+  /**
+   * @todo:
+   *   Make this check to see if the deletion succeeded, like Drupal Commerce does.
+   *   Commerce currently uses it's own custom fork of EntityAPIController which extends the delete() function to return TRUE/FALSE.
+   *   See commerce_order_order_delete_form_submit().
+   */
+  ledger_budget_delete($budget->tid);
+  drupal_set_message(t('Budget "@description" has been deleted.', array('@description' => $budget->description)));
+  watchdog('ledger_budget', 'Deleted budget "@description."', array('@description' => $budget->description), WATCHDOG_NOTICE);
+
+  // Redirect
+  $form_state['redirect'] = 'admin/ledger/budgets';
+}

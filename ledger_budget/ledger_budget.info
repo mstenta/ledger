@@ -1,0 +1,6 @@
+name = "Budget"
+description = "Defines the Ledger Budget entity type and Views integration."
+core = 7.x
+package = "Ledger"
+dependencies[] = entity
+dependencies[] = ledger
