@@ -77,7 +77,7 @@ function ledger_budget_schema() {
       'budget_aid' => array('budget_aid'),
       'target_aid' => array('target_aid'),
       'effective' => array('effective'),
-      'expires' => array('expires'),      
+      'expires' => array('expires'),
     ),
   );
   return $schema;

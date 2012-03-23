@@ -7,7 +7,7 @@
 
 /***************************************************************
  * Drupal core hooks
- **************************************************************/
+ * *************************************************************/
 
 /**
  * Implements hook_menu().
@@ -106,7 +106,7 @@ function ledger_budget_ui_menu_local_tasks_alter(&$data, $router_item, $root_pat
 
 /***************************************************************
  * Views hooks
- **************************************************************/
+ * *************************************************************/
 
 /**
  * Implements hook_views_api().
@@ -120,7 +120,7 @@ function ledger_budget_ui_views_api() {
 
 /***************************************************************
  * Page callbacks
- **************************************************************/
+ * *************************************************************/
 
 /**
  * Wrapper function for the ledger_ui_budget_form that serves as a page callback.
@@ -152,7 +152,7 @@ function ledger_budget_ui_budget_form_wrapper($budget, $op) {
 
 /***************************************************************
  * Budget settings form
- **************************************************************/
+ * *************************************************************/
 
 /**
  * Form callback: ledger budget settings form.
@@ -168,7 +168,7 @@ function ledger_budget_settings_form($form, &$form_state) {
 
 /***************************************************************
  * Budget entity forms
- **************************************************************/
+ * *************************************************************/
 
 /**
  * Form callback: ledger budget edit form.
@@ -177,7 +177,7 @@ function ledger_budget_form($form, &$form_state, $budget, $op = 'edit') {
 
   // Save the budget object to the $form_state.
   //$form_state['ledger_budget'] = $budget;
-  
+
   // Effective Date
   $form['effective'] = array(
     '#title' => t('Effective'),
@@ -193,7 +193,7 @@ function ledger_budget_form($form, &$form_state, $budget, $op = 'edit') {
     '#default_value' => date('Y-m-d H:i:s', $budget->expires),
     '#description' => t('Timestamp for when the budget expires'),
   );
-  
+
   $form['budget_aid'] = array(
     '#type' => 'select',
     '#title' => t('Budget Account ID'),
@@ -201,7 +201,7 @@ function ledger_budget_form($form, &$form_state, $budget, $op = 'edit') {
     '#options' => ledger_account_select_options(),
     '#default_value' => $budget->budget_aid,
   );
-  
+
   $form['target_aid'] = array(
     '#type' => 'select',
     '#title' => t('Target Account ID'),
@@ -225,7 +225,7 @@ function ledger_budget_form($form, &$form_state, $budget, $op = 'edit') {
     '#default_value' => $budget->repeat_every,
     '#required' => TRUE,
   );
-  
+
   // Repeat Unit
   $form['repeat_unit'] = array(
     '#title' => t('Repeat unit'),
@@ -261,9 +261,9 @@ function ledger_budget_form($form, &$form_state, $budget, $op = 'edit') {
       '#date_format' => 'Y-m-d H:i:s',
       '#date_type' => DATE_UNIX,
       '#date_timezone' => date_default_timezone(),
-    );    
+    );
   }
- 
+
   // Add the Field API elements.
   field_attach_form('ledger_budget', $budget, $form, $form_state);
 
@@ -287,12 +287,12 @@ function ledger_budget_form_validate(&$form, &$form_state) {
 
   // Load budget object from $form_state
   //$budget = $form_state['ledger_budget'];
-  $budget = (object)$form_state['values'];  
-  
+  $budget = (object)$form_state['values'];
+
   $timestamps = array('effective', 'expires');
-  
+
   // Convert the timestamp to unix-style and validate
-  foreach($timestamps as $timestamp){
+  foreach ($timestamps as $timestamp) {
   $form_state['values'][$timestamp] = strtotime($form_state['values'][$timestamp]);
     if ($form_state['values'][$timestamp] === FALSE) {
       form_set_error($timestamp, 'Invalid timestamp.');
@@ -306,7 +306,7 @@ function ledger_budget_form_validate(&$form, &$form_state) {
 /**
  * Submit callback for ledger_budget_form().
  */
-function ledger_budget_form_submit(&$form, &$form_state) { 
+function ledger_budget_form_submit(&$form, &$form_state) {
   $budget = (object) $form_state['values'];
   field_attach_submit('budget', $budget, $form, $form_state);
   $budget = ledger_budget_save($budget);
