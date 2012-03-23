@@ -356,7 +356,7 @@ function ledger_budget_delete_form_submit($form, &$form_state) {
    *   Commerce currently uses it's own custom fork of EntityAPIController which extends the delete() function to return TRUE/FALSE.
    *   See commerce_order_order_delete_form_submit().
    */
-  ledger_budget_delete($budget->tid);
+  ledger_budget_delete($budget->bid);
   drupal_set_message(t('Budget "@description" has been deleted.', array('@description' => $budget->description)));
   watchdog('ledger_budget', 'Deleted budget "@description."', array('@description' => $budget->description), WATCHDOG_NOTICE);
 
