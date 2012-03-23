@@ -75,9 +75,6 @@ class LedgerBudget extends Entity {
  * The controller for LedgerBudget entities
  */
 class LedgerBudgetController extends EntityAPIController {
-//  public function __construct($entityType) {
-//    parent::__construct($entityType);
-//  }
 
   /**
    * Create a budget - we first set up the values that are specific

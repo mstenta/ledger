@@ -75,9 +75,6 @@ class LedgerTransaction extends Entity {
  * The controller for LedgerTransaction entities
  */
 class LedgerTransactionController extends EntityAPIController {
-  public function __construct($entityType) {
-    parent::__construct($entityType);
-  }
 
   /**
    * Create a transaction - we first set up the values that are specific

@@ -104,9 +104,6 @@ class LedgerAccount extends Entity {
  * The controller for LedgerAccount entities
  */
 class LedgerAccountController extends EntityAPIController {
-  public function __construct($entityType) {
-    parent::__construct($entityType);
-  }
 
   /**
    * Create an account - we first set up the values that are specific
