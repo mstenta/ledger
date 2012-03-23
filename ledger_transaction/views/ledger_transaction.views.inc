@@ -40,7 +40,7 @@ function ledger_transaction_views_data_alter(&$data) {
     ),
   );
 
-  // Add a field for common transaction operations. This is just a combination of View, Edit, and Delete field above.
+  // Add a field for common transaction operations. This is just a combination of Edit, and Delete fields above.
   $data['ledger_transaction']['transaction_ops'] = array(
     'field' => array(
       'title' => t('Operations'),
