@@ -11,10 +11,13 @@
 function ledger_budget_ui_views_default_views() {
   $views = array();
 
+  /**
+   * Begin ledger_budgets view.
+   */
   $view = new view;
   $view->name = 'ledger_budgets';
   $view->description = 'View of all Ledger Budgets';
-  $view->tag = 'default';
+  $view->tag = 'ledger';
   $view->base_table = 'ledger_budget';
   $view->human_name = 'Ledger Budgets';
   $view->core = 7;
@@ -35,8 +38,8 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
     'name' => 'name',
-    'name_1' => 'name_1',
     'value' => 'value',
+    'name_1' => 'name_1',
     'effective' => 'effective',
     'expires' => 'expires',
     'repeat_every' => 'repeat_every',
@@ -52,14 +55,14 @@ function ledger_budget_ui_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'name_1' => array(
+    'value' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
-    'value' => array(
+    'name_1' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
@@ -81,7 +84,7 @@ function ledger_budget_ui_views_default_views() {
       'empty_column' => 0,
     ),
     'repeat_every' => array(
-      'sortable' => 0,
+      'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
@@ -212,7 +215,8 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['fields']['effective']['hide_empty'] = 0;
   $handler->display->display_options['fields']['effective']['empty_zero'] = 0;
   $handler->display->display_options['fields']['effective']['hide_alter_empty'] = 1;
-  $handler->display->display_options['fields']['effective']['date_format'] = 'long';
+  $handler->display->display_options['fields']['effective']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['effective']['custom_date_format'] = 'm/d/Y g:i a';
   /* Field: Budget: Expires */
   $handler->display->display_options['fields']['expires']['id'] = 'expires';
   $handler->display->display_options['fields']['expires']['table'] = 'ledger_budget';
@@ -235,7 +239,8 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['fields']['expires']['hide_empty'] = 0;
   $handler->display->display_options['fields']['expires']['empty_zero'] = 0;
   $handler->display->display_options['fields']['expires']['hide_alter_empty'] = 1;
-  $handler->display->display_options['fields']['expires']['date_format'] = 'long';
+  $handler->display->display_options['fields']['expires']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['expires']['custom_date_format'] = 'm/d/Y g:i a';
   /* Field: Budget: Repeat Every */
   $handler->display->display_options['fields']['repeat_every']['id'] = 'repeat_every';
   $handler->display->display_options['fields']['repeat_every']['table'] = 'ledger_budget';
@@ -259,6 +264,7 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['fields']['repeat_every']['empty_zero'] = 0;
   $handler->display->display_options['fields']['repeat_every']['hide_alter_empty'] = 1;
   $handler->display->display_options['fields']['repeat_every']['format_plural'] = 0;
+  $handler->display->display_options['fields']['repeat_every']['suffix'] = ' ';
   /* Field: Budget: Repeat Unit */
   $handler->display->display_options['fields']['repeat_unit']['id'] = 'repeat_unit';
   $handler->display->display_options['fields']['repeat_unit']['table'] = 'ledger_budget';
@@ -303,6 +309,29 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['fields']['description']['hide_empty'] = 0;
   $handler->display->display_options['fields']['description']['empty_zero'] = 0;
   $handler->display->display_options['fields']['description']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['description']['link_to_budget'] = 'view';
+  /* Field: Budget: Operations */
+  $handler->display->display_options['fields']['budget_ops']['id'] = 'budget_ops';
+  $handler->display->display_options['fields']['budget_ops']['table'] = 'ledger_budget';
+  $handler->display->display_options['fields']['budget_ops']['field'] = 'budget_ops';
+  $handler->display->display_options['fields']['budget_ops']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['budget_ops']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['budget_ops']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['budget_ops']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['budget_ops']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['budget_ops']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['budget_ops']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['budget_ops']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['budget_ops']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['budget_ops']['alter']['more_link'] = 0;
+  $handler->display->display_options['fields']['budget_ops']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['budget_ops']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['budget_ops']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['budget_ops']['element_label_colon'] = 1;
+  $handler->display->display_options['fields']['budget_ops']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['budget_ops']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['budget_ops']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['budget_ops']['hide_alter_empty'] = 1;
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -316,6 +345,9 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['tab_options']['description'] = 'Manage transactions in the ledger.';
   $handler->display->display_options['tab_options']['weight'] = '0';
   $handler->display->display_options['tab_options']['name'] = 'management';
+  /**
+   * End ledger_budgets view.
+   */
 
   $views[$view->name] = $view;
 
