@@ -38,11 +38,19 @@ function ledger_account_entry_schema() {
         'length' => '255',
         'not null' => FALSE,
       ),
-      'value' => array(
-        'description' => 'Transaction value',
-        'type' => 'float',
+      'value_num' => array(
+        'description' => 'Account entry value',
+        'type' => 'int',
+        'size' => 'big',
         'not null' => TRUE,
         'default' => 0,
+      ),
+      'value_denom' => array(
+        'description' => 'Account entry denominator',
+        'type' => 'int',
+        'size' => 'big',
+        'not null' => TRUE,
+        'default' => 1,
       ),
     ),
     'primary key' => array('eid'),
