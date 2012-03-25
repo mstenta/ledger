@@ -46,15 +46,21 @@ function ledger_import_gnucash_entity_insert($entity, $type) {
       }
 
       // Translate the value to a float.
-      // GnuCash formats values like "100000/100" for $1000
-      $value = str_replace('/100', '', $entity->ledger_account_entry_values[$i]);
-      $value = (float) $value / 100;
+      // GnuCash formats values like "100000/100" for $1000.00
+      $value_num = 0;
+      $value_denom = 1;
+      $values = explode('/', $entity->ledger_account_entry_values[$i]);
+      if (count($values) == 2) {
+        $value_num = $values[0];
+        $value_denom = $values[1];
+      }
 
       // Create an Account entry entity.
       $account_entry = ledger_account_entry_new();
       $account_entry->tid = $entity->tid;
       $account_entry->aid = $aid;
-      $account_entry->value = $value;
+      $account_entry->value_num = $value_num;
+      $account_entry->value_denom = $value_denom;
       ledger_account_entry_save($account_entry);
     }
   }
