@@ -19,4 +19,14 @@ function ledger_account_entry_views_data_alter(&$data) {
       'float' => TRUE,
     ),
   );
+
+  // Add a field for the calculated account balance.
+  $data['ledger_account']['balance'] = array(
+    'field' => array(
+      'title' => t('Balance'),
+      'help' => t('The current balance of the account.'),
+      'handler' => 'ledger_account_handler_field_balance',
+      'float' => TRUE,
+    ),
+  );
 }

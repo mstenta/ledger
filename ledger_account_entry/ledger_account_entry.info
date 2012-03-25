@@ -5,3 +5,4 @@ package = "Ledger"
 dependencies[] = ledger_account
 
 files[] = views/handlers/ledger_account_entry_handler_field_value.inc
+files[] = views/handlers/ledger_account_handler_field_balance.inc

@@ -27,7 +27,6 @@ function ledger_account_ui_views_default_views() {
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Ledger Accounts';
-  $handler->display->display_options['group_by'] = TRUE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['access']['perm'] = 'administer ledger';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -105,11 +104,6 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['relationships']['parent']['field'] = 'parent';
   $handler->display->display_options['relationships']['parent']['label'] = 'Parent Account';
   $handler->display->display_options['relationships']['parent']['required'] = 0;
-  /* Relationship: Account: Account entry */
-  $handler->display->display_options['relationships']['ledger_account_entry']['id'] = 'ledger_account_entry';
-  $handler->display->display_options['relationships']['ledger_account_entry']['table'] = 'ledger_account';
-  $handler->display->display_options['relationships']['ledger_account_entry']['field'] = 'ledger_account_entry';
-  $handler->display->display_options['relationships']['ledger_account_entry']['required'] = 0;
   /* Field: Account: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'ledger_account';
@@ -198,34 +192,31 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['fields']['name_1']['hide_empty'] = 0;
   $handler->display->display_options['fields']['name_1']['empty_zero'] = 0;
   $handler->display->display_options['fields']['name_1']['hide_alter_empty'] = 0;
-  /* Field: SUM(Account entry: Value) */
-  $handler->display->display_options['fields']['value']['id'] = 'value';
-  $handler->display->display_options['fields']['value']['table'] = 'ledger_account_entry';
-  $handler->display->display_options['fields']['value']['field'] = 'value';
-  $handler->display->display_options['fields']['value']['relationship'] = 'ledger_account_entry';
-  $handler->display->display_options['fields']['value']['group_type'] = 'sum';
-  $handler->display->display_options['fields']['value']['label'] = 'Balance';
-  $handler->display->display_options['fields']['value']['alter']['alter_text'] = 0;
-  $handler->display->display_options['fields']['value']['alter']['make_link'] = 0;
-  $handler->display->display_options['fields']['value']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['value']['alter']['external'] = 0;
-  $handler->display->display_options['fields']['value']['alter']['replace_spaces'] = 0;
-  $handler->display->display_options['fields']['value']['alter']['trim_whitespace'] = 0;
-  $handler->display->display_options['fields']['value']['alter']['nl2br'] = 0;
-  $handler->display->display_options['fields']['value']['alter']['word_boundary'] = 1;
-  $handler->display->display_options['fields']['value']['alter']['ellipsis'] = 1;
-  $handler->display->display_options['fields']['value']['alter']['more_link'] = 0;
-  $handler->display->display_options['fields']['value']['alter']['strip_tags'] = 0;
-  $handler->display->display_options['fields']['value']['alter']['trim'] = 0;
-  $handler->display->display_options['fields']['value']['alter']['html'] = 0;
-  $handler->display->display_options['fields']['value']['element_label_colon'] = 1;
-  $handler->display->display_options['fields']['value']['element_default_classes'] = 1;
-  $handler->display->display_options['fields']['value']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['value']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['value']['hide_alter_empty'] = 1;
-  $handler->display->display_options['fields']['value']['set_precision'] = 1;
-  $handler->display->display_options['fields']['value']['precision'] = '2';
-  $handler->display->display_options['fields']['value']['format_plural'] = 0;
+  /* Field: Account: Balance */
+  $handler->display->display_options['fields']['balance']['id'] = 'balance';
+  $handler->display->display_options['fields']['balance']['table'] = 'ledger_account';
+  $handler->display->display_options['fields']['balance']['field'] = 'balance';
+  $handler->display->display_options['fields']['balance']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['balance']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['balance']['alter']['more_link'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['balance']['element_label_colon'] = 0;
+  $handler->display->display_options['fields']['balance']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['balance']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['balance']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['balance']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['balance']['set_precision'] = 1;
+  $handler->display->display_options['fields']['balance']['precision'] = '2';
+  $handler->display->display_options['fields']['balance']['format_plural'] = 0;
   /* Field: Account: Operations */
   $handler->display->display_options['fields']['account_ops']['id'] = 'account_ops';
   $handler->display->display_options['fields']['account_ops']['table'] = 'ledger_account';
