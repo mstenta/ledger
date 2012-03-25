@@ -10,7 +10,7 @@
  */
 function ledger_account_entry_views_data_alter(&$data) {
 
-  // Replace the ledger_account_entry value field handler with out own extended handler.
+  // Add a field for the calculated account entry value.
   $data['ledger_account_entry']['value'] = array(
     'field' => array(
       'title' => t('Value'),

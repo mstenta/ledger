@@ -39,14 +39,14 @@ function ledger_account_entry_schema() {
         'not null' => FALSE,
       ),
       'value_num' => array(
-        'description' => 'Account entry value',
+        'description' => 'Account entry value numerator',
         'type' => 'int',
         'size' => 'big',
         'not null' => TRUE,
         'default' => 0,
       ),
       'value_denom' => array(
-        'description' => 'Account entry denominator',
+        'description' => 'Account entry value denominator',
         'type' => 'int',
         'size' => 'big',
         'not null' => TRUE,
