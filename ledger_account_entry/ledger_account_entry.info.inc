@@ -47,15 +47,6 @@ function ledger_account_entry_entity_property_info() {
     'required' => TRUE,
     'schema field' => 'description',
   );
-  $account_entry['value'] = array(
-    'type' => 'decimal',
-    'label' => t('Value'),
-    'description' => t('The value of the account entry.'),
-    'setter callback' => 'entity_property_verbatim_set',
-    'setter permission' => 'administer ledger',
-    'required' => TRUE,
-    'schema field' => 'value',
-  );
 
   return $info;
 }
