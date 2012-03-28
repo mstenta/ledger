@@ -211,7 +211,7 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
 
   // Load the account entries associated with this transaction.
   $account_entry_ids = array();
-  $result = db_query('SELECT eid FROM {ledger_account_entry} WHERE tid = :tid', array(':tid' => $transaction->tid));
+  $result = db_query('SELECT eid FROM {ledger_account_entry} WHERE tid = :tid AND tid != 0', array(':tid' => $transaction->tid));
   foreach ($result as $record) {
     $account_entry_ids[] = $record->eid;
   }
