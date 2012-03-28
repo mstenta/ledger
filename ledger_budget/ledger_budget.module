@@ -105,6 +105,50 @@ class LedgerBudgetController extends EntityAPIController {
     $budget = parent::create($values);
     return $budget;
   }
+
+  /**
+   * Save a budget.
+   *
+   * @param $transaction
+   *   Optionally a DatabaseTransaction object to use. Allows overrides to pass
+   *   in their transaction object.
+   */
+  public function save($entity, DatabaseTransaction $transaction = NULL) {
+
+    // Convert the entry's value to a numerator and denominator.
+    if (!empty($entity->value)) {
+
+      // Count the number of decimal places.
+      $precision = strlen(substr(strrchr($entity->value, '.'), 1));
+
+      // Calculate the denominator based on the precision.
+      $entity->value_denom = pow(10, $precision);
+      
+      // Calculate the numerator based on the denominator.
+      $entity->value_num = $entity->value * $entity->value_denom;
+    }
+
+    // Pass it to the parent controller's save function.
+    parent::save($entity, $transaction);
+  }
+
+  /**
+   * Load budgets.
+   */
+  public function load($ids = array(), $conditions = array()) {
+    
+    // Load the entity using the parent controller's load function.
+    $entities = parent::load($ids, $conditions);
+
+    // Loop through the returned entities.
+    foreach ($entities as $entity) {
+
+      // Calculate the value based on value_num and value_denom.
+      $entity->value = $entity->value_num / $entity->value_denom;
+    }
+
+    return $entities;
+  }
 }
 
 /**

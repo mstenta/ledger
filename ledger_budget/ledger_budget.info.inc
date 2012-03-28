@@ -39,14 +39,6 @@ function ledger_budget_entity_property_info() {
     'setter permission' => 'administer ledger',
     'schema field' => 'target_aid',
   );
-  $transaction['value'] = array(
-    'type' => 'decimal',
-    'label' => t('Value'),
-    'description' => t('The budgeted amount'),
-    'setter callback' => 'entity_property_verbatim_set',
-    'setter permission' => 'administer ledger',
-    'schema field' => 'value',
-  );
   $transaction['effective'] = array(
     'type' => 'date',
     'label' => t('Effective'),
@@ -90,5 +82,6 @@ function ledger_budget_entity_property_info() {
     'required' => TRUE,
     'schema field' => 'description',
   );
+
   return $info;
 }

@@ -32,11 +32,19 @@ function ledger_budget_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'value' => array(
-        'description' => 'Transaction value',
-        'type' => 'float',
+      'value_num' => array(
+        'description' => 'Transaction value numerator',
+        'type' => 'int',
+        'size' => 'big',
         'not null' => TRUE,
         'default' => 0,
+      ),
+      'value_denom' => array(
+        'description' => 'Transaction value denominator',
+        'type' => 'int',
+        'size' => 'big',
+        'not null' => TRUE,
+        'default' => 1,
       ),
       'effective' => array(
         'description' => 'Timestamp for when the budget takes effect',
