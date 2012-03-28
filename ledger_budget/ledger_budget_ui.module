@@ -194,6 +194,22 @@ function ledger_budget_form($form, &$form_state, $budget, $op = 'edit') {
     '#description' => t('Timestamp for when the budget expires'),
   );
 
+  // Use the date_popup module if it's available.
+  if (module_exists('date_popup')) {
+    $form['effective']['#type'] = 'date_popup';
+    $form['effective'] += array(
+      '#date_format' => 'Y-m-d H:i:s',
+      '#date_type' => DATE_UNIX,
+      '#date_timezone' => date_default_timezone(),
+    );
+    $form['expires']['#type'] = 'date_popup';
+    $form['expires'] += array(
+      '#date_format' => 'Y-m-d H:i:s',
+      '#date_type' => DATE_UNIX,
+      '#date_timezone' => date_default_timezone(),
+    );
+  }
+
   $form['budget_aid'] = array(
     '#type' => 'select',
     '#title' => t('Budget Account ID'),
@@ -247,22 +263,6 @@ function ledger_budget_form($form, &$form_state, $budget, $op = 'edit') {
     '#default_value' => $budget->description,
     '#description' => t('A brief description of the budget.'),
   );
-
-  // Use the date_popup module if it's available.
-  if (module_exists('date_popup')) {
-    $form['effective']['#type'] = 'date_popup';
-    $form['effective'] += array(
-      '#date_format' => 'Y-m-d H:i:s',
-      '#date_type' => DATE_UNIX,
-      '#date_timezone' => date_default_timezone(),
-    );
-    $form['expires']['#type'] = 'date_popup';
-    $form['expires'] += array(
-      '#date_format' => 'Y-m-d H:i:s',
-      '#date_type' => DATE_UNIX,
-      '#date_timezone' => date_default_timezone(),
-    );
-  }
 
   // Add the Field API elements.
   field_attach_form('ledger_budget', $budget, $form, $form_state);
