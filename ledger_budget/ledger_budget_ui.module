@@ -176,7 +176,7 @@ function ledger_budget_settings_form($form, &$form_state) {
 function ledger_budget_form($form, &$form_state, $budget, $op = 'edit') {
 
   // Save the budget object to the $form_state.
-  //$form_state['ledger_budget'] = $budget;
+  $form_state['ledger_budget'] = $budget;
 
   // Effective Date
   $form['effective'] = array(
@@ -286,12 +286,10 @@ function ledger_budget_form($form, &$form_state, $budget, $op = 'edit') {
 function ledger_budget_form_validate(&$form, &$form_state) {
 
   // Load budget object from $form_state
-  //$budget = $form_state['ledger_budget'];
-  $budget = (object)$form_state['values'];
+  $budget = $form_state['ledger_budget'];
 
+  // Convert the timestamps to unix-style and validate
   $timestamps = array('effective', 'expires');
-
-  // Convert the timestamp to unix-style and validate
   foreach ($timestamps as $timestamp) {
   $form_state['values'][$timestamp] = strtotime($form_state['values'][$timestamp]);
     if ($form_state['values'][$timestamp] === FALSE) {
@@ -307,9 +305,29 @@ function ledger_budget_form_validate(&$form, &$form_state) {
  * Submit callback for ledger_budget_form().
  */
 function ledger_budget_form_submit(&$form, &$form_state) {
-  $budget = (object) $form_state['values'];
-  field_attach_submit('budget', $budget, $form, $form_state);
-  $budget = ledger_budget_save($budget);
+
+  // If the user is editing a budget, merge the changes with the original values.
+  if ($form_state['ledger_budget']->bid) {
+
+    // Load the budget from the form_state.
+    $budget = $form_state['ledger_budget'];
+
+    // Merge in the values from the form.
+    $budget = (object) array_merge((array) $budget, $form_state['values']);
+  }
+
+  // If a new budget is being created, build a new transaction object.
+  else {
+    $budget = ledger_budget_new($form_state['values']);
+  }
+
+  // Notify field widgets.
+  field_attach_submit('ledger_budget', $budget, $form, $form_state);
+
+  // Save.
+  ledger_budget_save($budget);
+
+  // Provide a default redirect.
   $form_state['redirect'] = 'admin/ledger/budgets';
 }
 
