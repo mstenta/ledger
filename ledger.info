@@ -2,3 +2,5 @@ name = "Ledger"
 description = "Defines features and functions common to the Ledger modules. Must be enabled to uninstall other Ledger modules."
 core = 7.x
 package = "Ledger"
+
+files[] = views/handlers/ledger_handler_field_value.inc

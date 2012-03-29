@@ -18,7 +18,7 @@ function ledger_budget_views_data_alter(&$data) {
     'field' => array(
       'title' => t('Value'),
       'help' => t('The value of the budgeted transaction.'),
-      'handler' => 'ledger_budget_handler_field_value',
+      'handler' => 'ledger_handler_field_value',
       'float' => TRUE,
     ),
   );

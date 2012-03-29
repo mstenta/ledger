@@ -8,18 +8,7 @@
 /**
  * Field handler to provide more advanced display options of an account entry's
  */
-class ledger_account_entry_handler_field_value extends views_handler_field_numeric {
-
-  // Add fields to the query.
-  function query() {
-
-    // Ensure the main table for this field is included.
-    $this->ensure_my_table();
-
-    // Formula for calculating the final value, by dividing value by denom.
-    $formula = $this->table_alias . '.value_num / ' . $this->table_alias . '.value_denom';
-    $this->field_alias = $this->query->add_field(NULL, $formula, $this->table . '_' . $this->field);
-  }
+class ledger_account_entry_handler_field_value extends ledger_handler_field_value {
 
   // Define the options.
   function option_definition() {

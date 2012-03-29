@@ -2,13 +2,10 @@
 
 /**
  * @file
- * Contains the budget value field handler.
+ * Contains the value field handler.
+ * This handler can be used by modules that store values in value_num and value_denom fields.
  */
-
-/**
- * Field handler for budget value.
- */
-class ledger_budget_handler_field_value extends views_handler_field_numeric {
+class ledger_handler_field_value extends views_handler_field_numeric {
 
   // Add fields to the query.
   function query() {
