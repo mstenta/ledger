@@ -20,12 +20,12 @@ function ledger_account_entry_views_data_alter(&$data) {
     ),
   );
 
-  // Add a field for displaying the running account balance at the time of an account entry.
-  $data['ledger_account_entry']['account_balance'] = array(
+  // Add a field for the account balance at the time of the account entry.
+  $data['ledger_account_entry']['balance'] = array(
     'field' => array(
-      'title' => t('Running account balance'),
-      'help' => t('Display the running balance of the account at the time of an account entry.'),
-      'handler' => 'ledger_account_entry_handler_field_account_balance',
+      'title' => t('Balance'),
+      'help' => t('The balance of the account at the time of the account entry.'),
+      'handler' => 'ledger_account_entry_handler_field_balance',
       'float' => TRUE,
     ),
   );
