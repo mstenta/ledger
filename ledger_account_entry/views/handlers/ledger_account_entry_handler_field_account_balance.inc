@@ -39,7 +39,7 @@ class ledger_account_entry_handler_field_account_balance extends views_handler_f
 
     // Build a Drupal query object to pass in.
     $subquery = db_select('ledger_account_entry', 'e');
-    $subquery->addExpression('SUM(e.value)', 'account_balance');
+    $subquery->addExpression('SUM(e.value_num / e.value_denom)', 'account_balance');
     $subquery->join('ledger_transaction', 't', 'e.tid = t.tid');
     $subquery->where("e.aid = $this->table_alias.aid");
     $subquery->where("t.timestamp <= $this->transaction_table.timestamp");
