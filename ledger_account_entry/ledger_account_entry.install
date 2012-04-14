@@ -52,6 +52,20 @@ function ledger_account_entry_schema() {
         'not null' => TRUE,
         'default' => 1,
       ),
+      'balance_num' => array(
+        'description' => 'Account entry balance numerator',
+        'type' => 'int',
+        'size' => 'big',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'balance_denom' => array(
+        'description' => 'Account entry balance denominator',
+        'type' => 'int',
+        'size' => 'big',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
     ),
     'primary key' => array('eid'),
     'foreign keys' => array(
