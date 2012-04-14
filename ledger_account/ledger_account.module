@@ -397,8 +397,119 @@ function ledger_account_get_types($type = NULL) {
 
 
 /***************************************************************
- * Account form helper functions.
+ * Account helper functions.
  * *************************************************************/
+
+/**
+ * Create a hierarchical representation of accounts. This function is modeled after Drupal's taxonomy_get_tree().
+ *
+ * @param $parent
+ *   The account ID under which to generate the tree. If 0, generate the tree
+ *   for all accounts.
+ * @param $max_depth
+ *   The number of levels of the tree to return. Leave NULL to return all levels.
+ * @param $load_entities
+ *   If TRUE, a full entity load will occur on the account objects. Otherwise they
+ *   are partial objects queried directly from the {ledger_account} table to
+ *   save execution time and memory consumption when listing large numbers of
+ *   accounts. Defaults to FALSE.
+ *
+ * @return
+ *   An array of all account objects in the tree. Each account object is extended
+ *   to have "depth" and "parents" attributes in addition to its normal ones.
+ *   Results are statically cached. Account objects will be partial or complete
+ *   depending on the $load_entities parameter.
+ */
+function ledger_account_get_tree($parent = 0, $max_depth = NULL, $load_entities = FALSE) {
+  $children = &drupal_static(__FUNCTION__, array());
+  $parents = &drupal_static(__FUNCTION__ . ':parents', array());
+  $accounts = &drupal_static(__FUNCTION__ . ':accounts', array());
+
+  // We cache trees, so it's not CPU-intensive to call get_tree() on an account
+  // and its children, too.
+  if (empty($children)) {
+    $children = array();
+    $parents = array();
+    $accounts = array();
+
+    // Load all the accounts from the database.
+    $query = db_select('ledger_account', 'a');
+    $query->fields('a');
+    $query->orderBy('a.pid');  // Order by parent account id first.
+    $query->orderBy('a.name');  // Order by account name second.
+    $result = $query->execute();
+
+    foreach ($result as $account) {
+      $children[$account->pid][] = $account->aid;
+      $parents[$account->aid][] = $account->pid;
+      $accounts[$account->aid] = $account;
+    }
+  }
+
+  // Load full entities, if necessary. The entity controller statically
+  // caches the results.
+  if ($load_entities) {
+    $account_entities = ledger_account_load_multiple(array_keys($accounts));
+  }
+
+  $max_depth = (!isset($max_depth)) ? count($children) : $max_depth;
+  $tree = array();
+
+  // Keeps track of the parents we have to process, the last entry is used
+  // for the next processing step.
+  $process_parents = array();
+  $process_parents[] = $parent;
+
+  // Loops over the parent accounts and adds its children to the tree array.
+  // Uses a loop instead of a recursion, because it's more efficient.
+  while (count($process_parents)) {
+    $parent = array_pop($process_parents);
+    // The number of parents determines the current depth.
+    $depth = count($process_parents);
+    if ($max_depth > $depth && !empty($children[$parent])) {
+      $has_children = FALSE;
+      $child = current($children[$parent]);
+      do {
+        if (empty($child)) {
+          break;
+        }
+        $account = $load_entities ? $account_entities[$child] : $accounts[$child];
+        if (isset($parents[$account->aid])) {
+          // Clone the account so that the depth attribute remains correct
+          // in the event of multiple parents.
+          $account = clone $account;
+        }
+        $account->depth = $depth;
+        unset($account->pid);
+        $account->parents = $parents[$account->aid];
+        $tree[] = $account;
+        if (!empty($children[$account->aid])) {
+          $has_children = TRUE;
+
+          // We have to continue with this parent later.
+          $process_parents[] = $parent;
+          // Use the current account as parent for the next iteration.
+          $process_parents[] = $account->aid;
+
+          // Reset pointers for child lists because we step in there more often
+          // with multi parents.
+          reset($children[$account->aid]);
+          // Move pointer so that we get the correct account the next time.
+          next($children[$parent]);
+          break;
+        }
+      } while ($child = next($children[$parent]));
+
+      if (!$has_children) {
+        // We processed all accounts in this hierarchy-level, reset pointer
+        // so that this function works the next time it gets called.
+        reset($children[$parent]);
+      }
+    }
+  }
+
+  return $tree;
+}
 
 /**
  * Returns a list of accounts to use in a form select element.
