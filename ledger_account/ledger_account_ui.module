@@ -369,6 +369,10 @@ function ledger_account_delete_form_submit($form, &$form_state) {
  */
 function ledger_account_type_form($form, &$form_state, $account_type, $op = 'edit') {
 
+  // Save the account type object to the $form_state.
+  $form_state['ledger_account_type'] = $account_type;
+
+  // If the account type is cloned, add "cloned" to it's label, and unset it's type.
   if ($op == 'clone') {
     $account_type->label .= ' (cloned)';
     $account_type->type = '';
@@ -409,7 +413,25 @@ function ledger_account_type_form($form, &$form_state, $account_type, $op = 'edi
  * Form API submit callback for the type form.
  */
 function ledger_account_type_form_submit(&$form, &$form_state) {
-  $account_type = ledger_account_type_new($form_state['values']);
+
+  // If the user is editing an account, load a fresh copy to merge changes to.
+  if ($form_state['ledger_account_type']->id) {
+    $account_type = ledger_account_type_load($form_state['ledger_account_type']->id);
+    $account_type->label = $form_state['values']['label'];
+    $account_type->type = $form_state['values']['type'];
+  }
+
+  // If a new account is being created, build a new account object.
+  else {
+    $account_type = ledger_account_type_new($form_state['values']);
+  }
+
+  // Save the account.
   ledger_account_type_save($account_type);
+
+  // Display a message.
+  drupal_set_message('Account type saved.');
+
+  // Provide a default redirect.
   $form_state['redirect'] = 'admin/ledger/settings/account-types';
 }
