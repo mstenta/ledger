@@ -284,6 +284,9 @@ function ledger_transaction_form_submit(&$form, &$form_state) {
   // Execute the Account Entry Manager submit function.
   ledger_account_entry_manager_submit($form, $form_state, array('account_entries'), $transaction);
 
+  // Display a message.
+  drupal_set_message('Transaction saved.');
+
   // Provide a default redirect.
   $form_state['redirect'] = 'admin/ledger/transactions';
 }
