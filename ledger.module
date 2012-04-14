@@ -167,3 +167,30 @@ function ledger_delete_instance($instance) {
     field_update_field($field);
   }
 }
+
+/***************************************************************
+ * Ledger helper functions.
+ * *************************************************************/
+
+/**
+ * Converts a decimal value into a numerator and denominator.
+ *
+ * @param $value
+ *   The decimal value to be converted.
+ *
+ * @return
+ *   An array with a 'num' and 'denom' key.
+ */
+function ledger_value_fraction($value) {
+
+  // Count the number of decimal places.
+  $precision = strlen(substr(strrchr($value, '.'), 1));
+
+  // Calculate the denominator based on the precision.
+  $fraction['denom'] = pow(10, $precision);
+
+  // Calculate the numerator based on the denominator.
+  $fraction['num'] = $value * $fraction['denom'];
+
+  return $fraction;
+}

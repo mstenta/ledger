@@ -117,15 +117,9 @@ class LedgerBudgetController extends EntityAPIController {
 
     // Convert the entry's value to a numerator and denominator.
     if (!empty($entity->value)) {
-
-      // Count the number of decimal places.
-      $precision = strlen(substr(strrchr($entity->value, '.'), 1));
-
-      // Calculate the denominator based on the precision.
-      $entity->value_denom = pow(10, $precision);
-      
-      // Calculate the numerator based on the denominator.
-      $entity->value_num = $entity->value * $entity->value_denom;
+      $fraction = ledger_value_fraction($entity->value);
+      $entity->value_num = $fraction['num'];
+      $entity->value_denom = $fraction['denom'];
     }
 
     // Pass it to the parent controller's save function.
