@@ -521,12 +521,14 @@ function ledger_account_select_options() {
     // Give it a 0 value to start
     $options[0] = 'none';
 
-    // Load up all the accounts from the database.
-    $query = db_select('ledger_account', 'a');
-    $query->fields('a', array('aid', 'name'));
-    $accounts = $query->execute();
-    foreach ($accounts as $account) {
-      $options[$account->aid] = $account->name;
+    // Load the hierarchic list of accounts.
+    $account_tree = ledger_account_get_tree();
+
+    // Loop through the accounts.
+    foreach ($account_tree as $account) {
+    
+      // Add the account to the options, with dashes indicating depth.
+      $options[$account->aid] = str_repeat('-', $account->depth) . $account->name;
     }
   }
   return $options;
