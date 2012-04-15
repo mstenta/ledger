@@ -22,8 +22,8 @@ function theme_ledger_account_entry_manager($variables) {
       t(''),
       t('Description'),
       t('Account'),
-      t('Increase'),
-      t('Decrease'),
+      t('Debit'),
+      t('Credit'),
     ),
     'rows' => array(),
   );

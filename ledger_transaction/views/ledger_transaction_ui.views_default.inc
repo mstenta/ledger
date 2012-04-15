@@ -294,7 +294,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['value']['table'] = 'ledger_account_entry';
   $handler->display->display_options['fields']['value']['field'] = 'value';
   $handler->display->display_options['fields']['value']['relationship'] = 'ledger_account_entry';
-  $handler->display->display_options['fields']['value']['label'] = 'Increase';
+  $handler->display->display_options['fields']['value']['label'] = 'Debit';
   $handler->display->display_options['fields']['value']['alter']['alter_text'] = 0;
   $handler->display->display_options['fields']['value']['alter']['make_link'] = 0;
   $handler->display->display_options['fields']['value']['alter']['absolute'] = 0;
@@ -322,7 +322,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['value_1']['table'] = 'ledger_account_entry';
   $handler->display->display_options['fields']['value_1']['field'] = 'value';
   $handler->display->display_options['fields']['value_1']['relationship'] = 'ledger_account_entry';
-  $handler->display->display_options['fields']['value_1']['label'] = 'Decrease';
+  $handler->display->display_options['fields']['value_1']['label'] = 'Credit';
   $handler->display->display_options['fields']['value_1']['alter']['alter_text'] = 0;
   $handler->display->display_options['fields']['value_1']['alter']['make_link'] = 0;
   $handler->display->display_options['fields']['value_1']['alter']['absolute'] = 0;

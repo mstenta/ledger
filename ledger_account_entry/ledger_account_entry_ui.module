@@ -201,7 +201,7 @@ function ledger_account_entry_ui_manager_validate($element, &$form_state) {
       if ($form_state['triggering_element']['#value'] != 'Add account entry' && $form_state['triggering_element']['#value'] != 'Remove') {
 
         // Notify the user that their account entries don't balance.
-        form_set_error(implode('][', $element['#array_parents']), 'The account entries do not balance. Please add/remove entries so the Increase and Decrease columns add up to zero.');
+        form_set_error(implode('][', $element['#array_parents']), 'The account entries do not balance. Please add/remove entries so the Debit and Credit columns net to zero.');
       }
     }
   }
