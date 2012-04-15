@@ -402,6 +402,22 @@ function ledger_account_type_form($form, &$form_state, $account_type, $op = 'edi
     '#description' => t('A unique machine-readable name for this account type. It must only contain lowercase letters, numbers, and underscores.'),
   );
 
+  // Fundamental account type.
+  $form['fundamental'] = array(
+    '#type' => 'select',
+    '#title' => t('Fundamental account type'),
+    '#description' => t('The fundamental type of account, used for reporting.'),
+    '#options' => array(
+      'asset' => t('Asset'),
+      'liability' => t('Liability'),
+      'equity' => t('Equity'),
+      'income' => t('Income'),
+      'expense' => t('Expense'),
+    ),
+    '#default_value' => isset($account_type->fundamental) ? $account_type->fundamental : NULL,
+    '#required' => TRUE,
+  );
+
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
@@ -422,6 +438,7 @@ function ledger_account_type_form_submit(&$form, &$form_state) {
     $account_type = ledger_account_type_load($form_state['ledger_account_type']->id);
     $account_type->label = $form_state['values']['label'];
     $account_type->type = $form_state['values']['type'];
+    $account_type->fundamental = $form_state['values']['fundamental'];
   }
 
   // If a new account is being created, build a new account object.

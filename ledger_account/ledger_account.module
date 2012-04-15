@@ -324,6 +324,7 @@ class LedgerAccountTypeController extends EntityAPIControllerExportable {
       'id' => '',
       'type' => '',
       'label' => '',
+      'fundamental' => '',
     );
 
     $account_type = parent::create($values);
