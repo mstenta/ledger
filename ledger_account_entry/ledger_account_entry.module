@@ -120,6 +120,9 @@ class LedgerAccountEntryController extends EntityAPIController {
 
     // Pass it to the parent controller's save function.
     parent::save($entity, $transaction);
+
+    // Recalculate the account entry balances.
+    ledger_account_entry_calculate_balances($entity->aid);
   }
 
   /**
