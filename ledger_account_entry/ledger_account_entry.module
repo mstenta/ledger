@@ -248,3 +248,61 @@ function ledger_account_entry_delete($eid) {
 function ledger_account_entry_delete_multiple($account_entry_ids) {
   return entity_get_controller('ledger_account_entry')->delete($account_entry_ids);
 }
+
+/***************************************************************
+ * Account entry helper functions.
+ * *************************************************************/
+
+/**
+ * Update account entry balances.
+ *
+ * @param $aid
+ *   The id of the account to update balances for. If none is provided, all accounts will be updated.
+ */
+function ledger_account_entry_calculate_balances($aid = NULL) {
+
+  // If a specific account id is provided, recalculate the balances for account entries in it.
+  if ($aid) {
+
+    // Load all account entries for the account.
+    $query = db_select('ledger_account_entry', 'e');
+    $query->addField('e', 'eid');
+    $query->addExpression('e.value_num / e.value_denom', 'value');
+    $query->join('ledger_transaction', 't', 'e.tid = t.tid');
+    $query->condition('e.aid', $aid);
+    $query->orderby('t.timestamp', 'ASC');
+    $result = $query->execute();
+
+    // Initialize the balance.
+    $balance = 0;
+
+    // Loop through the results.
+    foreach ($result as $entry) {
+
+      // Add the value to the balance.
+      $balance += $entry->value;
+
+      // Convert the balance to a numerator and denominator.
+      $fraction = ledger_value_fraction($balance);
+      $balance_num = $fraction['num'];
+      $balance_denom = $fraction['denom'];
+
+      // Update the account entry's balance fields in the database.
+      db_query('UPDATE {ledger_account_entry} SET balance_num = :num, balance_denom = :denom WHERE eid = :eid', array(':num' => $balance_num, ':denom' => $balance_denom, ':eid' => $entry->eid));
+    }
+  }
+
+  // If no account id is provided, load a list of all account ids and recalculate all of them by calling this function again.
+  else {
+
+    // Load all the account ids.
+    $query = db_select('ledger_account', 'a');
+    $query->addField('a', 'aid');
+    $result = $query->execute();
+
+    // Loop through all the account ids and recalculate the balances for each.
+    foreach ($result as $account) {
+      ledger_account_entry_calculate_balances($account->aid);
+    }
+  }
+}
