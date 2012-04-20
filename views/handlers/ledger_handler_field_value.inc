@@ -23,6 +23,9 @@ class ledger_handler_field_value extends views_handler_field_numeric {
     // Ensure the main table for this field is included.
     $this->ensure_my_table();
 
+    // Add any additional fields (in case child classes add them).
+    $this->add_additional_fields();
+
     // Formula for calculating the final value, by dividing value by denom.
     $formula = $this->table_alias . '.' . $this->options['numerator'] . ' / ' . $this->table_alias . '.' . $this->options['denominator'];
     $this->field_alias = $this->query->add_field(NULL, $formula, $this->table . '_' . $this->field);
