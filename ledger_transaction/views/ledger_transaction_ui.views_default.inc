@@ -182,6 +182,7 @@ function ledger_transaction_ui_views_default_views() {
     'description' => 'description',
     'value' => 'value',
     'value_1' => 'value_1',
+    'balance' => 'balance',
     'transaction_ops' => 'transaction_ops',
   );
   $handler->display->display_options['style_options']['default'] = 'timestamp';
@@ -201,15 +202,16 @@ function ledger_transaction_ui_views_default_views() {
       'empty_column' => 0,
     ),
     'value' => array(
-      'sortable' => 1,
-      'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
     'value_1' => array(
-      'sortable' => 1,
-      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'balance' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -343,6 +345,32 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['value_1']['precision'] = '2';
   $handler->display->display_options['fields']['value_1']['format_plural'] = 0;
   $handler->display->display_options['fields']['value_1']['format'] = 'decrease';
+  /* Field: Account entry: Balance */
+  $handler->display->display_options['fields']['balance']['id'] = 'balance';
+  $handler->display->display_options['fields']['balance']['table'] = 'ledger_account_entry';
+  $handler->display->display_options['fields']['balance']['field'] = 'balance';
+  $handler->display->display_options['fields']['balance']['relationship'] = 'ledger_account_entry';
+  $handler->display->display_options['fields']['balance']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['balance']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['balance']['alter']['more_link'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['balance']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['balance']['element_label_colon'] = 1;
+  $handler->display->display_options['fields']['balance']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['balance']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['balance']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['balance']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['balance']['set_precision'] = 1;
+  $handler->display->display_options['fields']['balance']['precision'] = '2';
+  $handler->display->display_options['fields']['balance']['format_plural'] = 0;
   /* Field: Transaction: Operations */
   $handler->display->display_options['fields']['transaction_ops']['id'] = 'transaction_ops';
   $handler->display->display_options['fields']['transaction_ops']['table'] = 'ledger_transaction';
