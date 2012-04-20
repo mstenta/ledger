@@ -6,7 +6,7 @@
  */
 
 /**
- * Implementations hook_views_data_alter().
+ * Implements hook_views_data_alter().
  */
 function ledger_budget_views_data_alter(&$data) {
 

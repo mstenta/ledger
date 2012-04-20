@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Ledger Account Entry Views data.
+ * Ledger Account Entry Views hooks.
  */
 
 /**
- * Implementations hook_views_data_alter().
+ * Implements hook_views_data_alter().
  */
 function ledger_account_entry_views_data_alter(&$data) {
 
