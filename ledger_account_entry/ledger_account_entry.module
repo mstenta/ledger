@@ -35,6 +35,49 @@ function ledger_account_entry_entity_info() {
   return $entities;
 }
 
+/**
+ * Implements hook_[entity]_insert().
+ */
+function ledger_account_entry_ledger_account_entry_insert($account_entry) {
+
+  // Recalculate the account entry balances when a new account entry is inserted..
+  ledger_account_entry_calculate_balances($account_entry->aid);
+}
+
+/**
+ * Implements hook_[entity]_update().
+ */
+function ledger_account_entry_ledger_account_entry_update($account_entry) {
+
+  // Start a list of accounts to recalculate account entry balances in.
+  $aids = array();
+
+  // If the value of the account entry is changed, recalculate the account entry balances in that account.
+  if ($account_entry->value != $account_entry->original->value) {
+    $aids[] = $account_entry->aid;
+  }
+
+  // If the account entry is moved to another account, recalculate the account entry balances in both accounts.
+  if ($account_entry->aid != $account_entry->original->aid) {
+    $aids[] = $account_entry->aid;
+    $aids[] = $account_entry->original->aid;
+  }
+
+  // Recalculate account entry balances for the specified accounts.
+  foreach ($aids as $aid) {
+    ledger_account_entry_calculate_balances($aid);
+  }
+}
+
+/**
+ * Implements hook_[entity]_delete().
+ */
+function ledger_account_entry_ledger_account_entry_delete($account_entry) {
+
+  // Recalculate the account entry balances when an account entry is deleted.
+  ledger_account_entry_calculate_balances($account_entry->aid);
+}
+
 /***************************************************************
  * Views API hooks
  * *************************************************************/
@@ -120,9 +163,6 @@ class LedgerAccountEntryController extends EntityAPIController {
 
     // Pass it to the parent controller's save function.
     parent::save($entity, $transaction);
-
-    // Recalculate the account entry balances.
-    ledger_account_entry_calculate_balances($entity->aid);
   }
 
   /**
