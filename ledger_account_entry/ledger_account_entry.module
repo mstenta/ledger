@@ -301,11 +301,30 @@ function ledger_account_entry_delete_multiple($account_entry_ids) {
  *
  * @param $aid
  *   The id of the account to update balances for. If none is provided, all accounts will be updated.
+ * @param $timestamp
+ *   The timestamp to start with. All account entries with a timestamp greater than or equal to will be updated.
+ *   If none is provided, all account entries will be updated.
  */
-function ledger_account_entry_calculate_balances($aid = NULL) {
+function ledger_account_entry_calculate_balances($aid = NULL, $timestamp = 0) {
 
   // If a specific account id is provided, recalculate the balances for account entries in it.
   if ($aid) {
+
+    // Initialize the balance.
+    $balance = 0;
+
+    // Start with the last balance before the specified timestamp (if necessary).
+    if ($timestamp) {
+      $query = db_select('ledger_account_entry', 'e');
+      $query->addExpression('e.balance_num / e.balance_denom', 'balance');
+      $query->join('ledger_transaction', 't', 'e.tid = t.tid');
+      $query->condition('e.aid', $aid);
+      $query->condition('t.timestamp', $timestamp, '<');
+      $query->orderby('t.timestamp', 'DESC');
+      $query->range(0, 1);  // Only return the first result
+      $result = $query->execute();
+      $balance = $result->fetchField(0);
+    }
 
     // Load all account entries for the account.
     $query = db_select('ledger_account_entry', 'e');
@@ -313,11 +332,9 @@ function ledger_account_entry_calculate_balances($aid = NULL) {
     $query->addExpression('e.value_num / e.value_denom', 'value');
     $query->join('ledger_transaction', 't', 'e.tid = t.tid');
     $query->condition('e.aid', $aid);
+    $query->condition('t.timestamp', $timestamp, '>=');
     $query->orderby('t.timestamp', 'ASC');
     $result = $query->execute();
-
-    // Initialize the balance.
-    $balance = 0;
 
     // Loop through the results.
     foreach ($result as $entry) {
