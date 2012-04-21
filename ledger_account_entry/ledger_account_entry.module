@@ -40,14 +40,20 @@ function ledger_account_entry_entity_info() {
  */
 function ledger_account_entry_ledger_account_entry_insert($account_entry) {
 
+  // Load the transaction to get the timestamp.
+  $transaction = ledger_transaction_load($account_entry->tid);
+
   // Recalculate the account entry balances when a new account entry is inserted..
-  ledger_account_entry_calculate_balances($account_entry->aid);
+  ledger_account_entry_calculate_balances($account_entry->aid, $transaction->timestamp);
 }
 
 /**
  * Implements hook_[entity]_update().
  */
 function ledger_account_entry_ledger_account_entry_update($account_entry) {
+
+  // Load the transaction to get the timestamp.
+  $transaction = ledger_transaction_load($account_entry->tid);
 
   // Start a list of accounts to recalculate account entry balances in.
   $aids = array();
@@ -65,7 +71,7 @@ function ledger_account_entry_ledger_account_entry_update($account_entry) {
 
   // Recalculate account entry balances for the specified accounts.
   foreach ($aids as $aid) {
-    ledger_account_entry_calculate_balances($aid);
+    ledger_account_entry_calculate_balances($aid, $transaction->timestamp);
   }
 }
 
@@ -74,8 +80,11 @@ function ledger_account_entry_ledger_account_entry_update($account_entry) {
  */
 function ledger_account_entry_ledger_account_entry_delete($account_entry) {
 
+  // Load the transaction to get the timestamp.
+  $transaction = ledger_transaction_load($account_entry->tid);
+
   // Recalculate the account entry balances when an account entry is deleted.
-  ledger_account_entry_calculate_balances($account_entry->aid);
+  ledger_account_entry_calculate_balances($account_entry->aid, $transaction->timestamp);
 }
 
 /***************************************************************
