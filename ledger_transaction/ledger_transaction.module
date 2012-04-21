@@ -113,7 +113,15 @@ class LedgerTransactionController extends EntityAPIController {
 
     // Delete all account entries associated with the transanctions.
     if (!empty($ids)) {
-      db_query('DELETE FROM {ledger_account_entry} WHERE tid IN (' . implode(',', $ids) . ')');
+      $eids = array();
+      $query = db_select('ledger_account_entry', 'e');
+      $query->addField('e', 'eid');
+      $query->where('tid IN (' . implode(',', $ids) . ')');
+      $result = $query->execute();
+      foreach ($result as $row) {
+        $eids[] = $row->eid;
+      }
+      ledger_account_entry_delete_multiple($eids);
     }
 
     // Call the parent class's delete() function to delete the transaction entities from the database.
