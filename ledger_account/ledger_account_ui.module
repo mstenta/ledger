@@ -96,6 +96,15 @@ function ledger_account_ui_menu() {
     'context' => MENU_CONTEXT_INLINE,
   );
 
+  // Account settings form.
+  $items['admin/ledger/settings/account'] = array(
+    'title' => 'Account settings',
+    'description' => 'Configure general account settings.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ledger_account_settings_form'),
+    'access arguments' => array('administer ledger'),
+  );
+
   return $items;
 }
 
@@ -129,6 +138,32 @@ function ledger_account_ui_views_api() {
     'api' => 3,
     'path' => drupal_get_path('module', 'ledger_account_ui') . '/views',
   );
+}
+
+/***************************************************************
+ * Account settings form
+ * *************************************************************/
+
+/**
+ * Form callback: ledger account entry settings form.
+ */
+function ledger_account_settings_form($form, &$form_state) {
+
+  // Sign reverse balance settings.
+  $form['ledger_account_balance_sign_reverse'] = array(
+    '#type' => 'radios',
+    '#title' => t('Sign-reverse account balances'),
+    '#description' => t('Ledger stores credits to Liability, Equity, and Income accounts as negative numbers, to aid in balancing equations. You can control whether these accounts should be displayed with positive or negative balances with this setting.'),
+    '#options' => array(
+      '0' => 'None - display the balance exactly as it is stored.',
+      '1' => 'Reverse the sign on Liability, Equity, and Income account balances.',
+      '2' => 'Reverse the sign on Income and Expense account balances.',
+    ),
+    '#default_value' => variable_get('ledger_account_balance_sign_reverse', 1),
+    '#required' => TRUE,
+  );
+
+  return system_settings_form($form);
 }
 
 /***************************************************************
