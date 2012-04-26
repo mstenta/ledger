@@ -406,15 +406,16 @@ function ledger_account_type_form($form, &$form_state, $account_type, $op = 'edi
   $form['fundamental'] = array(
     '#type' => 'select',
     '#title' => t('Fundamental account type'),
-    '#description' => t('The fundamental type of account, used for reporting.'),
+    '#description' => t('The fundamental type of account, used for reporting. If none is selected, accounts of this type will not be included in any reports.'),
     '#options' => array(
       'asset' => t('Asset'),
       'liability' => t('Liability'),
       'equity' => t('Equity'),
       'income' => t('Income'),
       'expense' => t('Expense'),
+      '0' => t('none'),
     ),
-    '#default_value' => isset($account_type->fundamental) ? $account_type->fundamental : NULL,
+    '#default_value' => $account_type->fundamental ? $account_type->fundamental : NULL,
     '#required' => TRUE,
   );
 
