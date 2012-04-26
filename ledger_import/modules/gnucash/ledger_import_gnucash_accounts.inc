@@ -85,7 +85,7 @@ $feeds_importer->config = array(
 BANK:assets
 CASH:assets
 CREDIT:liabilities
-EQUITY:capital
+EQUITY:equity
 EXPENSE:expenses
 INCOME:income
 LIABILITY:liabilities
