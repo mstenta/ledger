@@ -148,7 +148,6 @@ function ledger_account_entry_ui_manager($element, &$form_state) {
       '#ajax' => array(
         'callback' => 'ledger_account_entry_ui_manager_ajax',
         'wrapper' => 'ledger-account-entries',
-        'name' => 'wooha',
       ),
     );
   }
@@ -347,7 +346,7 @@ function ledger_account_entry_ui_manager_ajax($form, $form_state) {
  * This is used in validate, submit, and ajax callback functions used by the account entry manager in order to
  * find itself in $form or $form_state, without having to worry about how deep in the form tree it is.
  *
- * It takes 2 arguments:
+ * It takes 3 arguments:
  * @param $form_data - Either a $form or $form_state['values'] containing the account entry manager data (the form element, or the returned values, respectively).
  * @param $parents - The #parents array (usually from a form state), which will be used for recusively drilling into $element to find the manager element's data.
  * @param $trim - How many items should be trimmed off the end of the $parents array before processing.
