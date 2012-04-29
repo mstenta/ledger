@@ -343,6 +343,7 @@ function ledger_account_entry_calculate_balances($aid = NULL, $timestamp = 0) {
     $query->condition('e.aid', $aid);
     $query->condition('t.timestamp', $timestamp, '>=');
     $query->orderby('t.timestamp', 'ASC');
+    $query->orderby('e.eid', 'ASC');
     $result = $query->execute();
 
     // Loop through the results.
