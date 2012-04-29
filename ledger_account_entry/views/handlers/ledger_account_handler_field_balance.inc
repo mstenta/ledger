@@ -28,13 +28,10 @@ class ledger_account_handler_field_balance extends views_handler_field_numeric {
     // Include additional fields.
     $this->add_additional_fields();
 
-    // Join the account table and the account_type table, to determine the fundamental type of this account entry's account.
-    $join_account = new views_join();
-    $join_account->construct('ledger_account', $this->table_alias, 'aid', 'aid');
-    $this->account_table = $this->query->add_relationship('ledger_account', $join_account, 'ledger_account', $this->table_alias);
-    $join_account_type = new views_join();
-    $join_account_type->construct('ledger_account_type', $this->account_table, 'type', 'type');
-    $this->account_type_table = $this->query->ensure_table('ledger_account_type', $this->account_table, $join_account_type);
+    // Join the account_type table, to determine the fundamental account type.
+    $join = new views_join();
+    $join->construct('ledger_account_type', $this->table_alias, 'type', 'type');
+    $this->account_type_table = $this->query->ensure_table('ledger_account_type', $this->relationship, $join);
     $this->account_type_field_alias = $this->query->add_field($this->account_type_table, 'fundamental');
 
     // Build a subquery that calculates the account's balance.
