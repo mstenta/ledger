@@ -47,10 +47,9 @@ class ledger_account_entry_handler_field_balance extends ledger_handler_field_va
     $this->account_type_table = $this->query->ensure_table('ledger_account_type', $this->account_table, $join_account_type);
     $this->account_type_field_alias = $this->query->add_field($this->account_type_table, 'fundamental');
 
-    // Set our own custom variable in the query for storing the table alias of the ledger_account_entry table. This will be used in hook_views_query_alter() to add an extra ORDER BY eid to the query.
-    $this->query->ledger_account_entry_balance = array(
-      'table_alias' => $this->table_alias,
-    );
+    // Set a custom variable in the query to hold the eid field alias.
+    // This will be used in the ledger_transaction_handler_sort_timestamp class to add an additional sort by eid to the View.
+    $this->query->ledger_account_entry_balance_eid_field_alias = $this->aliases['eid'];
   }
 
   // Override the get_value function to reverse the sign, if necessary.
