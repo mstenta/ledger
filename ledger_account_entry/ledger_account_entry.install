@@ -6,6 +6,13 @@
  */
 
 /**
+ * Implements hook_uninstall().
+ */
+function ledger_account_entry_uninstall() {
+  variable_del('ledger_account_entry_balance_calculate');
+}
+
+/**
  * Implements hook_schema().
  */
 function ledger_account_entry_schema() {

@@ -40,11 +40,15 @@ function ledger_account_entry_entity_info() {
  */
 function ledger_account_entry_ledger_account_entry_insert($account_entry) {
 
-  // Load the transaction to get the timestamp.
-  $transaction = ledger_transaction_load($account_entry->tid);
+  // Check to see if account entry balance calculation is enabled.
+  if (variable_get('ledger_account_entry_balance_calculate', 1)) {
 
-  // Recalculate the account entry balances when a new account entry is inserted..
-  ledger_account_entry_calculate_balances($account_entry->aid, $transaction->timestamp);
+    // Load the transaction to get the timestamp.
+    $transaction = ledger_transaction_load($account_entry->tid);
+
+    // Recalculate the account entry balances when a new account entry is inserted..
+    ledger_account_entry_calculate_balances($account_entry->aid, $transaction->timestamp);
+  }
 }
 
 /**
@@ -52,26 +56,30 @@ function ledger_account_entry_ledger_account_entry_insert($account_entry) {
  */
 function ledger_account_entry_ledger_account_entry_update($account_entry) {
 
-  // Load the transaction to get the timestamp.
-  $transaction = ledger_transaction_load($account_entry->tid);
+  // Check to see if account entry balance calculation is enabled.
+  if (variable_get('ledger_account_entry_balance_calculate', 1)) {
 
-  // Start a list of accounts to recalculate account entry balances in.
-  $aids = array();
+    // Load the transaction to get the timestamp.
+    $transaction = ledger_transaction_load($account_entry->tid);
 
-  // If the value of the account entry is changed, recalculate the account entry balances in that account.
-  if ($account_entry->value != $account_entry->original->value) {
-    $aids[] = $account_entry->aid;
-  }
+    // Start a list of accounts to recalculate account entry balances in.
+    $aids = array();
 
-  // If the account entry is moved to another account, recalculate the account entry balances in both accounts.
-  if ($account_entry->aid != $account_entry->original->aid) {
-    $aids[] = $account_entry->aid;
-    $aids[] = $account_entry->original->aid;
-  }
+    // If the value of the account entry is changed, recalculate the account entry balances in that account.
+    if ($account_entry->value != $account_entry->original->value) {
+      $aids[] = $account_entry->aid;
+    }
 
-  // Recalculate account entry balances for the specified accounts.
-  foreach ($aids as $aid) {
-    ledger_account_entry_calculate_balances($aid, $transaction->timestamp);
+    // If the account entry is moved to another account, recalculate the account entry balances in both accounts.
+    if ($account_entry->aid != $account_entry->original->aid) {
+      $aids[] = $account_entry->aid;
+      $aids[] = $account_entry->original->aid;
+    }
+
+    // Recalculate account entry balances for the specified accounts.
+    foreach ($aids as $aid) {
+      ledger_account_entry_calculate_balances($aid, $transaction->timestamp);
+    }
   }
 }
 
@@ -80,11 +88,15 @@ function ledger_account_entry_ledger_account_entry_update($account_entry) {
  */
 function ledger_account_entry_ledger_account_entry_delete($account_entry) {
 
-  // Load the transaction to get the timestamp.
-  $transaction = ledger_transaction_load($account_entry->tid);
+  // Check to see if account entry balance calculation is enabled.
+  if (variable_get('ledger_account_entry_balance_calculate', 1)) {
 
-  // Recalculate the account entry balances when an account entry is deleted.
-  ledger_account_entry_calculate_balances($account_entry->aid, $transaction->timestamp);
+    // Load the transaction to get the timestamp.
+    $transaction = ledger_transaction_load($account_entry->tid);
+
+    // Recalculate the account entry balances when an account entry is deleted.
+    ledger_account_entry_calculate_balances($account_entry->aid, $transaction->timestamp);
+  }
 }
 
 /***************************************************************
