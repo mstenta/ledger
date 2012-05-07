@@ -55,6 +55,39 @@ class FeedsLedgerTransactionProcessor extends FeedsProcessor {
   }
 
   /**
+   * Process the result of the parsing stage.
+   */
+  public function process(FeedsSource $source, FeedsParserResult $parser_result) {
+
+    // Turn off account entry balance calculation temporarily.
+    variable_set('ledger_account_entry_balance_calculate', 0);
+
+    // Run the parent process function.
+    parent::process($source, $parser_result);
+
+    // Turn account entry balance calculation back on and recalculate all accounts.
+    variable_set('ledger_account_entry_balance_calculate', 1);
+    ledger_account_entry_calculate_balances();
+  }
+
+  /**
+   * Remove all stored results or stored results up to a certain time for a
+   * source.
+   */
+  public function clear(FeedsSource $source) {
+
+    // Turn off account entry balance calculation temporarily.
+    variable_set('ledger_account_entry_balance_calculate', 0);
+
+    // Run the parent process function.
+    parent::clear($source);
+
+    // Turn account entry balance calculation back on and recalculate all accounts.
+    variable_set('ledger_account_entry_balance_calculate', 1);
+    ledger_account_entry_calculate_balances();
+  }
+
+  /**
    * Declare possible mapping targets that this processor exposes.
    *
    * @ingroup mappingapi
