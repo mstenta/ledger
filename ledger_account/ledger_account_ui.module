@@ -341,7 +341,7 @@ function ledger_account_form_submit(&$form, &$form_state) {
   ledger_account_save($account);
 
   // Display a message.
-  drupal_set_message('Account saved.');
+  drupal_set_message(t('Account saved.'));
 
   // Provide a default redirect.
   $form_state['redirect'] = 'admin/ledger/accounts';
@@ -486,7 +486,7 @@ function ledger_account_type_form_submit(&$form, &$form_state) {
   ledger_account_type_save($account_type);
 
   // Display a message.
-  drupal_set_message('Account type saved.');
+  drupal_set_message(t('Account type saved.'));
 
   // Provide a default redirect.
   $form_state['redirect'] = 'admin/ledger/settings/account-types';

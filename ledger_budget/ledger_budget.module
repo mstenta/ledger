@@ -43,10 +43,10 @@ function ledger_budget_entity_info() {
  * Implements hook_views_api().
  */
 function ledger_budget_views_api() {
- return array(
-   'api' => 3,
-   'path' => drupal_get_path('module', 'ledger_budget') . '/views',
- );
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ledger_budget') . '/views',
+  );
 }
 
 /***************************************************************
@@ -130,7 +130,7 @@ class LedgerBudgetController extends EntityAPIController {
    * Load budgets.
    */
   public function load($ids = array(), $conditions = array()) {
-    
+
     // Load the entity using the parent controller's load function.
     $entities = parent::load($ids, $conditions);
 

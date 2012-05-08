@@ -11,7 +11,7 @@
 class ledger_account_handler_field_balance extends views_handler_field_numeric {
 
   function construct() {
-    
+
     // Inherit the parent's construction.
     parent::construct();
 

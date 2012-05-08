@@ -165,7 +165,7 @@ class LedgerAccountEntryController extends EntityAPIController {
     $account_entry = parent::create($values);
     return $account_entry;
   }
-  
+
   /**
    * Save an account entry.
    *
@@ -190,7 +190,7 @@ class LedgerAccountEntryController extends EntityAPIController {
    * Load account entries.
    */
   public function load($ids = array(), $conditions = array()) {
-    
+
     // Load the entity using the parent controller's load function.
     $entities = parent::load($ids, $conditions);
 

@@ -6,7 +6,7 @@
  */
 
 /**
- * Field handler to provide more advanced display options of an account entry's
+ * Field handler to provide more advanced display options of an account entry's.
  */
 class ledger_account_entry_handler_field_value extends ledger_handler_field_value {
 

@@ -29,10 +29,10 @@ function ledger_account_permission() {
  * Implements hook_views_api().
  */
 function ledger_views_api() {
- return array(
-   'api' => 3,
-   'path' => drupal_get_path('module', 'ledger') . '/views',
- );
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ledger') . '/views',
+  );
 }
 
 /***************************************************************
@@ -184,7 +184,7 @@ function ledger_delete_instance($instance) {
 function ledger_value_fraction($value) {
 
   // Count the number of decimal places.
-  $precision = strlen(substr(strrchr($value, '.'), 1));
+  $precision = drupal_strlen(drupal_substr(strrchr($value, '.'), 1));
 
   // Calculate the denominator based on the precision.
   $fraction['denom'] = pow(10, $precision);

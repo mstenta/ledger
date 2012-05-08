@@ -527,7 +527,7 @@ function ledger_account_select_options() {
 
     // Loop through the accounts.
     foreach ($account_tree as $account) {
-    
+
       // Add the account to the options, with dashes indicating depth.
       $options[$account->aid] = str_repeat('-', $account->depth) . $account->name;
     }
