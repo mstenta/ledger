@@ -520,7 +520,7 @@ function ledger_account_select_options() {
   if (empty($options)) {
 
     // Give it a 0 value to start
-    $options[0] = 'none';
+    $options[0] = '- Select -';
 
     // Load the hierarchic list of accounts.
     $account_tree = ledger_account_get_tree();
