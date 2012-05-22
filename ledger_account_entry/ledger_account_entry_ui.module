@@ -6,6 +6,16 @@
  */
 
 /***************************************************************
+ * Constants
+ * *************************************************************/
+
+/**
+ * We provide these button labels as constants because they are used in a few places to determine which button was pressed.
+ */
+define('LEDGER_ACCOUNT_ENTRY_UI_ADD_BUTTON_LABEL', 'Add account entry');
+define('LEDGER_ACCOUNT_ENTRY_UI_REMOVE_BUTTON_LABEL', 'Remove');
+
+/***************************************************************
  * Drupal core hooks
  * *************************************************************/
 
@@ -131,7 +141,7 @@ function ledger_account_entry_ui_manager($element, &$form_state) {
   // Button for adding an account entry
   $element['add'] = array(
     '#type' => 'submit',
-    '#value' => t('Add account entry'),
+    '#value' => t(LEDGER_ACCOUNT_ENTRY_UI_ADD_BUTTON_LABEL),
     '#submit' => array('ledger_account_entry_ui_manager_add'),
     '#ajax' => array(
       'callback' => 'ledger_account_entry_ui_manager_ajax',
@@ -143,7 +153,7 @@ function ledger_account_entry_ui_manager($element, &$form_state) {
   if (!empty($account_entries)) {
     $element['remove'] = array(
       '#type' => 'submit',
-      '#value' => t('Remove'),
+      '#value' => t(LEDGER_ACCOUNT_ENTRY_UI_REMOVE_BUTTON_LABEL),
       '#submit' => array('ledger_account_entry_ui_manager_remove'),
       '#ajax' => array(
         'callback' => 'ledger_account_entry_ui_manager_ajax',
@@ -162,7 +172,7 @@ function ledger_account_entry_ui_manager($element, &$form_state) {
 function ledger_account_entry_ui_manager_validate($element, &$form_state) {
 
   // Don't validate if the user is simply adding/removing account entries.
-  if ($form_state['triggering_element']['#value'] != 'Add account entry' && $form_state['triggering_element']['#value'] != 'Remove') {
+  if ($form_state['triggering_element']['#value'] != LEDGER_ACCOUNT_ENTRY_UI_ADD_BUTTON_LABEL && $form_state['triggering_element']['#value'] != LEDGER_ACCOUNT_ENTRY_UI_REMOVE_BUTTON_LABEL) {
 
     // Keep a running tally of the overall manager balance.
     $manager_balance = 0;
