@@ -364,6 +364,8 @@ function ledger_account_entry_ui_manager_ajax($form, $form_state) {
  * @return - Returns a reference to the manager's data inside $element.
  *
  * For examples of usage:
+ * @see ledger_account_entry_manager_validate()
+ * @see ledger_account_entry_manager_submit()
  * @see ledger_account_entry_ui_manager_add()
  * @see ledger_account_entry_ui_manager_remove()
  * @see ledger_account_entry_ui_manager_ajax()
