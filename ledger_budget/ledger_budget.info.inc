@@ -12,16 +12,16 @@ function ledger_budget_entity_property_info() {
   $info = array();
 
   // Add meta-data about the budget properties.
-  $transaction = &$info['ledger_budget']['properties'];
+  $budget = &$info['ledger_budget']['properties'];
 
-  $transaction['bid'] = array(
+  $budget['bid'] = array(
     'type' => 'integer',
     'label' => t('Budget ID'),
     'description' => t('The unique ID of the ledger budget.'),
     'setter permission' => 'administer ledger',
     'schema field' => 'bid',
   );
-  $transaction['budget_account'] = array(
+  $budget['budget_account'] = array(
     'type' => 'ledger_account',
     'label' => t('Budget Account ID'),
     'description' => t('The account ID of the budget account'),
@@ -30,7 +30,7 @@ function ledger_budget_entity_property_info() {
     'setter permission' => 'administer ledger',
     'schema field' => 'budget_aid',
   );
-  $transaction['target_account'] = array(
+  $budget['target_account'] = array(
     'type' => 'ledger_account',
     'label' => t('Target Account ID'),
     'description' => t('The account ID of the target account'),
@@ -39,7 +39,7 @@ function ledger_budget_entity_property_info() {
     'setter permission' => 'administer ledger',
     'schema field' => 'target_aid',
   );
-  $transaction['effective'] = array(
+  $budget['effective'] = array(
     'type' => 'date',
     'label' => t('Effective'),
     'description' => t('Timestamp for when the budget takes effect'),
@@ -48,7 +48,7 @@ function ledger_budget_entity_property_info() {
     'required' => TRUE,
     'schema field' => 'effective',
   );
-  $transaction['expires'] = array(
+  $budget['expires'] = array(
     'type' => 'date',
     'label' => t('Expires'),
     'description' => t('Timestamp for when the budget expires'),
@@ -57,7 +57,7 @@ function ledger_budget_entity_property_info() {
     'required' => TRUE,
     'schema field' => 'expires',
   );
-  $transaction['repeat_every'] = array(
+  $budget['repeat_every'] = array(
     'type' => 'integer',
     'label' => t('Repeat Every'),
     'description' => t('Repeat every X {repeat_units}'),
@@ -66,7 +66,7 @@ function ledger_budget_entity_property_info() {
     'required' => TRUE,
     'schema field' => 'repeat_every',
   );
-  $transaction['repeat_unit'] = array(
+  $budget['repeat_unit'] = array(
     'label' => t('Repeat Unit'),
     'description' => t('Repeat every X {repeat_units}'),
     'setter callback' => 'entity_property_verbatim_set',
@@ -74,9 +74,9 @@ function ledger_budget_entity_property_info() {
     'required' => TRUE,
     'schema field' => 'repeat_unit',
   );
-  $transaction['description'] = array(
+  $budget['description'] = array(
     'label' => t('Description'),
-    'description' => t('A brief description of the transaction.'),
+    'description' => t('A brief description of the budget.'),
     'setter callback' => 'entity_property_verbatim_set',
     'setter permission' => 'administer ledger',
     'required' => TRUE,
