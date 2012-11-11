@@ -5,3 +5,4 @@ package = "Ledger"
 dependencies[] = ledger_ui
 dependencies[] = ledger_account
 dependencies[] = views
+dependencies[] = views_bulk_operations
