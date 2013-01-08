@@ -357,7 +357,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['value_1']['format'] = 'decrease';
   /* Field: Account entry: Balance */
   $handler->display->display_options['fields']['balance']['id'] = 'balance';
-  $handler->display->display_options['fields']['balance']['table'] = 'ledger_account_entry';
+  $handler->display->display_options['fields']['balance']['table'] = 'ledger_account_entry_balance';
   $handler->display->display_options['fields']['balance']['field'] = 'balance';
   $handler->display->display_options['fields']['balance']['relationship'] = 'ledger_account_entry';
   $handler->display->display_options['fields']['balance']['set_precision'] = TRUE;

@@ -49,7 +49,7 @@ class ledger_account_handler_field_balance extends views_handler_field_numeric {
     if (isset($values->{$alias})) {
 
       // Pass the value and the account type to the sign reversing function.
-      ledger_account_balance_sign_reverse($values->{$alias}, $values->{$this->account_type_field_alias});
+      ledger_period_sign_reverse($values->{$alias}, $values->{$this->account_type_field_alias});
 
       // Return the value.
       return $values->{$alias};

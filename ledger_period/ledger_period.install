@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @file
+ * Ledger Period install
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function ledger_period_schema() {
+  $schema['ledger_account_entry_balance'] = array(
+    'description' => 'Ledger account entry balance',
+    'fields' => array(
+      'eid' => array(
+        'description' => 'Account entry ID',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'balance_num' => array(
+        'description' => 'Account entry balance numerator',
+        'type' => 'int',
+        'size' => 'big',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'balance_denom' => array(
+        'description' => 'Account entry balance denominator',
+        'type' => 'int',
+        'size' => 'big',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+    ),
+    'indexes' => array(
+      'eid' => array('eid'),
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ledger_period_uninstall() {
+  variable_del('ledger_period_sign_reverse');
+  variable_del('ledger_period_balance_calculate');
+}

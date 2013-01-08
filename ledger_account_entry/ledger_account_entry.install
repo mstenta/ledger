@@ -6,13 +6,6 @@
  */
 
 /**
- * Implements hook_uninstall().
- */
-function ledger_account_entry_uninstall() {
-  variable_del('ledger_account_entry_balance_calculate');
-}
-
-/**
  * Implements hook_schema().
  */
 function ledger_account_entry_schema() {
@@ -54,20 +47,6 @@ function ledger_account_entry_schema() {
       ),
       'value_denom' => array(
         'description' => 'Account entry value denominator',
-        'type' => 'int',
-        'size' => 'big',
-        'not null' => TRUE,
-        'default' => 1,
-      ),
-      'balance_num' => array(
-        'description' => 'Account entry balance numerator',
-        'type' => 'int',
-        'size' => 'big',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'balance_denom' => array(
-        'description' => 'Account entry balance denominator',
         'type' => 'int',
         'size' => 'big',
         'not null' => TRUE,

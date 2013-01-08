@@ -15,10 +15,8 @@ class ledger_account_entry_handler_field_balance extends ledger_handler_field_va
     // Inherit the parent's construction.
     parent::construct();
 
-    // Add the account entry aid field, so that we can JOIN the account table in $this->query().
-    $this->additional_fields['aid'] = 'aid';
-
-    // Add the account entry id field, so that we can sort by it in hook_views_query_alter().
+    // Add the account entry id field, so that we can join to the {account_entry}
+    // table in $this::query().
     $this->additional_fields['eid'] = 'eid';
   }
 
@@ -38,14 +36,21 @@ class ledger_account_entry_handler_field_balance extends ledger_handler_field_va
     // Execute the parent class's query() method.
     parent::query();
 
-    // Join the account table and the account_type table, to determine the fundamental type of this account entry's account.
+    // Join the {ledger_account_entry} table to the {ledger_account_entry_balance} table.
+    $join_account_entry = new views_join();
+    $join_account_entry->construct('ledger_account_entry', $this->table_alias, 'eid', 'eid');
+    $this->table_alias_account_entry = $this->query->add_relationship('ledger_account_entry', $join_account_entry, 'ledger_account_entry');
+
+    // Join the {ledger_account} table to the {ledger_account_entry} table.
     $join_account = new views_join();
-    $join_account->construct('ledger_account', $this->table_alias, 'aid', 'aid');
-    $this->account_table = $this->query->add_relationship('ledger_account', $join_account, 'ledger_account', $this->table_alias);
+    $join_account->construct('ledger_account', $this->table_alias_account_entry, 'aid', 'aid');
+    $this->table_alias_account = $this->query->add_relationship('ledger_account', $join_account, 'ledger_account', $this->table_alias_account_entry);
+
+    // Join the {ledger_account_type} table to the {ledger_account} table, and fundamental account type..
     $join_account_type = new views_join();
-    $join_account_type->construct('ledger_account_type', $this->account_table, 'type', 'type');
-    $this->account_type_table = $this->query->ensure_table('ledger_account_type', $this->account_table, $join_account_type);
-    $this->account_type_field_alias = $this->query->add_field($this->account_type_table, 'fundamental');
+    $join_account_type->construct('ledger_account_type', $this->table_alias_account, 'type', 'type');
+    $this->table_alias_account_type = $this->query->ensure_table('ledger_account_type', $this->table_alias_account, $join_account_type);
+    $this->account_type_field_alias = $this->query->add_field($this->table_alias_account_type, 'fundamental');
 
     // Set a custom variable in the query to hold the eid field alias.
     // This will be used in the ledger_transaction_handler_sort_timestamp class to add an additional sort by eid to the View.
@@ -58,7 +63,7 @@ class ledger_account_entry_handler_field_balance extends ledger_handler_field_va
     if (isset($values->{$alias})) {
 
       // Pass the value and the account type to the sign reversing function.
-      ledger_account_balance_sign_reverse($values->{$alias}, $values->{$this->account_type_field_alias});
+      ledger_period_sign_reverse($values->{$alias}, $values->{$this->account_type_field_alias});
 
       // Return the value.
       return $values->{$alias};
