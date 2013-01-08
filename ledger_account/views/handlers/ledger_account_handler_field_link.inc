@@ -22,6 +22,12 @@ class ledger_account_handler_field_link extends views_handler_field {
     // Inherit the parent's options.
     $options = parent::option_definition();
 
+    // Allow users to toggle the ?destination parameter.
+    $options['destination'] = array(
+      'default' => 1,
+      'translatable' => FALSE,
+    );
+
     // Provide a text field so users can change the text of the link.
     $options['text'] = array(
       'default' => '',
@@ -36,6 +42,14 @@ class ledger_account_handler_field_link extends views_handler_field {
 
     // Inherit the parent's options form.
     parent::options_form($form, $form_state);
+
+    // Allow users to toggle the ?destination parameter.
+    $form['destination'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Destination'),
+      '#description' => t('Add a ?destination parameter to the link pointing back to the current page.'),
+      '#default_value' => $this->options['destination'],
+    );
 
     // Provide a text field so users can change the text of the link.
     $form['text'] = array(
@@ -58,6 +72,12 @@ class ledger_account_handler_field_link extends views_handler_field {
   // Render the field.
   function render($values) {
 
+    // Assemble the link options.
+    $options = array();
+    if (!empty($this->options['destination'])) {
+      $options['query']['destination'] = current_path();
+    }
+
     // Load the link text, if it is defined by the user, otherwise just use "view".
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
 
@@ -65,6 +85,6 @@ class ledger_account_handler_field_link extends views_handler_field {
     $aid = $this->get_value($values, 'aid');
 
     // Return the text as a link to the account page.
-    return l($text, 'admin/ledger/accounts/' . $aid);
+    return l($text, 'admin/ledger/accounts/' . $aid, $options);
   }
 }

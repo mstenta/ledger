@@ -16,10 +16,16 @@ class ledger_account_handler_field_link_edit extends ledger_account_handler_fiel
       return;
     }
 
+    // Assemble the link options.
+    $options = array();
+    if (!empty($this->options['destination'])) {
+      $options['query']['destination'] = current_path();
+    }
+
     // Load the link text, if it is defined in the options, otherwise just use "edit".
     $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');
 
     // Return the text as a link to the account edit page.
-    return l($text, 'admin/ledger/accounts/' . $account->aid . '/edit');
+    return l($text, 'admin/ledger/accounts/' . $account->aid . '/edit', $options);
   }
 }

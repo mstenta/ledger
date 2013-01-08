@@ -26,10 +26,16 @@ class ledger_transaction_handler_field_operations extends ledger_transaction_han
       return;
     }
 
+    // Assemble the link options.
+    $options = array();
+    if (!empty($this->options['destination'])) {
+      $options['query']['destination'] = current_path();
+    }
+
     // Define the operations to include.
     $ops = array(
-      l(t('Edit'), 'admin/ledger/transactions/' . $transaction->tid . '/edit'),
-      l(t('Delete'), 'admin/ledger/transactions/' . $transaction->tid . '/delete'),
+      l(t('Edit'), 'admin/ledger/transactions/' . $transaction->tid . '/edit', $options),
+      l(t('Delete'), 'admin/ledger/transactions/' . $transaction->tid . '/delete', $options),
     );
 
     // Assemble the list of operations.

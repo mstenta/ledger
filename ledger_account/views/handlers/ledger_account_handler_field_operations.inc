@@ -26,10 +26,16 @@ class ledger_account_handler_field_operations extends ledger_account_handler_fie
       return;
     }
 
+    // Assemble the link options.
+    $options = array();
+    if (!empty($this->options['destination'])) {
+      $options['query']['destination'] = current_path();
+    }
+
     // Define the operations to include.
     $ops = array(
-      l(t('Edit'), 'admin/ledger/accounts/' . $account->aid . '/edit'),
-      l(t('Delete'), 'admin/ledger/accounts/' . $account->aid . '/delete'),
+      l(t('Edit'), 'admin/ledger/accounts/' . $account->aid . '/edit', $options),
+      l(t('Delete'), 'admin/ledger/accounts/' . $account->aid . '/delete', $options),
     );
 
     // Assemble the list of operations.

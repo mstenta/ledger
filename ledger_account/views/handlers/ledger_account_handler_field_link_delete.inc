@@ -16,10 +16,16 @@ class ledger_account_handler_field_link_delete extends ledger_account_handler_fi
       return;
     }
 
+    // Assemble the link options.
+    $options = array();
+    if (!empty($this->options['destination'])) {
+      $options['query']['destination'] = current_path();
+    }
+
     // Load the link text, if it is defined in the options, otherwise just use "delete".
     $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
 
     // Return the text as a link to the account delete page.
-    return l($text, 'admin/ledger/accounts/' . $account->aid . '/delete');
+    return l($text, 'admin/ledger/accounts/' . $account->aid . '/delete', $options);
   }
 }
