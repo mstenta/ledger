@@ -26,3 +26,4 @@ class ledger_transaction_handler_sort_timestamp extends views_handler_sort_date 
     }
   }
 }
+

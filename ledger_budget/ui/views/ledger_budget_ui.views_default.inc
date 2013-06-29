@@ -192,3 +192,4 @@ function ledger_budget_ui_views_default_views() {
 
   return $views;
 }
+

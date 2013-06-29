@@ -236,3 +236,4 @@ function ledger_transaction_delete($tid) {
 function ledger_transaction_delete_multiple($transaction_ids) {
   return entity_get_controller('ledger_transaction')->delete($transaction_ids);
 }
+

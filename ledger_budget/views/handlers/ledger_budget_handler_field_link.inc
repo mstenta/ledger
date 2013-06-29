@@ -68,3 +68,4 @@ class ledger_budget_handler_field_link extends views_handler_field {
     return l($text, 'admin/ledger/budgets/' . $bid);
   }
 }
+

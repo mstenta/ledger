@@ -77,3 +77,4 @@ class ledger_account_entry_handler_field_value extends ledger_handler_field_valu
     }
   }
 }
+

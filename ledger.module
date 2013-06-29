@@ -194,3 +194,4 @@ function ledger_value_fraction($value) {
 
   return $fraction;
 }
+

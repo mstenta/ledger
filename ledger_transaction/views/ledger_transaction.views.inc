@@ -49,3 +49,4 @@ function ledger_transaction_views_data_alter(&$data) {
     ),
   );
 }
+

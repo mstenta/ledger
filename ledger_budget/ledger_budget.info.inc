@@ -85,3 +85,4 @@ function ledger_budget_entity_property_info() {
 
   return $info;
 }
+

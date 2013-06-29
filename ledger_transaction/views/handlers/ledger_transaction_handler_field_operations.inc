@@ -42,3 +42,4 @@ class ledger_transaction_handler_field_operations extends ledger_transaction_han
     return implode(' | ', $ops);
   }
 }
+

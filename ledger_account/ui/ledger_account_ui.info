@@ -7,3 +7,4 @@ dependencies[] = ledger_period
 dependencies[] = ledger_ui
 dependencies[] = views
 dependencies[] = views_bulk_operations
+

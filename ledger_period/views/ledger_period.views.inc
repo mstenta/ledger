@@ -45,3 +45,4 @@ function ledger_period_views_data_alter(&$data) {
   $data['ledger_transaction']['timestamp']['field']['handler'] = 'ledger_transaction_handler_field_timestamp';
   $data['ledger_transaction']['timestamp']['sort']['handler'] = 'ledger_transaction_handler_sort_timestamp';
 }
+

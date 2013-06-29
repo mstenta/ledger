@@ -76,3 +76,4 @@ class ledger_account_handler_field extends views_handler_field {
     return $data;
   }
 }
+

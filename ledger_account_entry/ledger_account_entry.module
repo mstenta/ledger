@@ -248,3 +248,4 @@ function ledger_account_entry_delete($eid) {
 function ledger_account_entry_delete_multiple($account_entry_ids) {
   return entity_get_controller('ledger_account_entry')->delete($account_entry_ids);
 }
+

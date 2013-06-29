@@ -102,3 +102,4 @@ function ledger_account_schema() {
   );
   return $schema;
 }
+

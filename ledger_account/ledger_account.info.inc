@@ -58,3 +58,4 @@ function ledger_account_entity_property_info() {
 
   return $info;
 }
+

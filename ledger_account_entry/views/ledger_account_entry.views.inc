@@ -20,3 +20,4 @@ function ledger_account_entry_views_data_alter(&$data) {
     ),
   );
 }
+

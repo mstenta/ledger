@@ -415,3 +415,4 @@ function ledger_transaction_ui_views_default_views() {
 
   return $views;
 }
+

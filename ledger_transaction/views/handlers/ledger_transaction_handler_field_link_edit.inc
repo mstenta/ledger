@@ -29,3 +29,4 @@ class ledger_transaction_handler_field_link_edit extends ledger_transaction_hand
     return l($text, 'admin/ledger/transactions/' . $transaction->tid . '/edit', $options);
   }
 }
+

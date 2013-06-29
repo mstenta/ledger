@@ -71,3 +71,4 @@ function ledger_account_entry_schema() {
   );
   return $schema;
 }
+

@@ -23,3 +23,4 @@ class ledger_budget_handler_field_link_edit extends ledger_budget_handler_field_
     return l($text, 'admin/ledger/budgets/' . $budget->bid . '/edit');
   }
 }
+

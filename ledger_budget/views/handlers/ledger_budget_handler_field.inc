@@ -80,3 +80,4 @@ class ledger_budget_handler_field extends views_handler_field {
     return $data;
   }
 }
+

@@ -29,3 +29,4 @@ class ledger_account_handler_field_link_edit extends ledger_account_handler_fiel
     return l($text, 'admin/ledger/accounts/' . $account->aid . '/edit', $options);
   }
 }
+

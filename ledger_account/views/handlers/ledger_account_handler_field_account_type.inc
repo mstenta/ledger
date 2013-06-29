@@ -19,3 +19,4 @@ class ledger_account_handler_field_account_type extends views_handler_field {
     return $this->sanitize_value($value);
   }
 }
+

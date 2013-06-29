@@ -41,3 +41,4 @@ function ledger_transaction_entity_property_info() {
 
   return $info;
 }
+

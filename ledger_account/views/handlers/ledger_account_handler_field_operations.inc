@@ -42,3 +42,4 @@ class ledger_account_handler_field_operations extends ledger_account_handler_fie
     return implode(' | ', $ops);
   }
 }
+

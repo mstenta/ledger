@@ -252,3 +252,4 @@ function ledger_budget_delete($bid) {
 function ledger_budget_delete_multiple($budget_ids) {
   return entity_get_controller('ledger_budget')->delete($budget_ids);
 }
+

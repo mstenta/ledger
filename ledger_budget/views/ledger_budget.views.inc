@@ -59,3 +59,4 @@ function ledger_budget_views_data_alter(&$data) {
     ),
   );
 }
+

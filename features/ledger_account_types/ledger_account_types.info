@@ -11,3 +11,4 @@ features[ledger_account_type][] = "liabilities"
 name = "Account Types"
 package = "Ledger"
 php = "5.2.4"
+

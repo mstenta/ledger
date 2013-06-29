@@ -26,3 +26,4 @@ class ledger_transaction_handler_field_timestamp extends views_handler_field_dat
     }
   }
 }
+

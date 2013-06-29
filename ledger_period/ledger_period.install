@@ -47,3 +47,4 @@ function ledger_period_uninstall() {
   variable_del('ledger_period_sign_reverse');
   variable_del('ledger_period_balance_calculate');
 }
+

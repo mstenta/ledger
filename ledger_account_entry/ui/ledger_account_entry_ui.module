@@ -388,3 +388,4 @@ function _ledger_account_entry_ui_manager_parent(&$form_data, $parents, $trim=0)
   }
   return $reference;
 }
+

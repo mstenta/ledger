@@ -29,3 +29,4 @@ class ledger_transaction_handler_field_link_delete extends ledger_transaction_ha
     return l($text, 'admin/ledger/transactions/' . $transaction->tid . '/delete', $options);
   }
 }
+

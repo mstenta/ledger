@@ -29,3 +29,4 @@ class ledger_account_handler_field_link_delete extends ledger_account_handler_fi
     return l($text, 'admin/ledger/accounts/' . $account->aid . '/delete', $options);
   }
 }
+

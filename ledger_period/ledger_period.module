@@ -262,3 +262,4 @@ function ledger_period_sign_reverse(&$value, $account_type) {
 function ledger_period_delete_balance($eid) {
   db_delete('ledger_account_entry_balance')->condition('eid', $eid)->execute();
 }
+

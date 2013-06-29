@@ -52,3 +52,4 @@ function ledger_account_views_data_alter(&$data) {
     ),
   );
 }
+

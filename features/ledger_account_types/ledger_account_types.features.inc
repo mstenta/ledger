@@ -51,3 +51,4 @@ function ledger_account_types_default_ledger_account_type() {
   }');
   return $items;
 }
+

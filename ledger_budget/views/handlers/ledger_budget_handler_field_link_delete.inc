@@ -23,3 +23,4 @@ class ledger_budget_handler_field_link_delete extends ledger_budget_handler_fiel
     return l($text, 'admin/ledger/budgets/' . $budget->bid . '/delete');
   }
 }
+

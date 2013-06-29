@@ -70,3 +70,4 @@ class ledger_account_entry_handler_field_balance extends ledger_handler_field_va
     }
   }
 }
+

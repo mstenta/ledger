@@ -54,3 +54,4 @@ function theme_ledger_account_entry_manager($variables) {
 
   return $output;
 }
+

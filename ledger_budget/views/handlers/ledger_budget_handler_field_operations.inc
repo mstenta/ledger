@@ -36,3 +36,4 @@ class ledger_budget_handler_field_operations extends ledger_budget_handler_field
     return implode(' | ', $ops);
   }
 }
+

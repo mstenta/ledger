@@ -31,3 +31,4 @@ class ledger_handler_field_value extends views_handler_field_numeric {
     $this->field_alias = $this->query->add_field(NULL, $formula, $this->table . '_' . $this->field);
   }
 }
+
