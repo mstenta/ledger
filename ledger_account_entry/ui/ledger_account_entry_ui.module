@@ -20,6 +20,42 @@ define('LEDGER_ACCOUNT_ENTRY_UI_REMOVE_BUTTON_LABEL', 'Remove');
  * *************************************************************/
 
 /**
+ * Implements hook_menu().
+ */
+function ledger_account_entry_ui_menu() {
+  $items = array();
+
+  // Account entry settings.
+  $items['admin/ledger/settings/account_entry'] = array(
+    'title' => 'Account entry settings',
+    'description' => 'Configure general account entry settings, fields, and displays.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ledger_account_entry_settings_form'),
+    'access arguments' => array('administer ledger'),
+  );
+  $items['admin/ledger/settings/account_entry/settings'] = array(
+    'title' => 'Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function ledger_account_entry_ui_entity_info_alter(&$entity_info) {
+
+  // Expose the fields UI for account entries.
+  $entity_info['ledger_account_entry']['bundles']['ledger_account_entry']['admin'] = array(
+    'path' => 'admin/ledger/settings/account_entry',
+    'real path' => 'admin/ledger/settings/account_entry',
+    'access arguments' => array('administer ledger'),
+  );
+}
+
+/**
  * Implements hook_elements().
  */
 function ledger_account_entry_ui_element_info() {
@@ -45,6 +81,22 @@ function ledger_account_entry_ui_theme($existing, $type, $theme, $path) {
       'file' => 'ledger_account_entry_ui.theme.inc',
     ),
   );
+}
+
+/***************************************************************
+ * Account entry settings form
+ * *************************************************************/
+
+/**
+ * Form callback: ledger account entry settings form.
+ */
+function ledger_account_entry_settings_form($form, &$form_state) {
+
+  // For now, just return a little description.
+  $form['description'] = array(
+    '#markup' => 'Use the "Fields" and "Display" tabs above to customize account entries.',
+  );
+  return $form;
 }
 
 /***************************************************************
