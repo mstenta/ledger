@@ -89,7 +89,7 @@ class LedgerAccountEntryController extends EntityAPIController {
    */
   public function create(array $values = array()) {
 
-    // Add values that are specific to our transaction
+    // Add values that are specific to account entries.
     $values += array(
       'eid' => '',
       'tid' => 0,

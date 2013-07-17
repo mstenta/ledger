@@ -378,7 +378,7 @@ function ledger_account_entry_manager_submit($form, &$form_state, $parents, $tra
     }
   }
 
-  // If there are account entries do delete, delete them.
+  // If there are account entries to delete, delete them.
   if (!empty($form_state['remove_account_entries'])) {
     ledger_account_entry_delete_multiple($form_state['remove_account_entries']);
   }

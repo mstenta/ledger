@@ -162,7 +162,7 @@ function ledger_transaction_settings_form($form, &$form_state) {
 
   // For now, just return a little description.
   $form['description'] = array(
-    '#markup' => 'Use the "Fields" and "Display" tabs above to customize transactions',
+    '#markup' => 'Use the "Fields" and "Display" tabs above to customize transactions.',
   );
   return $form;
 }

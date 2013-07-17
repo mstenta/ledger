@@ -161,7 +161,7 @@ function ledger_budget_settings_form($form, &$form_state) {
 
   // For now, just return a little description.
   $form['description'] = array(
-    '#markup' => 'Use the "Fields" and "Display" tabs above to customize budgets',
+    '#markup' => 'Use the "Fields" and "Display" tabs above to customize budgets.',
   );
   return $form;
 }
