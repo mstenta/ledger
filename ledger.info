@@ -3,5 +3,3 @@ description = "Defines features and functions common to the Ledger modules. Must
 core = 7.x
 package = "Ledger"
 
-files[] = views/handlers/ledger_handler_field_value.inc
-

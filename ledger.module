@@ -22,20 +22,6 @@ function ledger_account_permission() {
 }
 
 /***************************************************************
- * Views API hooks
- * *************************************************************/
-
-/**
- * Implements hook_views_api().
- */
-function ledger_views_api() {
-  return array(
-    'api' => 3,
-    'path' => drupal_get_path('module', 'ledger') . '/views',
-  );
-}
-
-/***************************************************************
  * Functions for keeping the fields and their instances tidy.
  * This code is copied directly (and minimally modified) from
  * the illustrious Commerce module (commerce.module version 7.x-1.0
