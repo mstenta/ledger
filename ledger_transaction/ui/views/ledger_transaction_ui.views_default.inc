@@ -338,30 +338,36 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['description']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['description']['link_to_transaction'] = 'view';
   /* Field: Account entry: Value */
-  $handler->display->display_options['fields']['value']['id'] = 'value';
-  $handler->display->display_options['fields']['value']['table'] = 'ledger_account_entry';
-  $handler->display->display_options['fields']['value']['field'] = 'value';
-  $handler->display->display_options['fields']['value']['relationship'] = 'ledger_account_entry';
-  $handler->display->display_options['fields']['value']['label'] = 'Debit';
-  $handler->display->display_options['fields']['value']['set_precision'] = TRUE;
-  $handler->display->display_options['fields']['value']['precision'] = '2';
-  $handler->display->display_options['fields']['value']['format'] = 'increase';
+  $handler->display->display_options['fields']['ledger_value']['id'] = 'ledger_value';
+  $handler->display->display_options['fields']['ledger_value']['table'] = 'field_data_ledger_value';
+  $handler->display->display_options['fields']['ledger_value']['field'] = 'ledger_value';
+  $handler->display->display_options['fields']['ledger_value']['relationship'] = 'ledger_account_entry';
+  $handler->display->display_options['fields']['ledger_value']['label'] = 'Debit';
+  $handler->display->display_options['fields']['ledger_value']['type'] = 'fraction_decimal';
+  $handler->display->display_options['fields']['ledger_value']['settings'] = array(
+    'precision' => '2',
+  );
+  $handler->display->display_options['fields']['ledger_value']['condition'] = 'increase';
   /* Field: Account entry: Value */
-  $handler->display->display_options['fields']['value_1']['id'] = 'value_1';
-  $handler->display->display_options['fields']['value_1']['table'] = 'ledger_account_entry';
-  $handler->display->display_options['fields']['value_1']['field'] = 'value';
-  $handler->display->display_options['fields']['value_1']['relationship'] = 'ledger_account_entry';
-  $handler->display->display_options['fields']['value_1']['label'] = 'Credit';
-  $handler->display->display_options['fields']['value_1']['set_precision'] = TRUE;
-  $handler->display->display_options['fields']['value_1']['precision'] = '2';
-  $handler->display->display_options['fields']['value_1']['format'] = 'decrease';
-  /* Field: Account entry: Balance */
-  $handler->display->display_options['fields']['balance']['id'] = 'balance';
-  $handler->display->display_options['fields']['balance']['table'] = 'ledger_account_entry_balance';
-  $handler->display->display_options['fields']['balance']['field'] = 'balance';
-  $handler->display->display_options['fields']['balance']['relationship'] = 'ledger_account_entry';
-  $handler->display->display_options['fields']['balance']['set_precision'] = TRUE;
-  $handler->display->display_options['fields']['balance']['precision'] = '2';
+  $handler->display->display_options['fields']['ledger_value_1']['id'] = 'ledger_value_1';
+  $handler->display->display_options['fields']['ledger_value_1']['table'] = 'field_data_ledger_value';
+  $handler->display->display_options['fields']['ledger_value_1']['field'] = 'ledger_value';
+  $handler->display->display_options['fields']['ledger_value_1']['relationship'] = 'ledger_account_entry';
+  $handler->display->display_options['fields']['ledger_value_1']['label'] = 'Credit';
+  $handler->display->display_options['fields']['ledger_value_1']['type'] = 'fraction_decimal';
+  $handler->display->display_options['fields']['ledger_value_1']['settings'] = array(
+    'precision' => '2',
+  );
+  $handler->display->display_options['fields']['ledger_value_1']['condition'] = 'decrease';
+  /* Field: Field: Balance */
+  $handler->display->display_options['fields']['ledger_balance']['id'] = 'ledger_balance';
+  $handler->display->display_options['fields']['ledger_balance']['table'] = 'field_data_ledger_balance';
+  $handler->display->display_options['fields']['ledger_balance']['field'] = 'ledger_balance';
+  $handler->display->display_options['fields']['ledger_balance']['relationship'] = 'ledger_account_entry';
+  $handler->display->display_options['fields']['ledger_balance']['type'] = 'fraction_decimal';
+  $handler->display->display_options['fields']['ledger_balance']['settings'] = array(
+    'precision' => '2',
+  );
   /* Field: Transaction: Operations */
   $handler->display->display_options['fields']['transaction_ops']['id'] = 'transaction_ops';
   $handler->display->display_options['fields']['transaction_ops']['table'] = 'ledger_transaction';

@@ -190,13 +190,14 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['fields']['name_1']['label'] = 'Parent Account';
   $handler->display->display_options['fields']['name_1']['empty'] = '(none)';
   $handler->display->display_options['fields']['name_1']['hide_alter_empty'] = FALSE;
-  /* Field: Account: Balance */
-  $handler->display->display_options['fields']['balance']['id'] = 'balance';
-  $handler->display->display_options['fields']['balance']['table'] = 'ledger_account';
-  $handler->display->display_options['fields']['balance']['field'] = 'balance';
-  $handler->display->display_options['fields']['balance']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['balance']['set_precision'] = TRUE;
-  $handler->display->display_options['fields']['balance']['precision'] = '2';
+  /* Field: Field: Balance */
+  $handler->display->display_options['fields']['ledger_balance']['id'] = 'ledger_balance';
+  $handler->display->display_options['fields']['ledger_balance']['table'] = 'field_data_ledger_balance';
+  $handler->display->display_options['fields']['ledger_balance']['field'] = 'ledger_balance';
+  $handler->display->display_options['fields']['ledger_balance']['type'] = 'fraction_decimal';
+  $handler->display->display_options['fields']['ledger_balance']['settings'] = array(
+    'precision' => '2',
+  );
   /* Field: Account: Operations */
   $handler->display->display_options['fields']['account_ops']['id'] = 'account_ops';
   $handler->display->display_options['fields']['account_ops']['table'] = 'ledger_account';
