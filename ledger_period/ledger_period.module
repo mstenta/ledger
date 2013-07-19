@@ -27,6 +27,17 @@ function ledger_period_menu() {
 }
 
 /**
+ * Implements hook_field_access().
+ */
+function ledger_period_field_access($op, $field, $entity_type, $entity, $account) {
+
+  // Prevent edit access to the balance fields.
+  if ($field['field_name'] == 'ledger_balance' && $op == 'edit') {
+    return FALSE;
+  }
+}
+
+/**
  * Implements hook_[entity]_insert().
  */
 function ledger_period_ledger_account_type_insert($account_type) {
