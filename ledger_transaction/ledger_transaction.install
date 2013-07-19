@@ -39,12 +39,3 @@ function ledger_transaction_schema() {
   return $schema;
 }
 
-/**
- * Implements hook_uninstall().
- */
-function ledger_transaction_uninstall() {
-
-  // Delete any field instances attached to the transaction types.
-  ledger_delete_instances('ledger_transaction');
-}
-

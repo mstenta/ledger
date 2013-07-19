@@ -86,12 +86,3 @@ function ledger_budget_enable() {
   ledger_budget_configure_budget_types();
 }
 
-/**
- * Implements hook_uninstall().
- */
-function ledger_budget_uninstall() {
-
-  // Delete any field instances attached to the transaction types.
-  ledger_delete_instances('ledger_budget');
-}
-
