@@ -171,7 +171,7 @@ function ledger_account_entry_ui_manager($element, &$form_state) {
         $in = $account_entry->value;
       }
       elseif ($account_entry->value < 0) {
-        $out = abs($account_entry->value);
+        $out = str_replace('-', '', $account_entry->value);
       }
 
       // Value that went into the account

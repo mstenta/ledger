@@ -111,11 +111,12 @@ class LedgerAccountEntryController extends EntityAPIController {
    */
   public function save($entity, DatabaseTransaction $transaction = NULL) {
 
-    // Convert the entry's value to a numerator and denominator.
+    // Convert the account entry's value to a numerator and denominator and
+    // save it to the account entry's Fraction field.
     if (!empty($entity->value)) {
-      $fraction = ledger_value_fraction($entity->value);
-      $entity->value_num = $fraction['num'];
-      $entity->value_denom = $fraction['denom'];
+      $fraction = fraction_from_decimal($entity->value);
+      $entity->ledger_value[LANGUAGE_NONE][0]['numerator'] = $fraction->getNumerator();
+      $entity->ledger_value[LANGUAGE_NONE][0]['denominator'] = $fraction->getDenominator();
     }
 
     // Pass it to the parent controller's save function.
@@ -130,11 +131,32 @@ class LedgerAccountEntryController extends EntityAPIController {
     // Load the entity using the parent controller's load function.
     $entities = parent::load($ids, $conditions);
 
-    // Loop through the returned entities.
+    // Load information about the account entry value field instance.
+    $instance = field_info_instance('ledger_account_entry', 'ledger_value', 'ledger_account_entry');
+
+    // Determine the default value field display's decimal precision.
+    $precision = FRACTION_PRECISION_DEFAULT;
+    if (!empty($instance['display']['default']['settings']['precision'])) {
+      $precision = $instance['display']['default']['settings']['precision'];
+    }
+
+    // Iterate through the returned entities.
     foreach ($entities as $entity) {
 
-      // Calculate the value based on value_num and value_denom.
-      $entity->value = $entity->value_num / $entity->value_denom;
+      // Start with a value of 0.
+      $value = 0;
+
+      // Iterate through the fraction field values.
+      if (!empty($entity->ledger_value[LANGUAGE_NONE])) {
+        foreach ($entity->ledger_value[LANGUAGE_NONE] as $value) {
+
+          // Create a decimal equivalent value.
+          $value = $value['fraction']->toDecimal($precision);
+        }
+      }
+
+      // Assign the value.
+      $entity->value = $value;
     }
 
     return $entities;
@@ -247,5 +269,52 @@ function ledger_account_entry_delete($eid) {
  */
 function ledger_account_entry_delete_multiple($account_entry_ids) {
   return entity_get_controller('ledger_account_entry')->delete($account_entry_ids);
+}
+
+/***************************************************************
+ * Configuration functions.
+ * *************************************************************/
+
+/**
+ * Add necessary fields to the account entry bundle.
+ */
+function ledger_account_entry_configure_account_entry_types($type = 'ledger_account_entry') {
+
+  // Create the ledger_value field, if necessary.
+  $field_name = ledger_configure_value_field();
+
+  // Look up existing instance information.
+  $instance = field_info_instance('ledger_account_entry', $field_name, $type);
+
+  // If the instance doesn't exist, create it.
+  if (empty($instance)) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'ledger_account_entry',
+      'bundle' => $type,
+      'label' => t('Value'),
+      'settings' => array(),
+      'widget' => array(
+        'type' => 'fraction_decimal',
+        'settings' => array(
+          'precision' => 2,
+        ),
+        'weight' => -10,
+      ),
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+          'type' => 'fraction_decimal',
+          'settings' => array(
+            'precision' => 2,
+          ),
+          'weight' => -10,
+        ),
+      ),
+    );
+
+    // Create the field instance.
+    field_create_instance($instance);
+  }
 }
 

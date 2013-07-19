@@ -38,20 +38,6 @@ function ledger_account_entry_schema() {
         'length' => '255',
         'not null' => FALSE,
       ),
-      'value_num' => array(
-        'description' => 'Account entry value numerator',
-        'type' => 'int',
-        'size' => 'big',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'value_denom' => array(
-        'description' => 'Account entry value denominator',
-        'type' => 'int',
-        'size' => 'big',
-        'not null' => TRUE,
-        'default' => 1,
-      ),
     ),
     'primary key' => array('eid'),
     'foreign keys' => array(
@@ -70,5 +56,14 @@ function ledger_account_entry_schema() {
     ),
   );
   return $schema;
+}
+
+/**
+ * Implements hook_enable().
+ */
+function ledger_account_entry_enable() {
+
+  // Add Value fields to account entry bundles.
+  ledger_account_entry_configure_account_entry_types();
 }
 

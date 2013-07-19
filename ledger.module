@@ -195,3 +195,44 @@ function ledger_value_fraction($value) {
   return $fraction;
 }
 
+/***************************************************************
+ * Configuration functions.
+ * *************************************************************/
+
+/**
+ * Create ledger_value field.
+ *
+ * This function is not used by the ledger module itself, but is provided
+ * for other ledger modules to use to add a value field to their entities.
+ * See ledger_account_entry_configure_account_entry_types() for an example.
+ *
+ * @return
+ *   Returns the field name.
+ */
+function ledger_configure_value_field() {
+
+  // If the fraction field type isn't found, clear the Field cache.
+  if (!field_info_field_types('fraction')) {
+    field_cache_clear();
+  }
+
+  // Look up existing field information.
+  $field_name = 'ledger_value';
+  $field = field_info_field($field_name);
+
+  // If the field doesn't exist, create it.
+  if (empty($field)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'fraction',
+      'cardinality' => 1,
+      'translatable' => FALSE,
+      'locked' => TRUE,
+    );
+    $field = field_create_field($field);
+  }
+
+  // Return the field name.
+  return $field_name;
+}
+
