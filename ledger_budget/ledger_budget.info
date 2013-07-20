@@ -4,6 +4,7 @@ core = 7.x
 package = "Ledger"
 dependencies[] = entity
 dependencies[] = ledger
+dependencies[] = fraction
 
 files[] = views/handlers/ledger_budget_handler_field_link_delete.inc
 files[] = views/handlers/ledger_budget_handler_field_link_edit.inc

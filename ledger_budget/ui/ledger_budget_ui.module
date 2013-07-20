@@ -226,14 +226,6 @@ function ledger_budget_form($form, &$form_state, $budget, $op = 'edit') {
     '#default_value' => $budget->target_aid,
   );
 
-  // Value
-  $form['value'] = array(
-    '#title' => t('Budget Value'),
-    '#type' => 'textfield',
-    '#default_value' => $budget->value,
-    '#required' => TRUE,
-  );
-
   // Every
   $form['repeat_every'] = array(
     '#title' => t('Repeat every'),

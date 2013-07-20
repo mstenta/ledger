@@ -2,6 +2,7 @@ name = "Budget UI"
 description = "Exposes a default UI for Budgets"
 core = 7.x
 package = "Ledger"
+dependencies[] = ledger_account
 dependencies[] = ledger_budget
 dependencies[] = ledger_ui
 dependencies[] = views

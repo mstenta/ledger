@@ -128,12 +128,14 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['fields']['name']['field'] = 'name';
   $handler->display->display_options['fields']['name']['relationship'] = 'budget_account';
   $handler->display->display_options['fields']['name']['label'] = 'Budget Account';
-  /* Field: Budget: Value */
-  $handler->display->display_options['fields']['value']['id'] = 'value';
-  $handler->display->display_options['fields']['value']['table'] = 'ledger_budget';
-  $handler->display->display_options['fields']['value']['field'] = 'value';
-  $handler->display->display_options['fields']['value']['set_precision'] = TRUE;
-  $handler->display->display_options['fields']['value']['precision'] = '2';
+  /* Field: Field: Value */
+  $handler->display->display_options['fields']['ledger_value']['id'] = 'ledger_value';
+  $handler->display->display_options['fields']['ledger_value']['table'] = 'field_data_ledger_value';
+  $handler->display->display_options['fields']['ledger_value']['field'] = 'ledger_value';
+  $handler->display->display_options['fields']['ledger_value']['type'] = 'fraction_decimal';
+  $handler->display->display_options['fields']['ledger_value']['settings'] = array(
+    'precision' => '2',
+  );
   /* Field: Account: Name */
   $handler->display->display_options['fields']['name_1']['id'] = 'name_1';
   $handler->display->display_options['fields']['name_1']['table'] = 'ledger_account';

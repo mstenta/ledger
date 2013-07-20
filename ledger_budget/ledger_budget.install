@@ -32,20 +32,6 @@ function ledger_budget_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'value_num' => array(
-        'description' => 'Transaction value numerator',
-        'type' => 'int',
-        'size' => 'big',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'value_denom' => array(
-        'description' => 'Transaction value denominator',
-        'type' => 'int',
-        'size' => 'big',
-        'not null' => TRUE,
-        'default' => 1,
-      ),
       'effective' => array(
         'description' => 'Timestamp for when the budget takes effect',
         'type' => 'int',
@@ -89,6 +75,15 @@ function ledger_budget_schema() {
     ),
   );
   return $schema;
+}
+
+/**
+ * Implements hook_enable().
+ */
+function ledger_budget_enable() {
+
+  // Add Value fields to budget bundles.
+  ledger_budget_configure_budget_types();
 }
 
 /**
