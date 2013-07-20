@@ -92,8 +92,8 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'ledger_transaction';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
-  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '0';
-  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 0;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '1';
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_result'] = 1;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
@@ -260,8 +260,8 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'ledger_transaction';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
-  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '0';
-  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 0;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '1';
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_result'] = 1;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
@@ -337,7 +337,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['description']['field'] = 'description';
   $handler->display->display_options['fields']['description']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['description']['link_to_transaction'] = 'view';
-  /* Field: Account entry: Value */
+  /* Field: Field: Value */
   $handler->display->display_options['fields']['ledger_value']['id'] = 'ledger_value';
   $handler->display->display_options['fields']['ledger_value']['table'] = 'field_data_ledger_value';
   $handler->display->display_options['fields']['ledger_value']['field'] = 'ledger_value';
@@ -348,7 +348,7 @@ function ledger_transaction_ui_views_default_views() {
     'precision' => '2',
   );
   $handler->display->display_options['fields']['ledger_value']['condition'] = 'increase';
-  /* Field: Account entry: Value */
+  /* Field: Field: Value */
   $handler->display->display_options['fields']['ledger_value_1']['id'] = 'ledger_value_1';
   $handler->display->display_options['fields']['ledger_value_1']['table'] = 'field_data_ledger_value';
   $handler->display->display_options['fields']['ledger_value_1']['field'] = 'ledger_value';
