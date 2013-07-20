@@ -3,13 +3,13 @@ description = "Provides accounting periods and running account balances."
 core = 7.x
 package = "Ledger"
 dependencies[] = entity
+dependencies[] = fraction
 dependencies[] = ledger
 dependencies[] = ledger_account
 dependencies[] = ledger_account_entry
 dependencies[] = ledger_transaction
 
-files[] = views/handlers/ledger_account_entry_handler_field_balance.inc
-files[] = views/handlers/ledger_account_handler_field_balance.inc
+files[] = views/handlers/ledger_handler_field_balance.inc
 files[] = views/handlers/ledger_transaction_handler_field_timestamp.inc
 files[] = views/handlers/ledger_transaction_handler_sort_timestamp.inc
 
