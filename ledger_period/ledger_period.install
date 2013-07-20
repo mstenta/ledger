@@ -23,3 +23,12 @@ function ledger_period_enable() {
   ledger_period_configure_account_entry_types();
 }
 
+/**
+ * Implements hook_modules_enabled().
+ */
+function ledger_period_modules_enabled($modules) {
+
+  // Add Balance fields to any account types provided by enabled modules.
+  ledger_period_configure_account_types();
+}
+
