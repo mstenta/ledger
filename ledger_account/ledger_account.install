@@ -103,3 +103,15 @@ function ledger_account_schema() {
   return $schema;
 }
 
+/**
+ * Implements hook_uninstall().
+ */
+function ledger_account_uninstall() {
+
+  // Remove fields from account bundles.
+  $account_types = db_query("SELECT type FROM {ledger_account_type}")->fetchCol();
+  foreach ($account_types as $bundle) {
+    field_attach_delete_bundle('ledger_account', $bundle);
+  }
+}
+

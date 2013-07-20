@@ -67,3 +67,12 @@ function ledger_account_entry_enable() {
   ledger_account_entry_configure_account_entry_types();
 }
 
+/**
+ * Implements hook_uninstall().
+ */
+function ledger_account_entry_uninstall() {
+
+  // Remove fields from account entry bundles.
+  field_attach_delete_bundle('ledger_account_entry', 'ledger_account_entry');
+}
+

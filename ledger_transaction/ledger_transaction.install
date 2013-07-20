@@ -39,3 +39,12 @@ function ledger_transaction_schema() {
   return $schema;
 }
 
+/**
+ * Implements hook_uninstall().
+ */
+function ledger_transaction_uninstall() {
+
+  // Remove fields from transaction bundles.
+  field_attach_delete_bundle('ledger_transaction', 'ledger_transaction');
+}
+
