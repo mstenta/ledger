@@ -79,3 +79,23 @@ function ledger_book_schema() {
   return $schema;
 }
 
+/**
+ * Implements hook_install().
+ */
+function ledger_book_install() {
+
+  // Load user 1.
+  $user = user_load(1);
+
+  // Create a new book, owned by user 1.
+  $values = array(
+    'bid' => NULL,
+    'name' => $user->name . "'s book",
+    'uid' => 1,
+  );
+  $book = ledger_book_new($values);
+  ledger_book_save($book);
+
+  // Assign all existing accounts to the new book.
+  db_query("INSERT INTO {ledger_book_account} (SELECT :bid as bid, aid FROM {ledger_account})", array(':bid' => $book->bid));
+}
