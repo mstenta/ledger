@@ -1,0 +1,81 @@
+<?php
+
+/**
+ * @file
+ * Ledger Book install
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function ledger_book_schema() {
+  $schema['ledger_book'] = array(
+    'description' => 'Ledger books',
+    'fields' => array(
+      'bid' => array(
+        'description' => 'Book ID',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'description' => 'Book name',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+      ),
+      'uid' => array(
+        'description' => 'The {users}.uid that owns this book.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('bid'),
+    'indexes' => array(
+      'name' => array('name'),
+      'uid' => array('uid'),
+    ),
+    'foreign keys' => array(
+      'book_owner' => array(
+        'table' => 'user',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+  );
+  $schema['ledger_book_account'] = array(
+    'description' => 'Stores information that links accounts to books.',
+    'fields' => array(
+      'bid' => array(
+        'description' => 'The ledger book id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'aid' => array(
+        'description' => 'The ledger account id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'bid' => array('bid'),
+      'aid' => array('aid'),
+    ),
+    'foreign keys' => array(
+      'ledger_book' => array(
+        'table' => 'ledger_book',
+        'columns' => array('bid' => 'bid'),
+      ),
+      'ledger_account' => array(
+        'table' => 'ledger_account',
+        'columns' => array('aid' => 'aid'),
+      ),
+    ),
+  );
+  return $schema;
+}
+

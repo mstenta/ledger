@@ -1,0 +1,200 @@
+<?php
+
+/**
+ * @file
+ * Ledger Book
+ */
+
+/***************************************************************
+ * Drupal core hooks
+ * *************************************************************/
+
+/**
+ * Implements hook_entity_info().
+ */
+function ledger_book_entity_info() {
+  $entities['ledger_book'] = array(
+    'label' => t('Book'),
+    'label plural' => t('Books'),
+    'description' => t('A Ledger book.'),
+    'entity class' => 'LedgerBook',
+    'controller class' => 'LedgerBookController',
+    'base table' => 'ledger_book',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'bid',
+    ),
+    'label callback' => 'entity_class_label',
+    'uri callback' => 'entity_class_uri',
+    'module' => 'ledger_book',
+    'bundles' => array(
+      'ledger_book' => array(
+        'label' => t('Book', array(), array('context' => 'a ledger book')),
+      ),
+    ),
+  );
+  return $entities;
+}
+
+/***************************************************************
+ * Ledger Book class and functions
+ * *************************************************************/
+
+/**
+ * The class for LedgerBook entities.
+ */
+class LedgerBook extends Entity {
+
+  public function __construct($values = array()) {
+    parent::__construct($values, 'ledger_book');
+  }
+
+  protected function defaultLabel() {
+    return t('@name', array('@name' => $this->name));
+  }
+
+  protected function defaultUri() {
+    return array('path' => 'admin/ledger/books/' . $this->bid);
+  }
+}
+
+/**
+ * The controller for LedgerBook entities
+ */
+class LedgerBookController extends EntityAPIController {
+
+  /**
+   * Create a book - we first set up the values that are specific
+   * to our ledger_book schema but then also go through the EntityAPIController
+   * function.
+   *
+   * @param $values
+   *   Values passed in.
+   *
+   * @return
+   *   A book object with all default fields initialized.
+   */
+  public function create(array $values = array()) {
+
+    // Add values that are specific to our book.
+    $values += array(
+      'bid' => '',
+      'name' => '',
+      'uid' => '',
+    );
+
+    $book = parent::create($values);
+    return $book;
+  }
+}
+
+/**
+ * Access callback for ledger books.
+ *
+ * @todo
+ *   Expand this access function to check based on the operation being performed.
+ *   Also add ability to check a specific book entity.
+ *
+ * @param $op
+ *   The operation being performed. One of 'view', 'update', 'create', 'delete'
+ *   or just 'edit' (being the same as 'create' or 'update').
+ * @param $book
+ *   Optionally a specific ledger book to check.
+ * @param $user
+ *   The user to check for. Leave it to NULL to check for the global user.
+ * @return boolean
+ *   Whether access is allowed or not.
+ */
+function ledger_book_access($op, $book = NULL, $user = NULL) {
+  return user_access('administer ledger', $user);
+}
+
+/**
+ * Returns the title of a book.
+ *
+ * @param $book
+ *   A ledger book object.
+ *
+ * @return
+ *   A string that represents the book title.
+ */
+function ledger_book_title($book) {
+
+  // Return the book name.
+  return $book->name;
+}
+
+/**
+ * Returns an initialized book object.
+ *
+ * @return
+ *   A book object with all default fields initialized.
+ */
+function ledger_book_new($values = array()) {
+  return entity_get_controller('ledger_book')->create($values);
+}
+
+/**
+ * Loads a book by ID.
+ */
+function ledger_book_load($bid) {
+  $books = ledger_book_load_multiple(array($bid), array());
+  return $books ? reset($books) : FALSE;
+}
+
+/**
+ * Loads multiple books by ID or based on a set of matching conditions.
+ *
+ * @see entity_load()
+ *
+ * @param $book_ids
+ *   An array of book IDs.
+ * @param $conditions
+ *   An array of conditions on the {ledger_book} table in the form
+ *     'field' => $value.
+ * @param $reset
+ *   Whether to reset the internal book loading cache.
+ *
+ * @return
+ *   An array of book objects indexed by bid.
+ */
+function ledger_book_load_multiple($book_ids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('ledger_book', $book_ids, $conditions, $reset);
+}
+
+/**
+ * Saves a book to the database.
+ *
+ * @param $book
+ *   The book object.
+ */
+function ledger_book_save($book) {
+  return entity_get_controller('ledger_book')->save($book);
+}
+
+/**
+ * Deletes a book by ID.
+ *
+ * @param $bid
+ *   The ID of the book to delete.
+ *
+ * @return
+ *   TRUE on success, FALSE otherwise.
+ */
+function ledger_book_delete($bid) {
+  return ledger_book_delete_multiple(array($bid));
+}
+
+/**
+ * Deletes multiple books by ID.
+ *
+ * @param $bids
+ *   An array of book IDs to delete.
+ *
+ * @return
+ *   TRUE on success, FALSE otherwise.
+ */
+function ledger_book_delete_multiple($bids) {
+  return entity_get_controller('ledger_book')->delete($bids);
+}
+
