@@ -11,10 +11,10 @@
 class ledger_handler_field_balance extends fraction_handler_field {
 
   // Sort the results by account entry ID.
-  function query() {
+  function query($use_groupby = FALSE) {
 
     // Execute the parent class's query() method.
-    parent::query();
+    parent::query($use_groupby);
 
     // If the entity type is not ledger_account or ledger_account_entry, bail.
     $entity_type = 'ledger_account_entry';
