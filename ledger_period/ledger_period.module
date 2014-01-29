@@ -185,8 +185,10 @@ function ledger_period_calculate_balances($aid = NULL, $timestamp = 0) {
       $result = $query->execute();
       $eid = $result->fetchField(0);
 
-      // Load the account entry.
-      $account_entry = ledger_account_entry_load($eid);
+      // Load the account entry, if an id was returned.
+      if (!empty($eid)) {
+        $account_entry = ledger_account_entry_load($eid);
+      }
 
       // If there is no balance value stored, clear the timestamp so that
       // the balances for the whole account are recalculated.
@@ -213,8 +215,10 @@ function ledger_period_calculate_balances($aid = NULL, $timestamp = 0) {
     // Loop through the results.
     foreach ($result as $row) {
 
-      // Load the account entry.
-      $account_entry = ledger_account_entry_load($row->eid);
+      // Load the account entry, if available.
+      if (!empty($row->eid)) {
+        $account_entry = ledger_account_entry_load($row->eid);
+      }
 
       // If the account entry has a value...
       if (!empty($account_entry->ledger_value[LANGUAGE_NONE])) {
