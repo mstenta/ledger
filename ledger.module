@@ -5,24 +5,25 @@
  * Ledger
  */
 
-/***************************************************************
+/****************************************************************
  * Drupal hooks
  * **************************************************************/
 
 /**
  * Implements hook_permission().
  */
-function ledger_account_permission() {
+function ledger_permission() {
   return array(
     'administer ledger' => array(
       'title' => t('Administer Ledger'),
-      'description' => t('Administer all ledger accounts and transactions.'),
+      'description' => t('Administer the ledger module settings.'),
+      'restrict access' => TRUE,
     ),
   );
 }
 
 /***************************************************************
- * Configuration functions.
+ * Configuration functions
  * *************************************************************/
 
 /**
