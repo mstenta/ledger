@@ -37,6 +37,20 @@ function ledger_book_entity_info() {
 }
 
 /***************************************************************
+ * Views API hooks
+ * *************************************************************/
+
+/**
+ * Implements hook_views_api().
+ */
+function ledger_book_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ledger_book') . '/views',
+  );
+}
+
+/***************************************************************
  * Ledger Book class and functions
  * *************************************************************/
 
