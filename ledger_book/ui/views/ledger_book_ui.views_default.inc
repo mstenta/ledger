@@ -168,7 +168,7 @@ function ledger_book_ui_views_default_views() {
   /* Display: All books (page) */
   $handler = $view->new_display('page', 'All books (page)', 'page');
   $handler->display->display_options['display_description'] = 'View displaying all books.';
-  $handler->display->display_options['path'] = 'admin/ledger/books/list';
+  $handler->display->display_options['path'] = 'ledger/books/list';
   $handler->display->display_options['menu']['type'] = 'default tab';
   $handler->display->display_options['menu']['title'] = 'List';
   $handler->display->display_options['menu']['weight'] = '-10';

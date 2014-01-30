@@ -68,7 +68,7 @@ class LedgerBook extends Entity {
   }
 
   protected function defaultUri() {
-    return array('path' => 'admin/ledger/books/' . $this->bid);
+    return array('path' => 'ledger/book/' . $this->bid);
   }
 }
 

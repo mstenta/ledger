@@ -16,38 +16,38 @@ function ledger_book_ui_menu() {
   $items = array();
 
   // Note: the following pages are defined by default Views:
-  //   /admin/ledger/books
+  //   /ledger/books
 
   // Create book
-  $items['admin/ledger/books/add'] = array(
+  $items['ledger/book/add'] = array(
     'title' => 'Create a ledger book',
     'description' => 'Create a new ledger book.',
     'page callback' => 'ledger_book_ui_book_form_wrapper',
-    'page arguments' => array(NULL, 3),
+    'page arguments' => array(NULL, 2),
     'access callback' => 'ledger_book_access',
     'access arguments' => array('create'),
     'weight' => 10,
   );
 
   // Edit book
-  $items['admin/ledger/books/%ledger_book/edit'] = array(
-    'title' => 'Edit',
+  $items['ledger/book/%ledger_book/edit'] = array(
+    'title' => 'Edit book',
     'page callback' => 'ledger_book_ui_book_form_wrapper',
-    'page arguments' => array(3, 4),
+    'page arguments' => array(2, 3),
     'access callback' => 'ledger_book_access',
-    'access arguments' => array('update', 3),
+    'access arguments' => array('update', 2),
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
 
   // Delete book
-  $items['admin/ledger/books/%ledger_book/delete'] = array(
+  $items['ledger/book/%ledger_book/delete'] = array(
     'title' => 'Delete',
     'page callback' => 'ledger_book_ui_book_form_wrapper',
-    'page arguments' => array(3, 4),
+    'page arguments' => array(2, 3),
     'access callback' => 'ledger_book_access',
-    'access arguments' => array('delete', 3),
+    'access arguments' => array('delete', 2),
     'type' => MENU_LOCAL_TASK,
     'weight' => 20,
     'context' => MENU_CONTEXT_INLINE,
@@ -61,9 +61,9 @@ function ledger_book_ui_menu() {
  */
 function ledger_book_ui_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 
-  // Add action link 'ledger/books/add' on 'ledger/books'.
-  if ($root_path == 'admin/ledger/books') {
-    $item = menu_get_item('admin/ledger/books/add');  // Load the menu item for the book add form
+  // Add action link 'ledger/book/add' on 'ledger/books'.
+  if ($root_path == 'ledger/books') {
+    $item = menu_get_item('ledger/book/add');  // Load the menu item for the book add form
     $item['localized_options']['query']['destination'] = current_path();  // Set the destination argument to the current path
     if ($item['access']) {
       $data['actions']['output'][] = array(
@@ -108,9 +108,8 @@ function ledger_book_ui_book_form_wrapper($book, $op, $type=NULL) {
   // Create the breadcrumb for the page
   $breadcrumb = array(
     l(t('Home'), '<front>'),
-    l(t('Administration'), 'admin'),
-    l(t('Ledger'), 'admin/ledger'),
-    l(t('Books'), 'admin/ledger/books'),
+    l(t('Ledger'), 'ledger'),
+    l(t('Books'), 'ledger/books'),
   );
   drupal_set_breadcrumb($breadcrumb);
 
@@ -214,7 +213,7 @@ function ledger_book_form_submit(&$form, &$form_state) {
   drupal_set_message(t('Book saved.'));
 
   // Provide a default redirect.
-  $form_state['redirect'] = 'admin/ledger/books';
+  $form_state['redirect'] = 'ledger/books';
 }
 
 /**
@@ -265,6 +264,6 @@ function ledger_book_delete_form_submit($form, &$form_state) {
   watchdog('ledger_book', 'Deleted book "@name."', array('@name' => $book->name), WATCHDOG_NOTICE);
 
   // Redirect
-  $form_state['redirect'] = 'admin/ledger/books';
+  $form_state['redirect'] = 'ledger/books';
 }
 
