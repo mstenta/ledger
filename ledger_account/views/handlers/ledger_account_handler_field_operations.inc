@@ -34,8 +34,8 @@ class ledger_account_handler_field_operations extends ledger_account_handler_fie
 
     // Define the operations to include.
     $ops = array(
-      l(t('Edit'), 'admin/ledger/accounts/' . $account->aid . '/edit', $options),
-      l(t('Delete'), 'admin/ledger/accounts/' . $account->aid . '/delete', $options),
+      l(t('Edit'), 'ledger/account/' . $account->aid . '/edit', $options),
+      l(t('Delete'), 'ledger/account/' . $account->aid . '/delete', $options),
     );
 
     // Assemble the list of operations.

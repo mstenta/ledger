@@ -67,7 +67,7 @@ class LedgerBudget extends Entity {
   }
 
   protected function defaultUri() {
-    return array('path' => 'admin/ledger/budgets/' . $this->bid);
+    return array('path' => 'ledger/budget/' . $this->bid);
   }
 }
 

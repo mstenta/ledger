@@ -26,7 +26,7 @@ class ledger_transaction_handler_field_link_delete extends ledger_transaction_ha
     $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
 
     // Return the text as a link to the transaction delete page.
-    return l($text, 'admin/ledger/transactions/' . $transaction->tid . '/delete', $options);
+    return l($text, 'ledger/transaction/' . $transaction->tid . '/delete', $options);
   }
 }
 

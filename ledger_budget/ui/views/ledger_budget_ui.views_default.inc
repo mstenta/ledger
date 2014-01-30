@@ -176,7 +176,7 @@ function ledger_budget_ui_views_default_views() {
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
-  $handler->display->display_options['path'] = 'admin/ledger/budgets/list';
+  $handler->display->display_options['path'] = 'ledger/budgets/list';
   $handler->display->display_options['menu']['type'] = 'default tab';
   $handler->display->display_options['menu']['title'] = 'List';
   $handler->display->display_options['menu']['weight'] = '0';

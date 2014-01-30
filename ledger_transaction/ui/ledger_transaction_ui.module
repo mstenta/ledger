@@ -16,30 +16,30 @@ function ledger_transaction_ui_menu() {
   $items = array();
 
   // Note: the following pages are defined by default Views:
-  //   /admin/ledger/accounts/%(/transactions)
-  //   /admin/ledger/transactions
+  //   /ledger/account/%(/transactions)
+  //   /ledger/transactions
 
   // Create transaction
-  $items['admin/ledger/transactions/add'] = array(
+  $items['ledger/transaction/add'] = array(
     'title' => 'Record a ledger transaction',
     'description' => 'Record a new transaction in the ledger.',
     'page callback' => 'ledger_transaction_ui_transaction_form_wrapper',
-    'page arguments' => array(NULL, 3),
+    'page arguments' => array(NULL, 2),
     'access callback' => 'ledger_transaction_access',
     'access arguments' => array('create'),
     'weight' => 10,
   );
 
   // Edit transaction
-  $items['admin/ledger/transactions/%ledger_transaction'] = array(
+  $items['ledger/transaction/%ledger_transaction'] = array(
     'title callback' => 'ledger_transaction_title',
-    'title arguments' => array(3),
+    'title arguments' => array(2),
     'page callback' => 'ledger_transaction_ui_transaction_form_wrapper',
-    'page arguments' => array(3, 4),
+    'page arguments' => array(2, 3),
     'access callback' => 'ledger_transaction_access',
-    'access arguments' => array('update', 3),
+    'access arguments' => array('update', 2),
   );
-  $items['admin/ledger/transactions/%ledger_transaction/edit'] = array(
+  $items['ledger/transaction/%ledger_transaction/edit'] = array(
     'title' => 'Edit',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => 0,
@@ -47,25 +47,25 @@ function ledger_transaction_ui_menu() {
   );
 
   // Delete transaction
-  $items['admin/ledger/transactions/%ledger_transaction/delete'] = array(
+  $items['ledger/transaction/%ledger_transaction/delete'] = array(
     'title' => 'Delete',
     'page callback' => 'ledger_transaction_ui_transaction_form_wrapper',
-    'page arguments' => array(3, 4),
+    'page arguments' => array(2, 3),
     'access callback' => 'ledger_transaction_access',
-    'access arguments' => array('delete', 3),
+    'access arguments' => array('delete', 2),
     'type' => MENU_LOCAL_TASK,
     'weight' => 20,
     'context' => MENU_CONTEXT_INLINE,
   );
 
-  $items['admin/ledger/settings/transaction'] = array(
+  $items['admin/config/ledger/transaction'] = array(
     'title' => 'Transaction settings',
     'description' => 'Configure general transaction settings, fields, and displays.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('ledger_transaction_settings_form'),
     'access arguments' => array('administer ledger'),
   );
-  $items['admin/ledger/settings/transaction/settings'] = array(
+  $items['admin/config/ledger/transaction/settings'] = array(
     'title' => 'Settings',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
@@ -81,8 +81,8 @@ function ledger_transaction_ui_entity_info_alter(&$entity_info) {
 
   // Expose the fields UI for transactions.
   $entity_info['ledger_transaction']['bundles']['ledger_transaction']['admin'] = array(
-    'path' => 'admin/ledger/settings/transaction',
-    'real path' => 'admin/ledger/settings/transaction',
+    'path' => 'admin/config/ledger/transaction',
+    'real path' => 'admin/config/ledger/transaction',
     'access arguments' => array('administer ledger'),
   );
 }
@@ -92,10 +92,10 @@ function ledger_transaction_ui_entity_info_alter(&$entity_info) {
  */
 function ledger_transaction_ui_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 
-  // Add action link 'ledger/transactions/add' on 'ledger/transactions' and 'admin/ledger/accounts/%/transactions'.
-  if ($root_path == 'admin/ledger/transactions' || $root_path == 'admin/ledger/accounts/%') {
-    $item = menu_get_item('admin/ledger/transactions/add');  // Load the menu item for the transaction add form
-    $item['localized_options']['query']['destination'] = current_path();  // Set the destination argument to the current path
+  // Add action link 'ledger/transaction/add' on 'ledger/transactions' and 'ledger/account/%/transactions'.
+  if ($root_path == 'ledger/transactions' || $root_path == 'ledger/account/%') {
+    $item = menu_get_item('ledger/transaction/add');  // Load the menu item for the transaction add form
+    $item['localized_options']['query']['destination'] = current_path();  // Set the destinatin argument to the current path
     if ($item['access']) {
       $data['actions']['output'][] = array(
         '#theme' => 'menu_local_action',
@@ -136,9 +136,8 @@ function ledger_transaction_ui_transaction_form_wrapper($transaction, $op) {
   // Create the breadcrumb for the page
   $breadcrumb = array(
     l(t('Home'), '<front>'),
-    l(t('Administration'), 'admin'),
-    l(t('Ledger'), 'admin/ledger'),
-    l(t('Transactions'), 'admin/ledger/transactions'),
+    l(t('Ledger'), 'ledger'),
+    l(t('Transactions'), 'ledger/transactions'),
   );
   drupal_set_breadcrumb($breadcrumb);
 
@@ -288,7 +287,7 @@ function ledger_transaction_form_submit(&$form, &$form_state) {
   drupal_set_message(t('Transaction saved.'));
 
   // Provide a default redirect.
-  $form_state['redirect'] = 'admin/ledger/transactions';
+  $form_state['redirect'] = 'ledger/transactions';
 }
 
 /**
@@ -339,6 +338,6 @@ function ledger_transaction_delete_form_submit($form, &$form_state) {
   watchdog('ledger_transaction', 'Deleted transaction "@description."', array('@description' => $transaction->description), WATCHDOG_NOTICE);
 
   // Redirect
-  $form_state['redirect'] = 'admin/ledger/transactions';
+  $form_state['redirect'] = 'ledger/transactions';
 }
 

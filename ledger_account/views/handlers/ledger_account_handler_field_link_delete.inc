@@ -26,7 +26,7 @@ class ledger_account_handler_field_link_delete extends ledger_account_handler_fi
     $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
 
     // Return the text as a link to the account delete page.
-    return l($text, 'admin/ledger/accounts/' . $account->aid . '/delete', $options);
+    return l($text, 'ledger/account/' . $account->aid . '/delete', $options);
   }
 }
 

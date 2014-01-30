@@ -16,27 +16,36 @@ function ledger_ui_menu() {
   $items = array();
 
   // Top level "Ledger" container.
-  $items['admin/ledger'] = array(
+  $items['ledger'] = array(
     'title' => 'Ledger',
-    'description' => 'Administer the accounts and transactions in the ledger.',
-    'page callback' => 'system_admin_menu_block_page',
+    'description' => 'Manage books, accounts, and transactions.',
+    'page callback' => 'ledger_ui_page_callback',
     'access arguments' => array('access administration pages'),
-    'file path' => drupal_get_path('module', 'system'),
-    'file' => 'system.admin.inc',
-    'weight' => -7,
   );
 
   // Ledger Settings container
-  $items['admin/ledger/settings'] = array(
-    'title' => 'Settings',
+  $items['admin/config/ledger'] = array(
+    'title' => 'Ledger',
     'description' => 'Administer ledger settings',
     'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('access administration pages'),
     'file path' => drupal_get_path('module', 'system'),
     'file' => 'system.admin.inc',
-    'weight' => 100,
   );
 
   return $items;
 }
 
+/***************************************************************
+ * Page callbacks
+ * *************************************************************/
+
+/**
+ * Page callback for the root /ledger patch.
+ */
+function ledger_ui_page_callback() {
+
+  // Just a placeholder at the moment...
+  $output = '';
+  return $output;
+}

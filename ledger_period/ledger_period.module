@@ -15,7 +15,7 @@
 function ledger_period_menu() {
 
   // Period settings form.
-  $items['admin/ledger/settings/period'] = array(
+  $items['admin/config/ledger/period'] = array(
     'title' => 'Accounting period',
     'description' => 'Configure accounting period and balance calculation settings.',
     'page callback' => 'drupal_get_form',

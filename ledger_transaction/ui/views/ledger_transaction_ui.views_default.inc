@@ -179,7 +179,7 @@ function ledger_transaction_ui_views_default_views() {
   $handler = $view->new_display('page', 'All transactions (page)', 'page');
   $handler->display->display_options['display_description'] = 'Page displaying all transactions.';
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
-  $handler->display->display_options['path'] = 'admin/ledger/transactions/list';
+  $handler->display->display_options['path'] = 'ledger/transactions/list';
   $handler->display->display_options['menu']['type'] = 'default tab';
   $handler->display->display_options['menu']['title'] = 'List';
   $handler->display->display_options['menu']['weight'] = '-10';
@@ -405,7 +405,7 @@ function ledger_transaction_ui_views_default_views() {
   else {
     return FALSE;
   }';
-  $handler->display->display_options['path'] = 'admin/ledger/accounts/%/transactions';
+  $handler->display->display_options['path'] = 'ledger/account/%/transactions';
   $handler->display->display_options['menu']['type'] = 'default tab';
   $handler->display->display_options['menu']['title'] = 'Transactions';
   $handler->display->display_options['menu']['weight'] = '0';

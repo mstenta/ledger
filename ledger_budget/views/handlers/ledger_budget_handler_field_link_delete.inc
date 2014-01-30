@@ -20,7 +20,7 @@ class ledger_budget_handler_field_link_delete extends ledger_budget_handler_fiel
     $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
 
     // Return the text as a link to the budget delete page.
-    return l($text, 'admin/ledger/budgets/' . $budget->bid . '/delete');
+    return l($text, 'ledger/budget/' . $budget->bid . '/delete');
   }
 }
 

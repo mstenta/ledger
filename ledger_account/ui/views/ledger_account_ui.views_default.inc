@@ -232,7 +232,7 @@ function ledger_account_ui_views_default_views() {
   $handler = $view->new_display('page', 'All accounts (page)', 'page');
   $handler->display->display_options['display_description'] = 'View displaying all accounts grouped by type.';
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
-  $handler->display->display_options['path'] = 'admin/ledger/accounts/list';
+  $handler->display->display_options['path'] = 'ledger/accounts/list';
   $handler->display->display_options['menu']['type'] = 'default tab';
   $handler->display->display_options['menu']['title'] = 'List';
   $handler->display->display_options['menu']['weight'] = '-10';

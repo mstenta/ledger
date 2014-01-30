@@ -26,7 +26,7 @@ class ledger_account_handler_field_link_edit extends ledger_account_handler_fiel
     $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');
 
     // Return the text as a link to the account edit page.
-    return l($text, 'admin/ledger/accounts/' . $account->aid . '/edit', $options);
+    return l($text, 'ledger/account/' . $account->aid . '/edit', $options);
   }
 }
 

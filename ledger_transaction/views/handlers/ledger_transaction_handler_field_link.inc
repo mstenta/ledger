@@ -85,7 +85,7 @@ class ledger_transaction_handler_field_link extends views_handler_field {
     $tid = $this->get_value($values, 'tid');
 
     // Return the text as a link to the transaction page.
-    return l($text, 'admin/ledger/transactions/' . $tid, $options);
+    return l($text, 'ledger/transaction/' . $tid, $options);
   }
 }
 

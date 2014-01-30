@@ -26,7 +26,7 @@ class ledger_transaction_handler_field_link_edit extends ledger_transaction_hand
     $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');
 
     // Return the text as a link to the transaction edit page.
-    return l($text, 'admin/ledger/transactions/' . $transaction->tid . '/edit', $options);
+    return l($text, 'ledger/transaction/' . $transaction->tid . '/edit', $options);
   }
 }
 

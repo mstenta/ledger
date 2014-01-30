@@ -28,8 +28,8 @@ class ledger_budget_handler_field_operations extends ledger_budget_handler_field
 
     // Define the operations to include.
     $ops = array(
-      l(t('Edit'), 'admin/ledger/budgets/' . $budget->bid . '/edit'),
-      l(t('Delete'), 'admin/ledger/budgets/' . $budget->bid . '/delete'),
+      l(t('Edit'), 'ledger/budget/' . $budget->bid . '/edit'),
+      l(t('Delete'), 'ledger/budget/' . $budget->bid . '/delete'),
     );
 
     // Assemble the list of operations.

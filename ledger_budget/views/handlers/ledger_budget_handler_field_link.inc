@@ -65,7 +65,7 @@ class ledger_budget_handler_field_link extends views_handler_field {
     $bid = $this->get_value($values, 'bid');
 
     // Return the text as a link to the budget page.
-    return l($text, 'admin/ledger/budgets/' . $bid);
+    return l($text, 'ledger/budget/' . $bid);
   }
 }
 

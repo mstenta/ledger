@@ -20,7 +20,7 @@ function ledger_account_ui_entity_info_alter(&$entity_info) {
       'access callback' => 'ledger_account_access',
       'module' => 'ledger_account',
       'admin ui' => array(
-        'path' => 'admin/ledger/settings/account-types',
+        'path' => 'admin/config/ledger/account-types',
         'controller class' => 'EntityDefaultUIController',
         'menu wildcard' => '%ledger_account_type',
       ),
@@ -32,8 +32,8 @@ function ledger_account_ui_entity_info_alter(&$entity_info) {
     $entity_info['ledger_account']['bundles'][$type] = array(
       'label' => $info->label,
       'admin' => array(
-        'path' => 'admin/ledger/settings/account-types/manage/%ledger_account_type',
-        'real path' => 'admin/ledger/settings/account-types/manage/' . $type,
+        'path' => 'admin/config/ledger/account-types/manage/%ledger_account_type',
+        'real path' => 'admin/config/ledger/account-types/manage/' . $type,
         'bundle argument' => 5,
         'access arguments' => array('administer ledger'),
       ),
@@ -48,10 +48,10 @@ function ledger_account_ui_menu() {
   $items = array();
 
   // Note: the following pages are defined by default Views:
-  //   /admin/ledger/accounts
+  //   /ledger/accounts
 
   // Create account
-  $items['admin/ledger/accounts/add'] = array(
+  $items['ledger/account/add'] = array(
     'title' => 'Create a ledger account',
     'description' => 'Create a new ledger account.',
     'page callback' => 'ledger_account_ui_add_page',
@@ -61,7 +61,7 @@ function ledger_account_ui_menu() {
 
   // Account add forms for each account type
   foreach (ledger_account_get_types() as $account_type) {
-    $items['admin/ledger/accounts/add/' . $account_type->type] = array(
+    $items['ledger/account/add/' . $account_type->type] = array(
       'title' => $account_type->label,
       'title callback' => 'check_plain',
       'page callback' => 'ledger_account_ui_account_form_wrapper',
@@ -73,24 +73,24 @@ function ledger_account_ui_menu() {
   }
 
   // Edit account
-  $items['admin/ledger/accounts/%ledger_account/edit'] = array(
-    'title' => 'Edit',
+  $items['ledger/account/%ledger_account/edit'] = array(
+    'title' => 'Edit account',
     'page callback' => 'ledger_account_ui_account_form_wrapper',
-    'page arguments' => array(3, 4),
+    'page arguments' => array(2, 3),
     'access callback' => 'ledger_account_access',
-    'access arguments' => array('update', 3),
+    'access arguments' => array('update', 2),
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
 
   // Delete account
-  $items['admin/ledger/accounts/%ledger_account/delete'] = array(
+  $items['ledger/account/%ledger_account/delete'] = array(
     'title' => 'Delete',
     'page callback' => 'ledger_account_ui_account_form_wrapper',
-    'page arguments' => array(3, 4),
+    'page arguments' => array(2, 3),
     'access callback' => 'ledger_account_access',
-    'access arguments' => array('delete', 3),
+    'access arguments' => array('delete', 2),
     'type' => MENU_LOCAL_TASK,
     'weight' => 20,
     'context' => MENU_CONTEXT_INLINE,
@@ -104,9 +104,9 @@ function ledger_account_ui_menu() {
  */
 function ledger_account_ui_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 
-  // Add action link 'ledger/accounts/add' on 'ledger/accounts'.
-  if ($root_path == 'admin/ledger/accounts') {
-    $item = menu_get_item('admin/ledger/accounts/add');  // Load the menu item for the account add form
+  // Add action link 'ledger/account/add' on 'ledger/accounts'.
+  if ($root_path == 'ledger/accounts') {
+    $item = menu_get_item('ledger/account/add');  // Load the menu item for the account add form
     $item['localized_options']['query']['destination'] = current_path();  // Set the destination argument to the current path
     if ($item['access']) {
       $data['actions']['output'][] = array(
@@ -166,9 +166,8 @@ function ledger_account_ui_account_form_wrapper($account, $op, $type=NULL) {
   // Create the breadcrumb for the page
   $breadcrumb = array(
     l(t('Home'), '<front>'),
-    l(t('Administration'), 'admin'),
-    l(t('Ledger'), 'admin/ledger'),
-    l(t('Accounts'), 'admin/ledger/accounts'),
+    l(t('Ledger'), 'ledger'),
+    l(t('Accounts'), 'ledger/accounts'),
   );
   drupal_set_breadcrumb($breadcrumb);
 
@@ -309,7 +308,7 @@ function ledger_account_form_submit(&$form, &$form_state) {
   drupal_set_message(t('Account saved.'));
 
   // Provide a default redirect.
-  $form_state['redirect'] = 'admin/ledger/accounts';
+  $form_state['redirect'] = 'ledger/accounts';
 }
 
 /**
@@ -360,7 +359,7 @@ function ledger_account_delete_form_submit($form, &$form_state) {
   watchdog('ledger_account', 'Deleted account "@name."', array('@name' => $account->name), WATCHDOG_NOTICE);
 
   // Redirect
-  $form_state['redirect'] = 'admin/ledger/accounts';
+  $form_state['redirect'] = 'ledger/accounts';
 }
 
 /***************************************************************
@@ -454,6 +453,6 @@ function ledger_account_type_form_submit(&$form, &$form_state) {
   drupal_set_message(t('Account type saved.'));
 
   // Provide a default redirect.
-  $form_state['redirect'] = 'admin/ledger/settings/account-types';
+  $form_state['redirect'] = 'admin/config/ledger/account-types';
 }
 

@@ -85,7 +85,7 @@ class ledger_account_handler_field_link extends views_handler_field {
     $aid = $this->get_value($values, 'aid');
 
     // Return the text as a link to the account page.
-    return l($text, 'admin/ledger/accounts/' . $aid, $options);
+    return l($text, 'ledger/account/' . $aid, $options);
   }
 }
 

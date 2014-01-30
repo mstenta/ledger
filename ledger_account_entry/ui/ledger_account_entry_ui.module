@@ -26,14 +26,14 @@ function ledger_account_entry_ui_menu() {
   $items = array();
 
   // Account entry settings.
-  $items['admin/ledger/settings/account_entry'] = array(
+  $items['admin/config/ledger/account_entry'] = array(
     'title' => 'Account entry settings',
     'description' => 'Configure general account entry settings, fields, and displays.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('ledger_account_entry_settings_form'),
     'access arguments' => array('administer ledger'),
   );
-  $items['admin/ledger/settings/account_entry/settings'] = array(
+  $items['admin/config/ledger/account_entry/settings'] = array(
     'title' => 'Settings',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
@@ -49,8 +49,8 @@ function ledger_account_entry_ui_entity_info_alter(&$entity_info) {
 
   // Expose the fields UI for account entries.
   $entity_info['ledger_account_entry']['bundles']['ledger_account_entry']['admin'] = array(
-    'path' => 'admin/ledger/settings/account_entry',
-    'real path' => 'admin/ledger/settings/account_entry',
+    'path' => 'admin/config/ledger/account_entry',
+    'real path' => 'admin/config/ledger/account_entry',
     'access arguments' => array('administer ledger'),
   );
 }

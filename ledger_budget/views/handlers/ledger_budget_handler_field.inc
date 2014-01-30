@@ -74,7 +74,7 @@ class ledger_budget_handler_field extends views_handler_field {
 
       // Alter the options of the link.
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = 'admin/ledger/budgets/' . $bid . '?destination=' . current_path();
+      $this->options['alter']['path'] = 'ledger/budget/' . $bid . '?destination=' . current_path();
     }
 
     return $data;

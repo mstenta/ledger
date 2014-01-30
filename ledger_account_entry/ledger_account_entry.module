@@ -67,7 +67,7 @@ class LedgerAccountEntry extends Entity {
   }
 
   protected function defaultUri() {
-    return array('path' => 'admin/ledger/account_entry/' . $this->eid);
+    return array('path' => 'ledger/account_entry/' . $this->eid);
   }
 }
 
