@@ -279,3 +279,45 @@ function ledger_book_delete_multiple($bids) {
   return entity_get_controller('ledger_book')->delete($bids);
 }
 
+/***************************************************************
+ * Utility functions
+ * *************************************************************/
+
+/**
+ * Return a list of books owned by a user.
+ *
+ * @param $account
+ *   (Optional) The user account to check. If ommitted, current user is used.
+ *
+ * @return array
+ *   Returns an array of books owned by the user.
+ */
+function ledger_book_user_books($account = NULL) {
+
+  $books = array();
+
+  // If the user account is not set, use the currently logged in user.
+  global $user;
+  if (!isset($account)) {
+    $account = $user;
+  }
+
+  // Start assembling the query.
+  $query = db_select('ledger_book', 'b');
+  $query->fields('b', array('bid', 'name'));
+
+  // If the user does not have 'administer ledger' permission, limit the results
+  // to books that they own.
+  if (!user_access('administer ledger', $account)) {
+    $query->condition('uid', $account->uid);
+  }
+
+  // Execute the query and process the results.
+  $result = $query->execute();
+  foreach ($result as $row) {
+    $books[$row->bid] = $row->name;
+  }
+
+  return $books;
+}
+
