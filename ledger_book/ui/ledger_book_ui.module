@@ -72,6 +72,18 @@ function ledger_book_ui_menu_local_tasks_alter(&$data, $router_item, $root_path)
       );
     }
   }
+
+  // Add action link 'ledger/account/add' on 'ledger/book/%/accounts'.
+  else if ($root_path == 'ledger/book/%' || $root_path == 'ledger/book/%/accounts') {
+    $item = menu_get_item('ledger/account/add');  // Load the menu item for the account add form
+    $item['localized_options']['query']['destination'] = current_path();  // Set the destination argument to the current path
+    if ($item['access']) {
+      $data['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
+    }
+  }
 }
 
 /***************************************************************
