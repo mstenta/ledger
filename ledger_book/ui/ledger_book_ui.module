@@ -207,6 +207,7 @@ function ledger_book_form($form, &$form_state, $book, $op = 'edit') {
     '#description' => t('The username id of the book\'s owner.'),
     '#autocomplete_path' => 'user/autocomplete',
     '#required' => TRUE,
+    '#access' => user_access('assign ledger_book ownership'),
   );
 
   // Add the Field API elements.

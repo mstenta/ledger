@@ -27,6 +27,9 @@ function ledger_book_permission() {
   $permissions['manage data in own ledger books'] = array(
     'title' => t('Manage data in own books'),
   );
+  $permissions['assign ledger_book ownership'] = array(
+    'title' => t('Assign ledger book ownership'),
+  );
 
   return $permissions;
 }
