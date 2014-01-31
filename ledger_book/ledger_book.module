@@ -10,6 +10,28 @@
  * *************************************************************/
 
 /**
+ * Implements hook_permission().
+ */
+function ledger_book_permission() {
+
+  // Add granular entity permissions via ledger's helper function.
+  $permissions = ledger_entity_access_permissions('ledger_book');
+
+  // Add even more granular permissions related to book ownership.
+  $permissions['view own ledger_book'] = array(
+    'title' => t('View own ledger books'),
+  );
+  $permissions['edit own ledger_book'] = array(
+    'title' => t('Edit own ledger books'),
+  );
+  $permissions['manage data in own ledger books'] = array(
+    'title' => t('Manage data in own books'),
+  );
+
+  return $permissions;
+}
+
+/**
  * Implements hook_entity_info().
  */
 function ledger_book_entity_info() {

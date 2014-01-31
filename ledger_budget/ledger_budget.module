@@ -10,6 +10,15 @@
  * *************************************************************/
 
 /**
+ * Implements hook_permission().
+ */
+function ledger_budget_permission() {
+
+  // Add granular entity permissions via ledger's helper function.
+  return ledger_entity_access_permissions('ledger_budget');
+}
+
+/**
  * Implements hook_entity_info().
  */
 function ledger_budget_entity_info() {

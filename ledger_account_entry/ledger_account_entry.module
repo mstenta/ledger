@@ -10,6 +10,15 @@
  * *************************************************************/
 
 /**
+ * Implements hook_permission().
+ */
+function ledger_account_entry_permission() {
+
+  // Add granular entity permissions via ledger's helper function.
+  return ledger_entity_access_permissions('ledger_account_entry');
+}
+
+/**
  * Implements hook_entity_info().
  */
 function ledger_account_entry_entity_info() {

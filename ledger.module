@@ -23,6 +23,41 @@ function ledger_permission() {
 }
 
 /***************************************************************
+ * Access functions
+ * *************************************************************/
+
+/**
+ * Generates granular entity permissions for use in hook_permission().
+ *
+ * @param $entity_type
+ *   The entity type to define permissions for.
+ *
+ * @return array
+ *   Returns an array of permissions for hook_permission().
+ */
+function ledger_entity_access_permissions($entity_type) {
+  $entity_info = entity_get_info($entity_type);
+
+  // Grab the entity label.
+  $label = strtolower($entity_info['label plural']);
+
+  // Generic create, view, and edit permissions.
+  $permissions['create ' . $entity_type] = array(
+    'title' => t('Create ledger @entity_type', array('@entity_type' => $label)),
+  );
+  $permissions['view all ' . $entity_type] = array(
+    'title' => t('View all ledger @entity_type', array('@entity_type' => $label)),
+    'restrict access' => TRUE,
+  );
+  $permissions['edit all ' . $entity_type] = array(
+    'title' => t('Edit all ledger @entity_type', array('@entity_type' => $label)),
+    'restrict access' => TRUE,
+  );
+
+  return $permissions;
+}
+
+/***************************************************************
  * Configuration functions
  * *************************************************************/
 
