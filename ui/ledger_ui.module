@@ -10,6 +10,18 @@
  * *************************************************************/
 
 /**
+ * Implements hook_permission().
+ */
+function ledger_ui_permission() {
+  return array(
+    'view ledger home' => array(
+      'title' => t('View Ledger Home'),
+      'description' => t('View the Ledger Home page.'),
+    ),
+  );
+}
+
+/**
  * Implements hook_menu().
  */
 function ledger_ui_menu() {
@@ -20,7 +32,7 @@ function ledger_ui_menu() {
     'title' => 'Ledger',
     'description' => 'Manage books, accounts, and transactions.',
     'page callback' => 'ledger_ui_page_callback',
-    'access arguments' => array('access administration pages'),
+    'access arguments' => array('view ledger home'),
   );
 
   // Ledger Settings container
@@ -28,7 +40,7 @@ function ledger_ui_menu() {
     'title' => 'Ledger',
     'description' => 'Administer ledger settings',
     'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
+    'access arguments' => array('administer ledger'),
     'file path' => drupal_get_path('module', 'system'),
     'file' => 'system.admin.inc',
   );
