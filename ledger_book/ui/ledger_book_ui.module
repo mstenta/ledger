@@ -161,12 +161,22 @@ function ledger_book_form($form, &$form_state, $book, $op = 'edit') {
     '#required' => TRUE,
   );
 
+  // Figure out the book's owner.
+  if (!empty($book->uid)) {
+    $user = user_load($book->uid);
+  }
+  else {
+    global $user;
+  }
+  $owner = $user->name;
+
   // Book owner
-  $form['uid'] = array(
+  $form['owner'] = array(
     '#title' => t('Book owner'),
     '#type' => 'textfield',
-    '#default_value' => $book->uid,
-    '#description' => t('The user id of the book\'s owner.'),
+    '#default_value' => $owner,
+    '#description' => t('The username id of the book\'s owner.'),
+    '#autocomplete_path' => 'user/autocomplete',
     '#required' => TRUE,
   );
 
@@ -196,6 +206,12 @@ function ledger_book_form_validate(&$form, &$form_state) {
 
   // Notify field widgets to validate their data.
   field_attach_form_validate('ledger_book', $book, $form, $form_state);
+
+  // Validate that the owner is a user.
+  $user = user_load_by_name($form_state['values']['owner']);
+  if (empty($user->uid)) {
+    form_set_error('owner', 'Book owner is not a valid user account.');
+  }
 }
 
 /**
@@ -203,15 +219,19 @@ function ledger_book_form_validate(&$form, &$form_state) {
  */
 function ledger_book_form_submit(&$form, &$form_state) {
 
+  // Load the owner's user account.
+  $owner = user_load_by_name($form_state['values']['owner']);
+
   // If the user is editing a book, load a fresh copy to merge changes to.
   if ($form_state['ledger_book']->bid) {
     $book = ledger_book_load($form_state['ledger_book']->bid);
     $book->name = $form_state['values']['name'];
-    $book->uid = $form_state['values']['uid'];
+    $book->uid = $owner->uid;
   }
 
   // If a new book is being created, build a new book object.
   else {
+    $form_state['values']['uid'] = $owner->uid;
     $book = ledger_book_new($form_state['values']);
   }
 
