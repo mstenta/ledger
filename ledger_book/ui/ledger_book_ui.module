@@ -57,6 +57,35 @@ function ledger_book_ui_menu() {
 }
 
 /**
+ * Implements hook_form_alter().
+ */
+function ledger_book_ui_form_alter(&$form, &$form_state, $form_id) {
+
+  // Alter the ledger account form.
+  if ($form_id == 'ledger_account_form') {
+
+    // Load a list of books owned by the current user.
+    $books = ledger_book_user_books();
+
+    // Figure out the default value.
+    $book_id = NULL;
+    if (!empty($form_state['ledger_account']->book_id)) {
+      $book_id = $form_state['ledger_account']->book_id;
+    }
+
+    // Add a required field for assigning the account to a book.
+    $form['book_id'] = array(
+      '#type' => 'select',
+      '#title' => t('Book'),
+      '#description' => t('Each account must be assigned to a book. Select a book from the list or ' . l('create a new book', 'ledger/book/add')),
+      '#options' => $books,
+      '#default_value' => $book_id,
+      '#required' => TRUE,
+    );
+  }
+}
+
+/**
  * Implements hook_menu_local_tasks_alter().
  */
 function ledger_book_ui_menu_local_tasks_alter(&$data, $router_item, $root_path) {
