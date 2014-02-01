@@ -411,6 +411,8 @@ function ledger_account_get_types($type = NULL) {
 /**
  * Create a hierarchical representation of accounts. This function is modeled after Drupal's taxonomy_get_tree().
  *
+ * @param book
+ *   The book id to limit accounts to. Required.
  * @param $parent
  *   The account ID under which to generate the tree. If 0, generate the tree
  *   for all accounts.
@@ -422,16 +424,26 @@ function ledger_account_get_types($type = NULL) {
  *   save execution time and memory consumption when listing large numbers of
  *   accounts. Defaults to FALSE.
  *
- * @return
+ * @return array
  *   An array of all account objects in the tree. Each account object is extended
  *   to have "depth" and "parents" attributes in addition to its normal ones.
  *   Results are statically cached. Account objects will be partial or complete
  *   depending on the $load_entities parameter.
  */
-function ledger_account_get_tree($parent = 0, $max_depth = NULL, $load_entities = FALSE) {
-  $children = &drupal_static(__FUNCTION__, array());
-  $parents = &drupal_static(__FUNCTION__ . ':parents', array());
-  $accounts = &drupal_static(__FUNCTION__ . ':accounts', array());
+function ledger_account_get_tree($book, $parent = 0, $max_depth = NULL, $load_entities = FALSE) {
+
+  // Start a tree array.
+  $tree = array();
+
+  // If no book id is provided, bail.
+  if (empty($book) || !is_numeric($book)) {
+    return $tree;
+  }
+
+  // Create static containers for this book's account information.
+  $children = &drupal_static(__FUNCTION__ . $book, array());
+  $parents = &drupal_static(__FUNCTION__ . $book . ':parents', array());
+  $accounts = &drupal_static(__FUNCTION__ . $book . ':accounts', array());
 
   // We cache trees, so it's not CPU-intensive to call get_tree() on an account
   // and its children, too.
@@ -443,6 +455,7 @@ function ledger_account_get_tree($parent = 0, $max_depth = NULL, $load_entities 
     // Load all the accounts from the database.
     $query = db_select('ledger_account', 'a');
     $query->fields('a');
+    $query->condition('a.bid', $book);  // Filter by book.
     $query->orderBy('a.pid');  // Order by parent account id first.
     $query->orderBy('a.name');  // Order by account name second.
     $result = $query->execute();
@@ -461,7 +474,6 @@ function ledger_account_get_tree($parent = 0, $max_depth = NULL, $load_entities 
   }
 
   $max_depth = (!isset($max_depth)) ? count($children) : $max_depth;
-  $tree = array();
 
   // Keeps track of the parents we have to process, the last entry is used
   // for the next processing step.
@@ -521,16 +533,21 @@ function ledger_account_get_tree($parent = 0, $max_depth = NULL, $load_entities 
 
 /**
  * Returns a list of accounts to use in a form select element.
+ *
+ * @param $book
+ *   The book id to load accounts from. Required.
  */
-function ledger_account_select_options() {
-  static $options = array();
+function ledger_account_select_options($book) {
+  $options = &drupal_static(__FUNCTION__ . $book, array());
+
+  // If options for the given book are not available, load them.
   if (empty($options)) {
 
     // Give it a 0 value to start
     $options[0] = '- Select -';
 
     // Load the hierarchic list of accounts.
-    $account_tree = ledger_account_get_tree();
+    $account_tree = ledger_account_get_tree($book);
 
     // Loop through the accounts.
     foreach ($account_tree as $account) {
