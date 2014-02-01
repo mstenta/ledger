@@ -43,39 +43,6 @@ function ledger_book_schema() {
       ),
     ),
   );
-  $schema['ledger_book_account'] = array(
-    'description' => 'Stores information that links accounts to books.',
-    'fields' => array(
-      'bid' => array(
-        'description' => 'The ledger book id.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'aid' => array(
-        'description' => 'The ledger account id.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'indexes' => array(
-      'bid' => array('bid'),
-      'aid' => array('aid'),
-    ),
-    'foreign keys' => array(
-      'ledger_book' => array(
-        'table' => 'ledger_book',
-        'columns' => array('bid' => 'bid'),
-      ),
-      'ledger_account' => array(
-        'table' => 'ledger_account',
-        'columns' => array('aid' => 'aid'),
-      ),
-    ),
-  );
   return $schema;
 }
 
