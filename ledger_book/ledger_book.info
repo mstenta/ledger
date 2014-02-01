@@ -3,5 +3,5 @@ description = "Defines the Ledger Book entity and associated features."
 core = 7.x
 package = "Ledger"
 dependencies[] = entity
-dependencies[] = ledger_account
+dependencies[] = ledger
 
