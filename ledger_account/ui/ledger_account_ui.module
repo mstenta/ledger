@@ -180,6 +180,13 @@ function ledger_account_ui_account_form_wrapper($account, $op, $type=NULL) {
   }
 }
 
+/**
+ * Ajax callback for rebuilding a list of accounts.
+ */
+function ledger_account_ajax($form, $form_state) {
+  return $form['accounts'];
+}
+
 /***************************************************************
  * Account entity forms
  * *************************************************************/
@@ -221,11 +228,53 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
     '#description' => t('A brief description of the account.'),
   );
 
+  // Load a list of books that the user has access to.
+  $books = ledger_book_user_books();
+
+  // Add a required field for assigning the account to a book.
+  $form['bid'] = array(
+    '#type' => 'select',
+    '#title' => t('Book'),
+    '#description' => t('Each account must be assigned to a book. Select a book from the list or ' . l('create a new book', 'ledger/book/add')),
+    '#options' => $books,
+    '#default_value' => $account->bid,
+    '#required' => TRUE,
+    '#ajax' => array(
+      'callback' => 'ledger_account_ajax',
+      'wrapper' => 'accounts-wrapper',
+    ),
+  );
+
+  // Parent accounts wrapper.
+  $form['accounts'] = array(
+    '#prefix' => '<div id="accounts-wrapper">',
+    '#suffix' => '</div>',
+  );
+
+  // Figure out which book to load accounts from based on priority.
+  $bid = 0;
+  // First, select the first available book (this will happen automatically in the browser for new accounts).
+  if (!empty($books)) {
+    reset($books);
+    $bid = key($books);
+  }
+  // Second, override with bid assigned to the account already.
+  if (!empty($account->bid)) {
+    $bid = $account->bid;
+  }
+  // Lastly, override with any values that have been set in this form.
+  if (!empty($form_state['values']['bid'])) {
+    $bid = $form_state['values']['bid'];
+  }
+
+  // Load the list of accounts for the book.
+  $accounts = ledger_account_select_options($bid);
+
   // Parent account ID
-  $form['pid'] = array(
+  $form['accounts']['pid'] = array(
     '#title' => t('Parent account'),
     '#type' => 'select',
-    '#options' => ledger_account_select_options(),
+    '#options' => $accounts,
     '#default_value' => $account->pid,
     '#description' => t('The account\'s parent account.'),
   );
@@ -253,6 +302,13 @@ function ledger_account_form_validate(&$form, &$form_state) {
 
   // Load account object from $form_state
   $account = $form_state['ledger_account'];
+
+  // Make sure the book ID is a valid book.
+  $bid = $form_state['values']['bid'];
+  $book = ledger_book_load($bid);
+  if (!isset($book->bid)) {
+    form_set_error('book', 'Invalid book.');
+  }
 
   // Make sure the parent account ID is a valid account.
   $pid = $form_state['values']['pid'];
@@ -290,6 +346,7 @@ function ledger_account_form_submit(&$form, &$form_state) {
     $account->name = $form_state['values']['name'];
     $account->description = $form_state['values']['description'];
     $account->type = $form_state['values']['type'];
+    $account->bid = $form_state['values']['bid'];
     $account->pid = $form_state['values']['pid'];
   }
 
