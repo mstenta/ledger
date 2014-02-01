@@ -27,6 +27,77 @@ function ledger_permission() {
  * *************************************************************/
 
 /**
+ * Access callback for ledger entities.
+ *
+ * @param $op
+ *   The operation being performed. One of 'view', 'update', 'create', 'delete'.
+ * @param $entity
+ *   Optionally a specific ledger entity to check.
+ * @param $account
+ *   The user to check for. Leave it to NULL to check for the global user.
+ * @param $entity_type
+ *   The type of entity to check.
+ *
+ * @return boolean
+ *   Whether access is allowed or not.
+ */
+function ledger_entity_access($op, $entity = NULL, $account = NULL, $entity_type = NULL) {
+
+  // If an account isn't provided, use the currently logged in user.
+  if (empty($account)) {
+    global $user;
+    $account = $user;
+  }
+
+  // If the user has 'administer ledger' permission, grant them access.
+  if (user_access('administer ledger', $account)) {
+    return TRUE;
+  }
+
+  // If a new entity is being created, check access.
+  if ($op == 'create') {
+    return user_access('create ' . $entity_type, $account);
+  }
+
+  // If an entity was provided, check access based on the op.
+  elseif (isset($entity)) {
+    switch ($op) {
+
+      // View
+      case 'view':
+
+        // If the account has access to view all entities of this type, proceed.
+        if (user_access('view all ' . $entity_type, $account)) {
+          return TRUE;
+        }
+
+        // Check to see if the account owns the entity and can view it.
+        if (!empty($entity->uid) && $entity->uid == $account->uid) {
+          return user_access('view own ' . $entity_type, $account);
+        }
+
+      // Update/delete
+      case 'update':
+      case 'delete':
+
+        // If the account has access to edit all entities of this type, proceed.
+        if (user_access('edit all ' . $entity_type, $account)) {
+          return TRUE;
+        }
+
+        // Check to see if the account owns the entity and can edit it.
+        if (!empty($entity->uid) && $entity->uid == $account->uid) {
+          return user_access('edit own ' . $entity_type, $account);
+        }
+    }
+  }
+
+  // If all else fails, deny access.
+  return FALSE;
+}
+
+
+/**
  * Generates granular entity permissions for use in hook_permission().
  *
  * @param $entity_type

@@ -37,6 +37,7 @@ function ledger_account_entity_info() {
     'label callback' => 'entity_class_label',
     'uri callback' => 'entity_class_uri',
     'module' => 'ledger_account',
+    'access callback' => 'ledger_account_access',
     'bundles' => array(),
     'bundle keys' => array(
       'bundle' => 'type',
@@ -166,24 +167,20 @@ class LedgerAccountController extends EntityAPIController {
 }
 
 /**
- * Access callback for ledger accounts.
- *
- * @todo
- *   Expand this access function to check based on the operation being performed.
- *   Also add ability to check a specific account entity.
+ * Access callback for ledger entities.
  *
  * @param $op
- *   The operation being performed. One of 'view', 'update', 'create', 'delete'
- *   or just 'edit' (being the same as 'create' or 'update').
+ *   The operation being performed. One of 'view', 'update', 'create', 'delete'.
+ * @param $entity
+ *   Optionally a specific ledger entity to check.
  * @param $account
- *   Optionally a specific ledger account to check.
- * @param $user
  *   The user to check for. Leave it to NULL to check for the global user.
+ *
  * @return boolean
  *   Whether access is allowed or not.
  */
-function ledger_account_access($op, $account = NULL, $user = NULL) {
-  return user_access('administer ledger', $user);
+function ledger_account_access($op, $entity = NULL, $account = NULL) {
+  return ledger_entity_access($op, $entity, $account, 'ledger_account');
 }
 
 /**

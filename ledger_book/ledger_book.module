@@ -52,6 +52,7 @@ function ledger_book_entity_info() {
     'label callback' => 'entity_class_label',
     'uri callback' => 'entity_class_uri',
     'module' => 'ledger_book',
+    'access callback' => 'ledger_book_access',
     'bundles' => array(
       'ledger_book' => array(
         'label' => t('Book', array(), array('context' => 'a ledger book')),
@@ -195,24 +196,20 @@ class LedgerBookController extends EntityAPIController {
 }
 
 /**
- * Access callback for ledger books.
- *
- * @todo
- *   Expand this access function to check based on the operation being performed.
- *   Also add ability to check a specific book entity.
+ * Access callback for ledger entities.
  *
  * @param $op
- *   The operation being performed. One of 'view', 'update', 'create', 'delete'
- *   or just 'edit' (being the same as 'create' or 'update').
- * @param $book
- *   Optionally a specific ledger book to check.
- * @param $user
+ *   The operation being performed. One of 'view', 'update', 'create', 'delete'.
+ * @param $entity
+ *   Optionally a specific ledger entity to check.
+ * @param $account
  *   The user to check for. Leave it to NULL to check for the global user.
+ *
  * @return boolean
  *   Whether access is allowed or not.
  */
-function ledger_book_access($op, $book = NULL, $user = NULL) {
-  return user_access('administer ledger', $user);
+function ledger_book_access($op, $entity = NULL, $account = NULL) {
+  return ledger_entity_access($op, $entity, $account, 'ledger_book');
 }
 
 /**

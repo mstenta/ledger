@@ -35,6 +35,7 @@ function ledger_budget_entity_info() {
     'label callback' => 'entity_class_label',
     'uri callback' => 'entity_class_uri',
     'module' => 'ledger_budget',
+    'access callback' => 'ledger_budget_access',
     'bundles' => array(
       'ledger_budget' => array(
         'label' => t('Budget', array(), array('context' => 'a ledger budget')),
@@ -177,24 +178,20 @@ class LedgerBudgetController extends EntityAPIController {
 }
 
 /**
- * Access callback for ledger budget.
- *
- * @todo
- *   Expand this access function to check based on the operation being performed.
- *   Also add ability to check a specific budget entity.
+ * Access callback for ledger entities.
  *
  * @param $op
- *   The operation being performed. One of 'view', 'update', 'create', 'delete'
- *   or just 'edit' (being the same as 'create' or 'update').
- * @param $budget
- *   Optionally a specific ledger budget to check.
- * @param $user
+ *   The operation being performed. One of 'view', 'update', 'create', 'delete'.
+ * @param $entity
+ *   Optionally a specific ledger entity to check.
+ * @param $account
  *   The user to check for. Leave it to NULL to check for the global user.
+ *
  * @return boolean
  *   Whether access is allowed or not.
  */
-function ledger_budget_access($op, $budget = NULL, $user = NULL) {
-  return user_access('administer ledger', $user);
+function ledger_budget_access($op, $entity = NULL, $account = NULL) {
+  return ledger_entity_access($op, $entity, $account, 'ledger_budget');
 }
 
 /**
