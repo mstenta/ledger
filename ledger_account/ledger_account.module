@@ -132,6 +132,7 @@ class LedgerAccountController extends EntityAPIController {
     $values += array(
       'aid' => '',
       'pid' => 0,
+      'bid' => 0,
       'name' => '',
       'description' => '',
       'type' => '',

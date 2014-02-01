@@ -25,6 +25,13 @@ function ledger_account_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'bid' => array(
+        'description' => 'Book ID',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       'name' => array(
         'description' => 'Account name',
         'type' => 'varchar',
@@ -47,6 +54,7 @@ function ledger_account_schema() {
     'primary key' => array('aid'),
     'indexes' => array(
       'pid' => array('pid'),
+      'bid' => array('bid'),
       'name' => array('name'),
       'type' => array('type'),
     ),
