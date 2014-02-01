@@ -30,6 +30,15 @@ function ledger_account_entity_property_info() {
     'required' => TRUE,
     'schema field' => 'pid',
   );
+  $account['book'] = array(
+    'type' => 'ledger_book',
+    'label' => t('Book'),
+    'description' => t('The book that the account is assigned to.'),
+    'setter callback' => 'entity_property_verbatim_set',
+    'setter permission' => 'administer ledger',
+    'required' => TRUE,
+    'schema field' => 'bid',
+  );
   $account['name'] = array(
     'label' => t('Name'),
     'description' => t('The name of the account.'),
