@@ -4,6 +4,7 @@ core = 7.x
 package = "Ledger"
 dependencies[] = entity
 dependencies[] = ledger
+dependencies[] = ledger_book
 dependencies[] = ledger_account
 dependencies[] = ledger_account_entry
 

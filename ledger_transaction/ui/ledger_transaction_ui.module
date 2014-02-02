@@ -208,6 +208,19 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     );
   }
 
+  // Load a list of books that the user has access to.
+  $books = ledger_book_user_books();
+
+  // Add a required field for assigning the transaction to a book.
+  $form['bid'] = array(
+    '#type' => 'select',
+    '#title' => t('Book'),
+    '#description' => t('Each transaction must be assigned to a book. Select a book from the list or ' . l('create a new book', 'ledger/book/add')),
+    '#options' => $books,
+    '#default_value' => $transaction->bid,
+    '#required' => TRUE,
+  );
+
   // Load the account entries associated with this transaction.
   $account_entry_ids = array();
   $result = db_query('SELECT eid FROM {ledger_account_entry} WHERE tid = :tid AND tid <> 0', array(':tid' => $transaction->tid));
@@ -253,6 +266,13 @@ function ledger_transaction_form_validate(&$form, &$form_state) {
     form_set_error('timestamp', 'Invalid timestamp.');
   }
 
+  // Make sure the book ID is a valid book.
+  $bid = $form_state['values']['bid'];
+  $book = ledger_book_load($bid);
+  if (!isset($book->bid)) {
+    form_set_error('book', 'Invalid book.');
+  }
+
   // Notify field widgets to validate their data.
   field_attach_form_validate('ledger_transaction', $transaction, $form, $form_state);
 }
@@ -267,6 +287,7 @@ function ledger_transaction_form_submit(&$form, &$form_state) {
     $transaction = ledger_transaction_load($form_state['ledger_transaction']->tid);
     $transaction->description = $form_state['values']['description'];
     $transaction->timestamp = $form_state['values']['timestamp'];
+    $transaction->bid = $form_state['values']['bid'];
   }
 
   // If a new transaction is being created, build a new transaction object.

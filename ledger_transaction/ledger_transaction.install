@@ -18,6 +18,13 @@ function ledger_transaction_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
+      'bid' => array(
+        'description' => 'Book ID',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       'description' => array(
         'description' => 'Transaction description',
         'type' => 'varchar',
@@ -33,6 +40,7 @@ function ledger_transaction_schema() {
     ),
     'primary key' => array('tid'),
     'indexes' => array(
+      'bid' => array('bid'),
       'timestamp' => array('timestamp'),
     ),
   );

@@ -21,6 +21,15 @@ function ledger_transaction_entity_property_info() {
     'setter permission' => 'administer ledger',
     'schema field' => 'tid',
   );
+  $transaction['book'] = array(
+    'type' => 'ledger_book',
+    'label' => t('Book'),
+    'description' => t('The book that the transaction is assigned to.'),
+    'setter callback' => 'entity_property_verbatim_set',
+    'setter permission' => 'administer ledger',
+    'required' => TRUE,
+    'schema field' => 'bid',
+  );
   $transaction['description'] = array(
     'label' => t('Description'),
     'description' => t('A brief description of the transaction.'),
