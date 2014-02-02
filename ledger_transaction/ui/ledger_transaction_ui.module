@@ -133,6 +133,9 @@ function ledger_transaction_ui_transaction_form_wrapper($transaction, $op) {
     $transaction = ledger_transaction_new();
   }
 
+  // Set the page title
+  drupal_set_title(t('Edit transaction: @transaction', array('@transaction' => ledger_transaction_title($transaction))));
+
   // Create the breadcrumb for the page
   $breadcrumb = array(
     l(t('Home'), '<front>'),

@@ -161,7 +161,7 @@ function ledger_account_ui_account_form_wrapper($account, $op, $type=NULL) {
   }
 
   // Set the page title
-  drupal_set_title(ledger_account_title($account));
+  drupal_set_title(t('Edit account: @account', array('@account' => ledger_account_title($account))));
 
   // Create the breadcrumb for the page
   $breadcrumb = array(

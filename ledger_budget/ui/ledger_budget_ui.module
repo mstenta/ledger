@@ -132,6 +132,9 @@ function ledger_budget_ui_budget_form_wrapper($budget, $op) {
     $budget = ledger_budget_new();
   }
 
+  // Set the page title
+  drupal_set_title(t('Edit budget: @budget', array('@budget' => ledger_budget_title($budget))));
+
   // Create the breadcrumb for the page
   $breadcrumb = array(
     l(t('Home'), '<front>'),

@@ -115,7 +115,7 @@ function ledger_book_ui_book_form_wrapper($book, $op, $type=NULL) {
   }
 
   // Set the page title
-  drupal_set_title(ledger_book_title($book));
+  drupal_set_title(t('Edit book: @book', array('@book' => ledger_book_title($book))));
 
   // Create the breadcrumb for the page
   $breadcrumb = array(
