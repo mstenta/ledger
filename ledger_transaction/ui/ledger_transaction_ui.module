@@ -150,6 +150,13 @@ function ledger_transaction_ui_transaction_form_wrapper($transaction, $op) {
   }
 }
 
+/**
+ * Ajax callback for rebuilding the account entries sub-form.
+ */
+function ledger_transaction_account_entries_ajax($form, $form_state) {
+  return $form['account_entries'];
+}
+
 /***************************************************************
  * Transaction settings form
  * *************************************************************/
@@ -219,7 +226,27 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     '#options' => $books,
     '#default_value' => $transaction->bid,
     '#required' => TRUE,
+    '#ajax' => array(
+      'callback' => 'ledger_transaction_account_entries_ajax',
+      'wrapper' => 'ledger-account-entries',
+    ),
   );
+
+  // Figure out which book to load accounts from based on priority.
+  $bid = 0;
+  // First, select the first available book (this will happen automatically in the browser for new accounts).
+  if (!empty($books)) {
+    reset($books);
+    $bid = key($books);
+  }
+  // Second, override with bid assigned to the account already.
+  if (!empty($transaction->bid)) {
+    $bid = $transaction->bid;
+  }
+  // Lastly, override with any values that have been set in this form.
+  if (!empty($form_state['values']['bid'])) {
+    $bid = $form_state['values']['bid'];
+  }
 
   // Load the account entries associated with this transaction.
   $account_entry_ids = array();
@@ -234,6 +261,7 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     '#type' => 'ledger_account_entry_manager',
     '#title' => t('Account entries'),
     '#default_value' => $transaction->account_entries,
+    '#book_id' => $bid,
   );
 
   // Add the Field API elements.

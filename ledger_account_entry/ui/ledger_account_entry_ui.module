@@ -160,7 +160,7 @@ function ledger_account_entry_ui_manager($element, &$form_state) {
       // Account select list
       $element['rows'][$key]['aid'] = array(
         '#type' => 'select',
-        '#options' => ledger_account_select_options(),
+        '#options' => ledger_account_select_options($element['#book_id']),
         '#default_value' => $account_entry->aid,
       );
 
@@ -216,7 +216,6 @@ function ledger_account_entry_ui_manager($element, &$form_state) {
 
   return $element;
 }
-
 
 /**
  * Ledger account entry manager validation.
