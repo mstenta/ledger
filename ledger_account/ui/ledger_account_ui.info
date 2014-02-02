@@ -9,4 +9,5 @@ dependencies[] = ledger_ui
 dependencies[] = ledger_book_ui
 dependencies[] = views
 dependencies[] = views_bulk_operations
+dependencies[] = views_tree
 
