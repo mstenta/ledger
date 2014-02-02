@@ -16,7 +16,7 @@ class ledger_transaction_handler_field extends views_handler_field {
     // Inherit the parent initialization.
     parent::init($view, $options);
 
-    // If the transaction is going to be linked to it's view page, we need to load the taxonomy id value so it's available to this handler.
+    // If the transaction is going to be linked to it's view page, we need to load the transaction id value so it's available to this handler.
     if ($this->options['link_to_transaction'] == 'view') {
       $this->additional_fields['tid'] = 'tid';
     }
