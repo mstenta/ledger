@@ -105,6 +105,17 @@ function ledger_budget_ui_menu_local_tasks_alter(&$data, $router_item, $root_pat
 }
 
 /***************************************************************
+ * Ledger hooks
+ * *************************************************************/
+
+/**
+ * Implements hook_ledger_book_ops().
+ */
+function ledger_budget_ui_ledger_book_ops($bid) {
+  return array(l('Budgets', 'ledger/book/' . $bid . '/budgets'));
+}
+
+/***************************************************************
  * Views hooks
  * *************************************************************/
 

@@ -107,6 +107,17 @@ function ledger_transaction_ui_menu_local_tasks_alter(&$data, $router_item, $roo
 }
 
 /***************************************************************
+ * Ledger hooks
+ * *************************************************************/
+
+/**
+ * Implements hook_ledger_book_ops().
+ */
+function ledger_transaction_ui_ledger_book_ops($bid) {
+  return array(l('Transactions', 'ledger/book/' . $bid . '/transactions'));
+}
+
+/***************************************************************
  * Views hooks
  * *************************************************************/
 

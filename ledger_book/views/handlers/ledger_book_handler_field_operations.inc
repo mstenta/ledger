@@ -31,11 +31,15 @@ class ledger_book_handler_field_operations extends ledger_book_handler_field_lin
       $options['query']['destination'] = current_path();
     }
 
-    // Define the operations to include.
-    $ops = array(
+    // Allow other modules to add their operations.
+    $ops = module_invoke_all('ledger_book_ops', $book->bid);
+
+    // Add the default edit and delete operations.
+    $default_ops = array(
       l(t('Edit'), 'ledger/book/' . $book->bid . '/edit', $options),
       l(t('Delete'), 'ledger/book/' . $book->bid . '/delete', $options),
     );
+    $ops = array_merge($ops, $default_ops);
 
     // Assemble the list of operations.
     return implode(' | ', $ops);
