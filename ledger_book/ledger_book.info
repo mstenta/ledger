@@ -10,4 +10,5 @@ files[] = views/handlers/ledger_book_handler_field_link_edit.inc
 files[] = views/handlers/ledger_book_handler_field_link.inc
 files[] = views/handlers/ledger_book_handler_field_operations.inc
 files[] = views/handlers/ledger_book_handler_field.inc
+files[] = views/handlers/ledger_book_plugin_argument_validate_book.inc
 

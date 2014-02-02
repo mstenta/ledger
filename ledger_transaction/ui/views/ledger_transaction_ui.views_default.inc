@@ -421,34 +421,8 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['arguments']['account']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['account']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['arguments']['account']['specify_validation'] = TRUE;
-  $handler->display->display_options['arguments']['account']['validate']['type'] = 'php';
-  $handler->display->display_options['arguments']['account']['validate_options']['code'] = '// Attempt to load the account object.
-  $account = ledger_account_load($argument);
-
-  // If the account exists, return TRUE.
-  if ($account) {
-
-    // Set the title used for substitution to the account name.
-    $handler->validated_title = ledger_account_title($account);
-    return TRUE;
-  }
-
-  // If the account doesn\'t exist, return FALSE.
-  else {
-    return FALSE;
-  }';
-  /* Contextual filter: Book: Owner uid */
-  $handler->display->display_options['arguments']['owner']['id'] = 'owner';
-  $handler->display->display_options['arguments']['owner']['table'] = 'ledger_book';
-  $handler->display->display_options['arguments']['owner']['field'] = 'owner';
-  $handler->display->display_options['arguments']['owner']['relationship'] = 'book';
-  $handler->display->display_options['arguments']['owner']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['owner']['default_argument_type'] = 'current_user';
-  $handler->display->display_options['arguments']['owner']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['owner']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['owner']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['owner']['specify_validation'] = TRUE;
-  $handler->display->display_options['arguments']['owner']['validate']['type'] = 'user';
+  $handler->display->display_options['arguments']['account']['validate']['type'] = 'ledger_account';
+  $handler->display->display_options['arguments']['account']['validate_options']['access'] = TRUE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Transaction: Description */
@@ -584,34 +558,8 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['arguments']['bid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['bid']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['arguments']['bid']['specify_validation'] = TRUE;
-  $handler->display->display_options['arguments']['bid']['validate']['type'] = 'php';
-  $handler->display->display_options['arguments']['bid']['validate_options']['code'] = '// Attempt to load the book object.
-  $book = ledger_book_load($argument);
-
-  // If the book exists, return TRUE.
-  if ($book) {
-
-    // Set the title used for substitution to the account name.
-    $handler->validated_title = ledger_book_title($book);
-    return TRUE;
-  }
-
-  // If the account doesn\'t exist, return FALSE.
-  else {
-    return FALSE;
-  }';
-  /* Contextual filter: Book: Owner uid */
-  $handler->display->display_options['arguments']['owner']['id'] = 'owner';
-  $handler->display->display_options['arguments']['owner']['table'] = 'ledger_book';
-  $handler->display->display_options['arguments']['owner']['field'] = 'owner';
-  $handler->display->display_options['arguments']['owner']['relationship'] = 'book';
-  $handler->display->display_options['arguments']['owner']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['owner']['default_argument_type'] = 'current_user';
-  $handler->display->display_options['arguments']['owner']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['owner']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['owner']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['owner']['specify_validation'] = TRUE;
-  $handler->display->display_options['arguments']['owner']['validate']['type'] = 'user';
+  $handler->display->display_options['arguments']['bid']['validate']['type'] = 'ledger_book';
+  $handler->display->display_options['arguments']['bid']['validate_options']['access'] = TRUE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Transaction: Description */

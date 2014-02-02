@@ -6,6 +6,20 @@
  */
 
 /**
+ * Implements hook_views_plugins().
+ */
+function ledger_account_views_plugins() {
+  return array(
+    'argument validator' => array(
+      'ledger_account' => array(
+        'title' => t('Ledger account'),
+        'handler' => 'ledger_account_plugin_argument_validate_account',
+      ),
+    ),
+  );
+}
+
+/**
  * Implements hook_views_data_alter().
  */
 function ledger_account_views_data_alter(&$data) {

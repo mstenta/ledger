@@ -6,6 +6,20 @@
  */
 
 /**
+ * Implements hook_views_plugins().
+ */
+function ledger_book_views_plugins() {
+  return array(
+    'argument validator' => array(
+      'ledger_book' => array(
+        'title' => t('Ledger book'),
+        'handler' => 'ledger_book_plugin_argument_validate_book',
+      ),
+    ),
+  );
+}
+
+/**
  * Implements hook_views_data_alter().
  */
 function ledger_book_views_data_alter(&$data) {
