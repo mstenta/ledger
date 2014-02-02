@@ -59,36 +59,22 @@ function ledger_entity_access($op, $entity = NULL, $account = NULL, $entity_type
     return user_access('create ' . $entity_type, $account);
   }
 
-  // If an entity was provided, check access based on the op.
-  elseif (isset($entity)) {
-    switch ($op) {
+  // If the operation is 'update' or 'delete', refer to it as 'edit'.
+  if ($op == 'update' || $op == 'delete') {
+    $op = 'edit';
+  }
 
-      // View
-      case 'view':
+  // If an entity was provided and the operation is view or edit...
+  if (isset($entity) && ($op == 'view' || $op == 'edit')) {
 
-        // If the account has access to view all entities of this type, proceed.
-        if (user_access('view all ' . $entity_type, $account)) {
-          return TRUE;
-        }
+    // First check to see if the user has access to all entities.
+    if (user_access($op . ' all ' . $entity_type, $account)) {
+      return TRUE;
+    }
 
-        // Check to see if the account owns the entity and can view it.
-        if (!empty($entity->uid) && $entity->uid == $account->uid) {
-          return user_access('view own ' . $entity_type, $account);
-        }
-
-      // Update/delete
-      case 'update':
-      case 'delete':
-
-        // If the account has access to edit all entities of this type, proceed.
-        if (user_access('edit all ' . $entity_type, $account)) {
-          return TRUE;
-        }
-
-        // Check to see if the account owns the entity and can edit it.
-        if (!empty($entity->uid) && $entity->uid == $account->uid) {
-          return user_access('edit own ' . $entity_type, $account);
-        }
+    // If the user can claim ownership of the entity, check their access.
+    if (ledger_entity_ownership($entity, $account, $entity_type)) {
+      return user_access($op . ' own ' . $entity_type, $account);
     }
   }
 
