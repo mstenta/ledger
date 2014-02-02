@@ -46,6 +46,27 @@ function ledger_account_entry_entity_info() {
 }
 
 /***************************************************************
+ * Ledger hooks
+ * *************************************************************/
+
+/**
+ * Implements hook_ledger_ownership().
+ */
+function ledger_account_entry_ledger_ownership($account_entry, $user) {
+
+  // If the account id is empty, bail.
+  if (empty($account_entry->aid)) {
+    return;
+  }
+
+  // Load the account entry's account.
+  $account = ledger_account_load($account_entry->aid);
+
+  // Defer to the account module's ownership function.
+  return ledger_account_ledger_ownership($account, $user);
+}
+
+/***************************************************************
  * Views API hooks
  * *************************************************************/
 

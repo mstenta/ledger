@@ -96,6 +96,32 @@ function ledger_entity_access($op, $entity = NULL, $account = NULL, $entity_type
   return FALSE;
 }
 
+/**
+ * Determine if a ledger entity is owned by a specific user.
+ *
+ * @param $entity
+ *   The entity to check.
+ * @param $user
+ *   The user account to check.
+ * @param $entity_type
+ *   The type of entity.
+ *
+ * @return boolean
+ *   Returns TRUE if the user owns the entity, FALSE otherwise.
+ */
+function ledger_entity_ownership($entity, $user, $entity_type) {
+
+  // Invoke the entity type module's hook_ledger_ownership().
+  $ownership = module_invoke($entity_type, 'ledger_ownership', $entity, $user);
+
+  // If ownership is explicitely TRUE, return TRUE, otherwise return FALSE.
+  if ($ownership === TRUE) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
 
 /**
  * Generates granular entity permissions for use in hook_permission().

@@ -54,6 +54,21 @@ function ledger_book_entity_info() {
 }
 
 /***************************************************************
+ * Ledger hooks
+ * *************************************************************/
+
+/**
+ * Implements hook_ledger_ownership().
+ */
+function ledger_book_ledger_ownership($book, $user) {
+
+  // Check to see if the user owns the book.
+  if ($user->uid == $book->uid) {
+    return TRUE;
+  }
+}
+
+/***************************************************************
  * Ledger Book class and functions
  * *************************************************************/
 

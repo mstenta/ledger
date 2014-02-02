@@ -46,6 +46,27 @@ function ledger_budget_entity_info() {
 }
 
 /***************************************************************
+ * Ledger hooks
+ * *************************************************************/
+
+/**
+ * Implements hook_ledger_ownership().
+ */
+function ledger_budget_ledger_ownership($budget, $user) {
+
+  // If the budget book id is empty, bail.
+  if (empty($budget->book_id)) {
+    return;
+  }
+
+  // Load the budget's book.
+  $book = ledger_book_load($budget->book_id);
+
+  // Defer to the book module's ownership function.
+  return ledger_book_ledger_ownership($book, $user);
+}
+
+/***************************************************************
  * Views API hooks
  * *************************************************************/
 
