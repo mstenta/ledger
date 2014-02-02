@@ -21,6 +21,15 @@ function ledger_budget_entity_property_info() {
     'setter permission' => 'administer ledger',
     'schema field' => 'bid',
   );
+  $budget['book'] = array(
+    'type' => 'ledger_book',
+    'label' => t('Book'),
+    'description' => t('The book that the budget is assigned to.'),
+    'setter callback' => 'entity_property_verbatim_set',
+    'setter permission' => 'administer ledger',
+    'required' => TRUE,
+    'schema field' => 'book_id',
+  );
   $budget['budget_account'] = array(
     'type' => 'ledger_account',
     'label' => t('Budget Account ID'),

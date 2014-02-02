@@ -209,19 +209,59 @@ function ledger_budget_form($form, &$form_state, $budget, $op = 'edit') {
     );
   }
 
-  $form['budget_aid'] = array(
+  // Load a list of books that the user has access to.
+  $books = ledger_book_user_books();
+
+  // Add a required field for assigning the budget to a book.
+  $form['book_id'] = array(
+    '#type' => 'select',
+    '#title' => t('Book'),
+    '#description' => t('Each budget must be assigned to a book. Select a book from the list or ' . l('create a new book', 'ledger/book/add')),
+    '#options' => $books,
+    '#default_value' => $budget->book_id,
+    '#required' => TRUE,
+    '#ajax' => array(
+      'callback' => 'ledger_account_ajax',
+      'wrapper' => 'accounts-wrapper',
+    ),
+  );
+
+  // Wrapper around the two account fields. Automatically refreshed when the
+  // book field above is changed.
+  $form['accounts'] = array(
+    '#prefix' => '<div id="accounts-wrapper">',
+    '#suffix' => '</div>',
+  );
+
+  // Figure out which book to load accounts from based on priority.
+  $book_id = 0;
+  // First, select the first available book (this will happen automatically in the browser for new accounts).
+  if (!empty($books)) {
+    reset($books);
+    $book_id = key($books);
+  }
+  // Second, override with book_id assigned to the budget already.
+  if (!empty($budget->book_id)) {
+    $book_id = $budget->book_id;
+  }
+  // Lastly, override with any values that have been set in this form.
+  if (!empty($form_state['values']['book_id'])) {
+    $book_id = $form_state['values']['book_id'];
+  }
+
+  $form['accounts']['budget_aid'] = array(
     '#type' => 'select',
     '#title' => t('Budget Account ID'),
     '#description' => t('The account ID of the budget account'),
-    '#options' => ledger_account_select_options(),
+    '#options' => ledger_account_select_options($book_id),
     '#default_value' => $budget->budget_aid,
   );
 
-  $form['target_aid'] = array(
+  $form['accounts']['target_aid'] = array(
     '#type' => 'select',
     '#title' => t('Target Account ID'),
     '#description' => t('The account ID of the target account'),
-    '#options' => ledger_account_select_options(),
+    '#options' => ledger_account_select_options($book_id),
     '#default_value' => $budget->target_aid,
   );
 
@@ -286,6 +326,13 @@ function ledger_budget_form_validate(&$form, &$form_state) {
     if ($form_state['values'][$timestamp] === FALSE) {
       form_set_error($timestamp, 'Invalid timestamp.');
     }
+  }
+
+  // Make sure the book ID is a valid book.
+  $bid = $form_state['values']['book_id'];
+  $book = ledger_book_load($bid);
+  if (!isset($book->bid)) {
+    form_set_error('book', 'Invalid book.');
   }
 
   // Notify field widgets to validate their data.

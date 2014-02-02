@@ -18,6 +18,13 @@ function ledger_budget_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
+      'book_id' => array(
+        'description' => 'Book ID',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       'budget_aid' => array(
         'description' => 'Budget Account ID',
         'type' => 'int',
@@ -68,6 +75,7 @@ function ledger_budget_schema() {
     ),
     'primary key' => array('bid'),
     'indexes' => array(
+      'book_id' => array('book_id'),
       'budget_aid' => array('budget_aid'),
       'target_aid' => array('target_aid'),
       'effective' => array('effective'),
