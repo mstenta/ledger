@@ -116,6 +116,12 @@ function ledger_entity_access_permissions($entity_type) {
   $permissions['create ' . $entity_type] = array(
     'title' => t('Create ledger @entity_type', array('@entity_type' => $label)),
   );
+  $permissions['view own ' . $entity_type] = array(
+    'title' => t('View own ledger @entity_type', array('@entity_type' => $label)),
+  );
+  $permissions['edit own ' . $entity_type] = array(
+    'title' => t('Edit own ledger @entity_type', array('@entity_type' => $label)),
+  );
   $permissions['view all ' . $entity_type] = array(
     'title' => t('View all ledger @entity_type', array('@entity_type' => $label)),
     'restrict access' => TRUE,
