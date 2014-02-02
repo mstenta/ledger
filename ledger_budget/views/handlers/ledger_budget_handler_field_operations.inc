@@ -20,9 +20,8 @@ class ledger_budget_handler_field_operations extends ledger_budget_handler_field
   function render($values) {
 
     // Ensure the user has access to edit this budget.
-    $budget = ledger_budget_new();
-    $budget->bid = $this->get_value($values, 'bid');
-    if (!ledger_budget_access('update', $budget)) {
+    $budget = ledger_budget_load($this->get_value($values, 'bid'));
+    if (!ledger_budget_access('edit', $budget)) {
       return;
     }
 

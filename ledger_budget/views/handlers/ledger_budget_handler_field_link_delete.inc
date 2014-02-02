@@ -10,8 +10,7 @@ class ledger_budget_handler_field_link_delete extends ledger_budget_handler_fiel
   function render($values) {
 
     // Ensure the user has access to edit this budget.
-    $budget = ledger_budget_new();
-    $budget->bid = $this->get_value($values, 'bid');
+    $budget = ledger_budget_load($this->get_value($values, 'bid'));
     if (!ledger_budget_access('update', $budget)) {
       return;
     }

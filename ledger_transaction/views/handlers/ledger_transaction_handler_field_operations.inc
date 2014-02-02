@@ -20,8 +20,7 @@ class ledger_transaction_handler_field_operations extends ledger_transaction_han
   function render($values) {
 
     // Ensure the user has access to edit this transaction.
-    $transaction = ledger_transaction_new();
-    $transaction->tid = $this->get_value($values, 'tid');
+    $transaction = ledger_transaction_load($this->get_value($values, 'tid'));
     if (!ledger_transaction_access('update', $transaction)) {
       return;
     }

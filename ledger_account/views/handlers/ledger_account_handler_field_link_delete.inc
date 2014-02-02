@@ -10,8 +10,7 @@ class ledger_account_handler_field_link_delete extends ledger_account_handler_fi
   function render($values) {
 
     // Ensure the user has access to edit this account.
-    $account = ledger_account_new();
-    $account->aid = $this->get_value($values, 'aid');
+    $account = ledger_account_load($this->get_value($values, 'aid'));
     if (!ledger_account_access('update', $account)) {
       return;
     }

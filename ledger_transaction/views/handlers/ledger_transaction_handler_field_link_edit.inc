@@ -10,8 +10,7 @@ class ledger_transaction_handler_field_link_edit extends ledger_transaction_hand
   function render($values) {
 
     // Ensure the user has access to edit this order.
-    $transaction = ledger_transaction_new();
-    $transaction->tid = $this->get_value($values, 'tid');
+    $transaction = ledger_transaction_load($this->get_value($values, 'tid'));
     if (!ledger_transaction_access('update', $transaction)) {
       return;
     }
