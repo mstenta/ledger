@@ -2,6 +2,7 @@ name = "Period"
 description = "Provides accounting periods and running account balances."
 core = 7.x
 package = "Ledger"
+configure = admin/config/ledger/period
 dependencies[] = entity
 dependencies[] = fraction
 dependencies[] = ledger

@@ -2,6 +2,7 @@ name = "Account UI"
 description = "Exposes a default UI for the Accounts through account edit forms and default Views."
 core = 7.x
 package = "Ledger"
+configure = admin/config/ledger/account-types
 dependencies[] = ledger_book
 dependencies[] = ledger_account
 dependencies[] = ledger_period
