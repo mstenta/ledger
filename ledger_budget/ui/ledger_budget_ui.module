@@ -392,8 +392,8 @@ function ledger_budget_form_submit(&$form, &$form_state) {
   // Display a message.
   drupal_set_message(t('Budget saved.'));
 
-  // Provide a default redirect.
-  $form_state['redirect'] = 'ledger/budgets';
+  // Redirect
+  $form_state['redirect'] = 'ledger/book/' . $budget->book_id;
 }
 
 /**
@@ -447,6 +447,6 @@ function ledger_budget_delete_form_submit($form, &$form_state) {
   watchdog('ledger_budget', 'Deleted budget "@description."', array('@description' => $budget->description), WATCHDOG_NOTICE);
 
   // Redirect
-  $form_state['redirect'] = 'ledger/budgets';
+  $form_state['redirect'] = 'ledger/book/' . $budget->book_id;
 }
 

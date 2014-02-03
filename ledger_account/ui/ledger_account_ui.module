@@ -382,8 +382,8 @@ function ledger_account_form_submit(&$form, &$form_state) {
   // Display a message.
   drupal_set_message(t('Account saved.'));
 
-  // Provide a default redirect.
-  $form_state['redirect'] = 'ledger/accounts';
+  // Redirect
+  $form_state['redirect'] = 'ledger/book/' . $account->bid;
 }
 
 /**
@@ -437,7 +437,7 @@ function ledger_account_delete_form_submit($form, &$form_state) {
   watchdog('ledger_account', 'Deleted account "@name."', array('@name' => $account->name), WATCHDOG_NOTICE);
 
   // Redirect
-  $form_state['redirect'] = 'ledger/accounts';
+  $form_state['redirect'] = 'ledger/book/' . $account->bid;
 }
 
 /***************************************************************

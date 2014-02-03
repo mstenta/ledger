@@ -356,8 +356,8 @@ function ledger_transaction_form_submit(&$form, &$form_state) {
   // Display a message.
   drupal_set_message(t('Transaction saved.'));
 
-  // Provide a default redirect.
-  $form_state['redirect'] = 'ledger/transactions';
+  // Redirect
+  $form_state['redirect'] = 'ledger/book/' . $transaction->bid;
 }
 
 /**
@@ -411,6 +411,6 @@ function ledger_transaction_delete_form_submit($form, &$form_state) {
   watchdog('ledger_transaction', 'Deleted transaction "@description."', array('@description' => $transaction->description), WATCHDOG_NOTICE);
 
   // Redirect
-  $form_state['redirect'] = 'ledger/transactions';
+  $form_state['redirect'] = 'ledger/book/' . $transaction->bid;
 }
 
