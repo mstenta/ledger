@@ -207,8 +207,11 @@ function ledger_account_ajax($form, $form_state) {
  */
 function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
 
-  // Save the account object to the $form_state.
-  $form_state['ledger_account'] = $account;
+  // Save the account object to the form values.
+  $form['ledger_account'] = array(
+    '#type' => 'value',
+    '#value' => $account,
+  );
 
   // Account id
   $form['aid'] = array(
@@ -311,8 +314,8 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
  */
 function ledger_account_form_validate(&$form, &$form_state) {
 
-  // Load account object from $form_state
-  $account = $form_state['ledger_account'];
+  // Load account object from the form values.
+  $account = $form_state['values']['ledger_account'];
 
   // Make sure the book ID is a valid book.
   $bid = $form_state['values']['bid'];
@@ -351,9 +354,13 @@ function ledger_account_form_validate(&$form, &$form_state) {
  */
 function ledger_account_form_submit(&$form, &$form_state) {
 
-  // If the user is editing an account, load a fresh copy to merge changes to.
-  if ($form_state['ledger_account']->aid) {
-    $account = ledger_account_load($form_state['ledger_account']->aid);
+  // If the user is editing an account, merge changes to it.
+  if ($form_state['values']['ledger_account']->aid) {
+
+    // Load the account object from the form values.
+    $account = $form_state['values']['ledger_account'];
+
+    // Overwrite with new values.
     $account->name = $form_state['values']['name'];
     $account->description = $form_state['values']['description'];
     $account->type = $form_state['values']['type'];
@@ -392,8 +399,11 @@ function ledger_account_form_submit(&$form, &$form_state) {
  */
 function ledger_account_delete_form($form, &$form_state, $account) {
 
-  // Save the account object to the $form_state.
-  $form_state['ledger_account'] = $account;
+  // Save the account object to the form values.
+  $form['ledger_account'] = array(
+    '#type' => 'value',
+    '#value' => $account,
+  );
 
   // Confirm form
   $form = confirm_form($form,
@@ -412,8 +422,8 @@ function ledger_account_delete_form($form, &$form_state, $account) {
  */
 function ledger_account_delete_form_submit($form, &$form_state) {
 
-  // Get the account object from the $form_state.
-  $account = $form_state['ledger_account'];
+  // Load the account object from the form values.
+  $account = $form_state['values']['ledger_account'];
 
   // Delete the account and log the results.
   /**
@@ -439,8 +449,11 @@ function ledger_account_delete_form_submit($form, &$form_state) {
  */
 function ledger_account_type_form($form, &$form_state, $account_type, $op = 'edit') {
 
-  // Save the account type object to the $form_state.
-  $form_state['ledger_account_type'] = $account_type;
+  // Save the account type object to the form values.
+  $form['ledger_account_type'] = array(
+    '#type' => 'value',
+    '#value' => $account_type,
+  );
 
   // If the account type is cloned, add "cloned" to it's label, and unset it's type.
   if ($op == 'clone') {
@@ -501,9 +514,13 @@ function ledger_account_type_form($form, &$form_state, $account_type, $op = 'edi
  */
 function ledger_account_type_form_submit(&$form, &$form_state) {
 
-  // If the user is editing an account, load a fresh copy to merge changes to.
-  if ($form_state['ledger_account_type']->id) {
-    $account_type = ledger_account_type_load($form_state['ledger_account_type']->id);
+  // If the user is editing an account, merge changes to it.
+  if (!empty($form_state['values']['ledger_account_type']->id)) {
+
+    // Load the account type object from the form values.
+    $account_type = $form_state['values']['ledger_account_type'];
+
+    // Overwrite with the new values.
     $account_type->label = $form_state['values']['label'];
     $account_type->type = $form_state['values']['type'];
     $account_type->fundamental = $form_state['values']['fundamental'];

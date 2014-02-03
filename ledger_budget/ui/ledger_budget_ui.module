@@ -188,8 +188,11 @@ function ledger_budget_settings_form($form, &$form_state) {
  */
 function ledger_budget_form($form, &$form_state, $budget, $op = 'edit') {
 
-  // Save the budget object to the $form_state.
-  $form_state['ledger_budget'] = $budget;
+  // Save the budget object to the form values.
+  $form['ledger_budget'] = array(
+    '#type' => 'value',
+    '#value' => $budget,
+  );
 
   // Effective Date
   $form['effective'] = array(
@@ -330,8 +333,8 @@ function ledger_budget_form($form, &$form_state, $budget, $op = 'edit') {
  */
 function ledger_budget_form_validate(&$form, &$form_state) {
 
-  // Load budget object from $form_state
-  $budget = $form_state['ledger_budget'];
+  // Load budget object from the form values.
+  $budget = $form_state['values']['ledger_budget'];
 
   // Convert the timestamps to unix-style and validate
   $timestamps = array('effective', 'expires');
@@ -358,17 +361,24 @@ function ledger_budget_form_validate(&$form, &$form_state) {
  */
 function ledger_budget_form_submit(&$form, &$form_state) {
 
-  // If the user is editing a budget, merge the changes with the original values.
-  if ($form_state['ledger_budget']->bid) {
+  // If the user is editing a budget, merge changes with it.
+  if ($form_state['values']['ledger_budget']->bid) {
 
-    // Load the budget from the form_state.
-    $budget = $form_state['ledger_budget'];
+    // Load the budget object from the form values.
+    $budget = $form_state['values']['ledger_budget'];
 
-    // Merge in the values from the form.
-    $budget = (object) array_merge((array) $budget, $form_state['values']);
+    // Overwrite with new values.
+    $budget->effective = $form_state['values']['effective'];
+    $budget->expires = $form_state['values']['expires'];
+    $budget->book_id = $form_state['values']['book_id'];
+    $budget->budget_aid = $form_state['values']['budget_aid'];
+    $budget->target_aid = $form_state['values']['target_aid'];
+    $budget->repeat_every = $form_state['values']['repeat_every'];
+    $budget->repeat_unit = $form_state['values']['repeat_unit'];
+    $budget->description = $form_state['values']['description'];
   }
 
-  // If a new budget is being created, build a new transaction object.
+  // If a new budget is being created, build a new budget object.
   else {
     $budget = ledger_budget_new($form_state['values']);
   }
@@ -399,8 +409,11 @@ function ledger_budget_form_submit(&$form, &$form_state) {
  */
 function ledger_budget_delete_form($form, &$form_state, $budget) {
 
-  // Save the budget object to the $form_state.
-  $form_state['ledger_budget'] = $budget;
+  // Save the budget object to the form values.
+  $form['ledger_budget'] = array(
+    '#type' => 'value',
+    '#value' => $budget,
+  );
 
   // Confirm form
   $form = confirm_form($form,
@@ -419,8 +432,8 @@ function ledger_budget_delete_form($form, &$form_state, $budget) {
  */
 function ledger_budget_delete_form_submit($form, &$form_state) {
 
-  // Get the budget object from the $form_state.
-  $budget = $form_state['ledger_budget'];
+  // Load the budget object from the form values.
+  $budget = $form_state['values']['ledger_budget'];
 
   // Delete the budget and log the results.
   /**

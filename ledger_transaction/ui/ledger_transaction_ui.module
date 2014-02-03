@@ -196,8 +196,11 @@ function ledger_transaction_settings_form($form, &$form_state) {
  */
 function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit') {
 
-  // Save the transaction object to the $form_state.
-  $form_state['ledger_transaction'] = $transaction;
+  // Save the transaction object to the form values.
+  $form['ledger_transaction'] = array(
+    '#type' => 'value',
+    '#value' => $transaction,
+  );
 
   // Transaction description
   $form['description'] = array(
@@ -299,8 +302,8 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
  */
 function ledger_transaction_form_validate(&$form, &$form_state) {
 
-  // Load transaction object from $form_state
-  $transaction = $form_state['ledger_transaction'];
+  // Load transaction object from form values.
+  $transaction = $form_state['values']['ledger_transaction'];
 
   // Convert the timestamp to unix-style and validate
   $form_state['values']['timestamp'] = strtotime($form_state['values']['timestamp']);
@@ -324,9 +327,13 @@ function ledger_transaction_form_validate(&$form, &$form_state) {
  */
 function ledger_transaction_form_submit(&$form, &$form_state) {
 
-  // If the user is editing a transaction, load a fresh copy to merge changes to.
-  if ($form_state['ledger_transaction']->tid) {
-    $transaction = ledger_transaction_load($form_state['ledger_transaction']->tid);
+  // If the user is editing a transaction, merge changes to it.
+  if ($form_state['values']['ledger_transaction']->tid) {
+
+    // Load the transaction object from the form values.
+    $transaction = $form_state['values']['ledger_transaction'];
+
+    // Overwrite with the new values.
     $transaction->description = $form_state['values']['description'];
     $transaction->timestamp = $form_state['values']['timestamp'];
     $transaction->bid = $form_state['values']['bid'];
@@ -366,8 +373,11 @@ function ledger_transaction_form_submit(&$form, &$form_state) {
  */
 function ledger_transaction_delete_form($form, &$form_state, $transaction) {
 
-  // Save the transaction object to the $form_state.
-  $form_state['ledger_transaction'] = $transaction;
+  // Save the transaction object to the form values.
+  $form['ledger_transaction'] = array(
+    '#type' => 'value',
+    '#value' => $transaction,
+  );
 
   // Confirm form
   $form = confirm_form($form,
@@ -386,8 +396,8 @@ function ledger_transaction_delete_form($form, &$form_state, $transaction) {
  */
 function ledger_transaction_delete_form_submit($form, &$form_state) {
 
-  // Get the transaction object from the $form_state.
-  $transaction = $form_state['ledger_transaction'];
+  // Get the transaction object from the form values.
+  $transaction = $form_state['values']['ledger_transaction'];
 
   // Delete the transaction and log the results.
   /**

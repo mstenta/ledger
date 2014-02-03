@@ -131,8 +131,11 @@ function ledger_book_ui_book_form_wrapper($book, $op, $type=NULL) {
  */
 function ledger_book_form($form, &$form_state, $book, $op = 'edit') {
 
-  // Save the book object to the $form_state.
-  $form_state['ledger_book'] = $book;
+  // Save the book object to the form values.
+  $form['ledger_book'] = array(
+    '#type' => 'value',
+    '#value' => $book,
+  );
 
   // Book id
   $form['bid'] = array(
@@ -190,8 +193,8 @@ function ledger_book_form($form, &$form_state, $book, $op = 'edit') {
  */
 function ledger_book_form_validate(&$form, &$form_state) {
 
-  // Load book object from $form_state
-  $book = $form_state['ledger_book'];
+  // Load book object from the form values.
+  $book = $form_state['values']['ledger_book'];
 
   // Notify field widgets to validate their data.
   field_attach_form_validate('ledger_book', $book, $form, $form_state);
@@ -211,9 +214,13 @@ function ledger_book_form_submit(&$form, &$form_state) {
   // Load the owner's user account.
   $owner = user_load_by_name($form_state['values']['owner']);
 
-  // If the user is editing a book, load a fresh copy to merge changes to.
-  if ($form_state['ledger_book']->bid) {
-    $book = ledger_book_load($form_state['ledger_book']->bid);
+  // If the user is editing a book, merge changes to it.
+  if ($form_state['values']['ledger_book']->bid) {
+
+    // Load the book object from the form values.
+    $book = $form_state['values']['ledger_book'];
+
+    // Overwrite with the new values.
     $book->name = $form_state['values']['name'];
     $book->uid = $owner->uid;
   }
@@ -250,8 +257,11 @@ function ledger_book_form_submit(&$form, &$form_state) {
  */
 function ledger_book_delete_form($form, &$form_state, $book) {
 
-  // Save the book object to the $form_state.
-  $form_state['ledger_book'] = $book;
+  // Save the book object to the form values.
+  $form['ledger_book'] = array(
+    '#type' => 'value',
+    '#value' => $book,
+  );
 
   // Confirm form
   $form = confirm_form($form,
@@ -270,8 +280,8 @@ function ledger_book_delete_form($form, &$form_state, $book) {
  */
 function ledger_book_delete_form_submit($form, &$form_state) {
 
-  // Get the book object from the $form_state.
-  $book = $form_state['ledger_book'];
+  // Get the book object from the form values.
+  $book = $form_state['values']['ledger_book'];
 
   // Delete the book and log the results.
   /**
