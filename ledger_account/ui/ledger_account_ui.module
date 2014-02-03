@@ -230,7 +230,7 @@ function ledger_account_form($form, &$form_state, $account, $op = 'edit') {
     '#title' => t('Account name'),
     '#type' => 'textfield',
     '#default_value' => $account->name,
-    '#description' => t('The name of the account.'),
+    '#description' => t('The name of the account. Account type: ' . ledger_account_type_label($account->type)),
     '#required' => TRUE,
   );
 
