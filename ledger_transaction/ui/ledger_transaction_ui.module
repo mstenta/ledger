@@ -92,9 +92,8 @@ function ledger_transaction_ui_entity_info_alter(&$entity_info) {
  */
 function ledger_transaction_ui_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 
-  // Add action link 'ledger/transaction/add' on 'ledger/transactions',
-  // 'ledger/account/%/transactions' and 'ledger/book/%/transactions'.
-  if ($root_path == 'ledger/transactions' || $root_path == 'ledger/account/%' || $root_path == 'ledger/book/%/transactions') {
+  // Add action links.
+  if ($root_path == 'admin/ledger/transactions' || $root_path == 'ledger/account/%' || $root_path == 'ledger/book/%/transactions') {
     $item = menu_get_item('ledger/transaction/add');  // Load the menu item for the transaction add form
     $item['localized_options']['query']['destination'] = current_path();  // Set the destinatin argument to the current path
     if ($item['access']) {
