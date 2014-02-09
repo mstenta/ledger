@@ -47,8 +47,9 @@ function ledger_budget_ui_views_default_views() {
     'repeat_every' => 'repeat_every',
     'repeat_unit' => 'repeat_every',
     'description' => 'description',
-    'budget_ops' => 'budget_ops',
     'name_2' => 'name_2',
+    'name_3' => 'name_3',
+    'budget_ops' => 'budget_ops',
   );
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
@@ -113,14 +114,21 @@ function ledger_budget_ui_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'budget_ops' => array(
+    'name_2' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
-    'name_2' => array(
+    'name_3' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'budget_ops' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -142,6 +150,17 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['relationships']['target_account']['table'] = 'ledger_budget';
   $handler->display->display_options['relationships']['target_account']['field'] = 'target_account';
   $handler->display->display_options['relationships']['target_account']['label'] = 'Target Account';
+  /* Relationship: Account: Book bid */
+  $handler->display->display_options['relationships']['book']['id'] = 'book';
+  $handler->display->display_options['relationships']['book']['table'] = 'ledger_account';
+  $handler->display->display_options['relationships']['book']['field'] = 'book';
+  $handler->display->display_options['relationships']['book']['relationship'] = 'budget_account';
+  /* Relationship: Book: Owner uid */
+  $handler->display->display_options['relationships']['owner']['id'] = 'owner';
+  $handler->display->display_options['relationships']['owner']['table'] = 'ledger_book';
+  $handler->display->display_options['relationships']['owner']['field'] = 'owner';
+  $handler->display->display_options['relationships']['owner']['relationship'] = 'book';
+  $handler->display->display_options['relationships']['owner']['label'] = 'Owner';
   /* Field: Bulk operations: Budget */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'ledger_budget';
@@ -242,6 +261,17 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['fields']['description']['table'] = 'ledger_budget';
   $handler->display->display_options['fields']['description']['field'] = 'description';
   $handler->display->display_options['fields']['description']['link_to_budget'] = 'view';
+  /* Field: Book: Name */
+  $handler->display->display_options['fields']['name_2']['id'] = 'name_2';
+  $handler->display->display_options['fields']['name_2']['table'] = 'ledger_book';
+  $handler->display->display_options['fields']['name_2']['field'] = 'name';
+  $handler->display->display_options['fields']['name_2']['relationship'] = 'book';
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name_3']['id'] = 'name_3';
+  $handler->display->display_options['fields']['name_3']['table'] = 'users';
+  $handler->display->display_options['fields']['name_3']['field'] = 'name';
+  $handler->display->display_options['fields']['name_3']['relationship'] = 'owner';
+  $handler->display->display_options['fields']['name_3']['label'] = 'Owner';
   /* Field: Budget: Operations */
   $handler->display->display_options['fields']['budget_ops']['id'] = 'budget_ops';
   $handler->display->display_options['fields']['budget_ops']['table'] = 'ledger_budget';
@@ -260,6 +290,7 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['filters']['description']['exposed'] = TRUE;
   $handler->display->display_options['filters']['description']['expose']['operator_id'] = 'description_op';
   $handler->display->display_options['filters']['description']['expose']['label'] = 'Description';
+  $handler->display->display_options['filters']['description']['expose']['use_operator'] = TRUE;
   $handler->display->display_options['filters']['description']['expose']['operator'] = 'description_op';
   $handler->display->display_options['filters']['description']['expose']['identifier'] = 'description';
   $handler->display->display_options['filters']['description']['expose']['remember_roles'] = array(
@@ -276,6 +307,7 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['filters']['name']['exposed'] = TRUE;
   $handler->display->display_options['filters']['name']['expose']['operator_id'] = 'name_op';
   $handler->display->display_options['filters']['name']['expose']['label'] = 'Budget account';
+  $handler->display->display_options['filters']['name']['expose']['use_operator'] = TRUE;
   $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
   $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
   $handler->display->display_options['filters']['name']['expose']['remember_roles'] = array(
@@ -292,9 +324,43 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['filters']['name_1']['exposed'] = TRUE;
   $handler->display->display_options['filters']['name_1']['expose']['operator_id'] = 'name_1_op';
   $handler->display->display_options['filters']['name_1']['expose']['label'] = 'Target account';
+  $handler->display->display_options['filters']['name_1']['expose']['use_operator'] = TRUE;
   $handler->display->display_options['filters']['name_1']['expose']['operator'] = 'name_1_op';
   $handler->display->display_options['filters']['name_1']['expose']['identifier'] = 'name_1';
   $handler->display->display_options['filters']['name_1']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+  );
+  /* Filter criterion: Book: Name */
+  $handler->display->display_options['filters']['name_2']['id'] = 'name_2';
+  $handler->display->display_options['filters']['name_2']['table'] = 'ledger_book';
+  $handler->display->display_options['filters']['name_2']['field'] = 'name';
+  $handler->display->display_options['filters']['name_2']['relationship'] = 'book';
+  $handler->display->display_options['filters']['name_2']['operator'] = 'contains';
+  $handler->display->display_options['filters']['name_2']['group'] = 1;
+  $handler->display->display_options['filters']['name_2']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['name_2']['expose']['operator_id'] = 'name_2_op';
+  $handler->display->display_options['filters']['name_2']['expose']['label'] = 'Book';
+  $handler->display->display_options['filters']['name_2']['expose']['use_operator'] = TRUE;
+  $handler->display->display_options['filters']['name_2']['expose']['operator'] = 'name_2_op';
+  $handler->display->display_options['filters']['name_2']['expose']['identifier'] = 'name_2';
+  $handler->display->display_options['filters']['name_2']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+  );
+  /* Filter criterion: User: Name */
+  $handler->display->display_options['filters']['uid']['id'] = 'uid';
+  $handler->display->display_options['filters']['uid']['table'] = 'users';
+  $handler->display->display_options['filters']['uid']['field'] = 'uid';
+  $handler->display->display_options['filters']['uid']['relationship'] = 'owner';
+  $handler->display->display_options['filters']['uid']['value'] = '';
+  $handler->display->display_options['filters']['uid']['group'] = 1;
+  $handler->display->display_options['filters']['uid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['uid']['expose']['operator_id'] = 'uid_op';
+  $handler->display->display_options['filters']['uid']['expose']['label'] = 'Owner';
+  $handler->display->display_options['filters']['uid']['expose']['operator'] = 'uid_op';
+  $handler->display->display_options['filters']['uid']['expose']['identifier'] = 'uid';
+  $handler->display->display_options['filters']['uid']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
   );
@@ -492,6 +558,7 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['filters']['description']['exposed'] = TRUE;
   $handler->display->display_options['filters']['description']['expose']['operator_id'] = 'description_op';
   $handler->display->display_options['filters']['description']['expose']['label'] = 'Description';
+  $handler->display->display_options['filters']['description']['expose']['use_operator'] = TRUE;
   $handler->display->display_options['filters']['description']['expose']['operator'] = 'description_op';
   $handler->display->display_options['filters']['description']['expose']['identifier'] = 'description';
   $handler->display->display_options['filters']['description']['expose']['remember_roles'] = array(
@@ -508,6 +575,7 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['filters']['name']['exposed'] = TRUE;
   $handler->display->display_options['filters']['name']['expose']['operator_id'] = 'name_op';
   $handler->display->display_options['filters']['name']['expose']['label'] = 'Budget account';
+  $handler->display->display_options['filters']['name']['expose']['use_operator'] = TRUE;
   $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
   $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
   $handler->display->display_options['filters']['name']['expose']['remember_roles'] = array(
@@ -524,6 +592,7 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['filters']['name_1']['exposed'] = TRUE;
   $handler->display->display_options['filters']['name_1']['expose']['operator_id'] = 'name_1_op';
   $handler->display->display_options['filters']['name_1']['expose']['label'] = 'Target account';
+  $handler->display->display_options['filters']['name_1']['expose']['use_operator'] = TRUE;
   $handler->display->display_options['filters']['name_1']['expose']['operator'] = 'name_1_op';
   $handler->display->display_options['filters']['name_1']['expose']['identifier'] = 'name_1';
   $handler->display->display_options['filters']['name_1']['expose']['remember_roles'] = array(
