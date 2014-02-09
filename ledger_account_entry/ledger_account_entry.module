@@ -182,7 +182,7 @@ class LedgerAccountEntryController extends EntityAPIController {
         foreach ($entity->ledger_value[LANGUAGE_NONE] as $value) {
 
           // Create a decimal equivalent value.
-          $value = $value['fraction']->toDecimal($precision);
+          $value = $value['fraction']->toDecimal($precision, TRUE);
         }
       }
 
@@ -334,6 +334,7 @@ function ledger_account_entry_configure_account_entry_types($type = 'ledger_acco
           'type' => 'fraction_decimal',
           'settings' => array(
             'precision' => 2,
+            'auto_precision' => TRUE,
           ),
           'weight' => -10,
         ),

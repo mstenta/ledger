@@ -235,6 +235,7 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['fields']['ledger_balance']['type'] = 'fraction_decimal';
   $handler->display->display_options['fields']['ledger_balance']['settings'] = array(
     'precision' => '2',
+    'auto_precision' => 1,
   );
   /* Field: Book: Name */
   $handler->display->display_options['fields']['name_3']['id'] = 'name_3';
@@ -382,6 +383,7 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['fields']['ledger_balance']['type'] = 'fraction_decimal';
   $handler->display->display_options['fields']['ledger_balance']['settings'] = array(
     'precision' => '2',
+    'auto_precision' => 1,
   );
   /* Field: Account: Operations */
   $handler->display->display_options['fields']['account_ops']['id'] = 'account_ops';

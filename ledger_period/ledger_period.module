@@ -385,6 +385,7 @@ function ledger_period_configure_balance_field_instance($type, $bundle) {
           'type' => 'fraction_decimal',
           'settings' => array(
             'precision' => 2,
+            'auto_precision' => TRUE,
           ),
           'weight' => 100,
         ),

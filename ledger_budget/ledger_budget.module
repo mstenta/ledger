@@ -187,7 +187,7 @@ class LedgerBudgetController extends EntityAPIController {
         foreach ($entity->ledger_value[LANGUAGE_NONE] as $value) {
 
           // Create a decimal equivalent value.
-          $value = $value['fraction']->toDecimal($precision);
+          $value = $value['fraction']->toDecimal($precision, TRUE);
         }
       }
 
@@ -368,6 +368,7 @@ function ledger_budget_configure_budget_types($type = 'ledger_budget') {
           'type' => 'fraction_decimal',
           'settings' => array(
             'precision' => 2,
+            'auto_precision' => TRUE,
           ),
           'weight' => -10,
         ),

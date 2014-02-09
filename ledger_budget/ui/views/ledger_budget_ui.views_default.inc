@@ -208,6 +208,7 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['fields']['ledger_value']['type'] = 'fraction_decimal';
   $handler->display->display_options['fields']['ledger_value']['settings'] = array(
     'precision' => '2',
+    'auto_precision' => 1,
   );
   /* Field: Account: Name */
   $handler->display->display_options['fields']['name_1']['id'] = 'name_1';
@@ -424,6 +425,7 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['fields']['ledger_value']['type'] = 'fraction_decimal';
   $handler->display->display_options['fields']['ledger_value']['settings'] = array(
     'precision' => '2',
+    'auto_precision' => 1,
   );
   /* Field: Account: Name */
   $handler->display->display_options['fields']['name_1']['id'] = 'name_1';
