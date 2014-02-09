@@ -226,17 +226,23 @@ function ledger_account_entry_ui_manager_validate($element, &$form_state) {
   if ($form_state['triggering_element']['#value'] != LEDGER_ACCOUNT_ENTRY_UI_ADD_BUTTON_LABEL && $form_state['triggering_element']['#value'] != LEDGER_ACCOUNT_ENTRY_UI_REMOVE_BUTTON_LABEL) {
 
     // Keep a running tally of the overall manager balance.
-    $manager_balance = 0;
+    $manager_balance = fraction();
 
     // Loop through all the account entries.
     if (!empty($element['rows'])) {
       foreach (element_children($element['rows']) as $key) {
 
-        // Calculate the value of the account entry by adding the "in" and "out" fields.
-        $value = 0 + $element['#value']['rows'][$key]['in'] - $element['#value']['rows'][$key]['out'];
+        // Load the "in" and "out" field values into fractions.
+        $in_fraction = fraction_from_decimal($element['#value']['rows'][$key]['in']);
+        $out_fraction = fraction_from_decimal($element['#value']['rows'][$key]['out']);
 
-        // Add the value to the running manager balance.
-        $manager_balance += $value;
+        // Determine the absolute value of the entry by subtracting the out from the in.
+        $value = fraction();
+        $value->add($in_fraction);
+        $value->subtract($out_fraction);
+
+        // Add the value to the running balance.
+        $manager_balance->add($value);
 
         // Skip validation if this is a new account entry, and none of the values are filled in (it will simply be discarded).
         if (!$element['rows'][$key]['account_entry']['#value']->eid && empty($element['#value']['rows'][$key]['aid']) && !$value) {
@@ -252,13 +258,15 @@ function ledger_account_entry_ui_manager_validate($element, &$form_state) {
         }
 
         // Make sure the entry has a value.
-        if (!$value) {
+        $numerator = $value->getNumerator();
+        if (empty($numerator)) {
           form_set_error($element_name, 'Account entry must have a value.');
         }
       }
 
       // Make sure the overall balance of the manager is zero.
-      if ($manager_balance) {
+      $balance_numerator = $manager_balance->getNumerator();
+      if (!empty($balance_numerator)) {
 
         // Notify the user that their account entries don't balance.
         form_set_error(implode('][', $element['#array_parents']), 'The account entries do not balance. Please add/remove entries so the Debit and Credit columns net to zero.');
@@ -356,7 +364,9 @@ function ledger_account_entry_manager_submit($form, &$form_state, $parents, $tra
       $account_entry = $row['account_entry'];
 
       // Calculate the account entry value by adding the "in" and "out" fields
-      $value = 0 + $row['in'] - $row['out'];
+      $in = fraction_from_decimal($row['in']);
+      $out = fraction_from_decimal($row['out']);
+      $value = fraction()->add($in)->subtract($out);
 
       // Add the transaction id, if one doesn't already exist.
       if (empty($account_entry->tid) && !empty($transaction->tid)) {
@@ -369,7 +379,7 @@ function ledger_account_entry_manager_submit($form, &$form_state, $parents, $tra
         // Update the values in the original account entry and save it.
         $account_entry->description = $row['description'];
         $account_entry->aid = $row['aid'];
-        $account_entry->value = $value;
+        $account_entry->value = $value->toDecimal(FRACTION_PRECISION_DEFAULT, TRUE);
 
         // Save it.
         ledger_account_entry_save($account_entry);

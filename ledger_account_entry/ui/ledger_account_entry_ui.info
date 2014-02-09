@@ -3,5 +3,6 @@ description = "Exposes default UI elements for managing ledger account entries."
 core = 7.x
 package = "Ledger"
 configure = admin/config/ledger/account_entry
+dependencies[] = fraction
 dependencies[] = ledger_account_entry
 
