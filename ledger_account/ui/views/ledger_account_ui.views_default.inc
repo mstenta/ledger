@@ -26,7 +26,7 @@ function ledger_account_ui_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Accounts';
+  $handler->display->display_options['title'] = 'All Accounts';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['access']['perm'] = 'view all ledger_account';
@@ -320,7 +320,7 @@ function ledger_account_ui_views_default_views() {
   /* Display: All accounts (page) */
   $handler = $view->new_display('page', 'All accounts (page)', 'page');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
-  $handler->display->display_options['path'] = 'ledger/accounts';
+  $handler->display->display_options['path'] = 'admin/ledger/accounts';
   $handler->display->display_options['menu']['type'] = 'tab';
   $handler->display->display_options['menu']['title'] = 'Accounts';
   $handler->display->display_options['menu']['weight'] = '10';
@@ -443,7 +443,6 @@ function ledger_account_ui_views_default_views() {
   $handler->display->display_options['tab_options']['type'] = 'normal';
   $handler->display->display_options['tab_options']['title'] = 'Accounts';
   $handler->display->display_options['tab_options']['weight'] = '0';
-  $handler->display->display_options['tab_options']['name'] = 'management';
   /**
    * End ledger_accounts view.
    */

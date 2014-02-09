@@ -26,7 +26,7 @@ function ledger_budget_ui_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Budgets';
+  $handler->display->display_options['title'] = 'All Budgets';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['access']['perm'] = 'view all ledger_budget';
@@ -356,7 +356,7 @@ function ledger_budget_ui_views_default_views() {
   /* Display: All budgets (page) */
   $handler = $view->new_display('page', 'All budgets (page)', 'page');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
-  $handler->display->display_options['path'] = 'ledger/budgets';
+  $handler->display->display_options['path'] = 'admin/ledger/budgets';
   $handler->display->display_options['menu']['type'] = 'tab';
   $handler->display->display_options['menu']['title'] = 'Budgets';
   $handler->display->display_options['menu']['weight'] = '50';
@@ -590,7 +590,6 @@ function ledger_budget_ui_views_default_views() {
   $handler->display->display_options['menu']['type'] = 'tab';
   $handler->display->display_options['menu']['title'] = 'Budgets';
   $handler->display->display_options['menu']['weight'] = '50';
-  $handler->display->display_options['menu']['name'] = 'management';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
   /**

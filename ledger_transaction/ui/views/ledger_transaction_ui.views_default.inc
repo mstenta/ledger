@@ -26,7 +26,7 @@ function ledger_transaction_ui_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Transactions';
+  $handler->display->display_options['title'] = 'All Transactions';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['access']['perm'] = 'view all ledger_transaction';
@@ -271,7 +271,7 @@ function ledger_transaction_ui_views_default_views() {
   /* Display: All transactions (page) */
   $handler = $view->new_display('page', 'All transactions (page)', 'page');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
-  $handler->display->display_options['path'] = 'ledger/transactions';
+  $handler->display->display_options['path'] = 'admin/ledger/transactions';
   $handler->display->display_options['menu']['type'] = 'tab';
   $handler->display->display_options['menu']['title'] = 'Transactions';
   $handler->display->display_options['menu']['weight'] = '20';
@@ -596,7 +596,6 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['menu']['type'] = 'tab';
   $handler->display->display_options['menu']['title'] = 'Transactions';
   $handler->display->display_options['menu']['weight'] = '0';
-  $handler->display->display_options['menu']['name'] = 'management';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
   /**
