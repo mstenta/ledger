@@ -304,6 +304,35 @@ function ledger_budget_delete_multiple($budget_ids) {
 }
 
 /***************************************************************
+ * Utility functions.
+ * *************************************************************/
+
+/**
+ * Return the book id that a budget belongs to.
+ *
+ * @param $budget_id
+ *   Budget id.
+ *
+ * @return
+ *   Returns a book id if available, NULL otherwise.
+ */
+function ledger_budget_book($budget_id) {
+
+  // If the budget doesn't have an id, bail.
+  if (empty($budget_id) || !is_numeric($budget_id)) {
+    return;
+  }
+
+  // Look up the book id by finding accounts associated with this budget.
+  $query = db_select('ledger_budget', 'lb');
+  $query->addField('la', 'bid');
+  $query->join('ledger_account', 'la', 'la.aid = lb.budget_aid');
+  $query->condition('lb.bid', $budget->bid);
+  $query->range(0, 1);
+  return $query->execute()->fetchField();
+}
+
+/***************************************************************
  * Configuration functions.
  * *************************************************************/
 

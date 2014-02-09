@@ -352,10 +352,6 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['relationships']['ledger_account_entry']['id'] = 'ledger_account_entry';
   $handler->display->display_options['relationships']['ledger_account_entry']['table'] = 'ledger_transaction';
   $handler->display->display_options['relationships']['ledger_account_entry']['field'] = 'ledger_account_entry';
-  /* Relationship: Transaction: Book bid */
-  $handler->display->display_options['relationships']['book']['id'] = 'book';
-  $handler->display->display_options['relationships']['book']['table'] = 'ledger_transaction';
-  $handler->display->display_options['relationships']['book']['field'] = 'book';
   $handler->display->display_options['defaults']['fields'] = FALSE;
   /* Field: Transaction: Timestamp */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
@@ -477,7 +473,8 @@ function ledger_transaction_ui_views_default_views() {
     'timestamp' => 'timestamp',
     'description' => 'description',
     'name' => 'name',
-    'name_1' => 'name_1',
+    'ledger_value' => 'ledger_value',
+    'ledger_value_1' => 'ledger_value_1',
     'transaction_ops' => 'transaction_ops',
   );
   $handler->display->display_options['style_options']['default'] = 'timestamp';
@@ -490,21 +487,28 @@ function ledger_transaction_ui_views_default_views() {
       'empty_column' => 0,
     ),
     'description' => array(
-      'sortable' => 0,
+      'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
     'name' => array(
-      'sortable' => 0,
+      'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
-    'name_1' => array(
-      'sortable' => 0,
+    'ledger_value' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'ledger_value_1' => array(
+      'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
@@ -520,10 +524,15 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relationship: Transaction: Book bid */
-  $handler->display->display_options['relationships']['book']['id'] = 'book';
-  $handler->display->display_options['relationships']['book']['table'] = 'ledger_transaction';
-  $handler->display->display_options['relationships']['book']['field'] = 'book';
+  /* Relationship: Transaction: Account entry */
+  $handler->display->display_options['relationships']['ledger_account_entry']['id'] = 'ledger_account_entry';
+  $handler->display->display_options['relationships']['ledger_account_entry']['table'] = 'ledger_transaction';
+  $handler->display->display_options['relationships']['ledger_account_entry']['field'] = 'ledger_account_entry';
+  /* Relationship: Account entry: Account aid */
+  $handler->display->display_options['relationships']['account']['id'] = 'account';
+  $handler->display->display_options['relationships']['account']['table'] = 'ledger_account_entry';
+  $handler->display->display_options['relationships']['account']['field'] = 'account';
+  $handler->display->display_options['relationships']['account']['relationship'] = 'ledger_account_entry';
   $handler->display->display_options['defaults']['fields'] = FALSE;
   /* Field: Transaction: Timestamp */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
@@ -537,29 +546,58 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['description']['table'] = 'ledger_transaction';
   $handler->display->display_options['fields']['description']['field'] = 'description';
   $handler->display->display_options['fields']['description']['hide_alter_empty'] = FALSE;
+  /* Field: Account: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'ledger_account';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'account';
+  $handler->display->display_options['fields']['name']['label'] = 'Account';
+  $handler->display->display_options['fields']['name']['link_to_account'] = 'view';
+  /* Field: Field: Value */
+  $handler->display->display_options['fields']['ledger_value']['id'] = 'ledger_value';
+  $handler->display->display_options['fields']['ledger_value']['table'] = 'field_data_ledger_value';
+  $handler->display->display_options['fields']['ledger_value']['field'] = 'ledger_value';
+  $handler->display->display_options['fields']['ledger_value']['relationship'] = 'ledger_account_entry';
+  $handler->display->display_options['fields']['ledger_value']['label'] = 'Credit';
+  $handler->display->display_options['fields']['ledger_value']['type'] = 'fraction_decimal';
+  $handler->display->display_options['fields']['ledger_value']['settings'] = array(
+    'precision' => '2',
+  );
+  $handler->display->display_options['fields']['ledger_value']['condition'] = 'decrease';
+  /* Field: Field: Value */
+  $handler->display->display_options['fields']['ledger_value_1']['id'] = 'ledger_value_1';
+  $handler->display->display_options['fields']['ledger_value_1']['table'] = 'field_data_ledger_value';
+  $handler->display->display_options['fields']['ledger_value_1']['field'] = 'ledger_value';
+  $handler->display->display_options['fields']['ledger_value_1']['relationship'] = 'ledger_account_entry';
+  $handler->display->display_options['fields']['ledger_value_1']['label'] = 'Debit';
+  $handler->display->display_options['fields']['ledger_value_1']['type'] = 'fraction_decimal';
+  $handler->display->display_options['fields']['ledger_value_1']['settings'] = array(
+    'precision' => '2',
+  );
+  $handler->display->display_options['fields']['ledger_value_1']['condition'] = 'increase';
   /* Field: Transaction: Operations */
   $handler->display->display_options['fields']['transaction_ops']['id'] = 'transaction_ops';
   $handler->display->display_options['fields']['transaction_ops']['table'] = 'ledger_transaction';
   $handler->display->display_options['fields']['transaction_ops']['field'] = 'transaction_ops';
   $handler->display->display_options['fields']['transaction_ops']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Contextual filter: Book: Book ID */
-  $handler->display->display_options['arguments']['bid']['id'] = 'bid';
-  $handler->display->display_options['arguments']['bid']['table'] = 'ledger_book';
-  $handler->display->display_options['arguments']['bid']['field'] = 'bid';
-  $handler->display->display_options['arguments']['bid']['relationship'] = 'book';
-  $handler->display->display_options['arguments']['bid']['default_action'] = 'not found';
-  $handler->display->display_options['arguments']['bid']['title_enable'] = TRUE;
-  $handler->display->display_options['arguments']['bid']['title'] = 'Transactions in book: %1';
-  $handler->display->display_options['arguments']['bid']['breadcrumb_enable'] = TRUE;
-  $handler->display->display_options['arguments']['bid']['breadcrumb'] = '%1';
-  $handler->display->display_options['arguments']['bid']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['bid']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['bid']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['bid']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['bid']['specify_validation'] = TRUE;
-  $handler->display->display_options['arguments']['bid']['validate']['type'] = 'ledger_book';
-  $handler->display->display_options['arguments']['bid']['validate_options']['access'] = TRUE;
+  /* Contextual filter: Account: Book bid */
+  $handler->display->display_options['arguments']['book']['id'] = 'book';
+  $handler->display->display_options['arguments']['book']['table'] = 'ledger_account';
+  $handler->display->display_options['arguments']['book']['field'] = 'book';
+  $handler->display->display_options['arguments']['book']['relationship'] = 'account';
+  $handler->display->display_options['arguments']['book']['default_action'] = 'not found';
+  $handler->display->display_options['arguments']['book']['title_enable'] = TRUE;
+  $handler->display->display_options['arguments']['book']['title'] = 'Transactions in book: %1';
+  $handler->display->display_options['arguments']['book']['breadcrumb_enable'] = TRUE;
+  $handler->display->display_options['arguments']['book']['breadcrumb'] = '%1';
+  $handler->display->display_options['arguments']['book']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['book']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['book']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['book']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['book']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['book']['validate']['type'] = 'ledger_book';
+  $handler->display->display_options['arguments']['book']['validate_options']['access'] = TRUE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Transaction: Description */

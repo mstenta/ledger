@@ -19,22 +19,26 @@ function ledger_budget_ui_menu() {
   //   /ledger/budgets
 
   // Create budget
+  $items['ledger/book/%ledger_book/budget'] =
   $items['ledger/budget/add'] = array(
     'title' => 'Add a budget',
     'description' => 'Add a new budget',
     'page callback' => 'ledger_budget_ui_budget_form_wrapper',
-    'page arguments' => array(NULL, 2),
+    'page arguments' => array(NULL, 'add', 2),
     'access callback' => 'ledger_budget_access',
     'access arguments' => array('create'),
     'weight' => 10,
   );
+
+  // Remove the last page argument from the simple /ledger/budget/add item.
+  array_pop($items['ledger/budget/add']['page arguments']);
 
   // Edit budget
   $items['ledger/budget/%ledger_budget'] = array(
     'title callback' => 'ledger_budget_title',
     'title arguments' => array(2),
     'page callback' => 'ledger_budget_ui_budget_form_wrapper',
-    'page arguments' => array(2, 3),
+    'page arguments' => array(2, 'edit'),
     'access callback' => 'ledger_budget_access',
     'access arguments' => array('update', 2),
   );
@@ -135,12 +139,35 @@ function ledger_budget_ui_views_api() {
 
 /**
  * Wrapper function for the ledger_ui_budget_form that serves as a page callback.
+ *
+ * @param ...
+ * @param $context_entity
+ *   An entity that has a 'bid' (ledger_book or ledget_account). If a valid
+ *   $budget entity is passed in, this is ignored.
+ *
+ * @return
+ *   Returns a form for adding/editing/deleting the budget.
  */
-function ledger_budget_ui_budget_form_wrapper($budget, $op) {
+function ledger_budget_ui_budget_form_wrapper($budget, $op, $context_entity = NULL) {
 
-  // If a budget isn't provided, create a new one.
-  if (!$budget) {
+  // If the budget exists and it has a budget account id, load the book id from
+  // its budget account.
+  if (!empty($budget->bid) && !empty($budget->budget_aid)) {
+    $query = db_select('ledger_budget', 'lb');
+    $query->addField('la', 'bid');
+    $query->join('ledger_account', 'la', 'lb.budget_aid = la.aid');
+    $query->condition('la.aid', $budget->budget_aid);
+    $budget->book_id = $query->execute()->fetchField();
+  }
+
+  // Otherwise, create a new empty entity.
+  else {
     $budget = ledger_budget_new();
+    
+    // If a context entity with a book id is available, get the book id.
+    if (!empty($context_entity->bid)) {
+      $budget->book_id = $context_entity->bid;
+    }
   }
 
   // Set the page title
@@ -226,22 +253,48 @@ function ledger_budget_form($form, &$form_state, $budget, $op = 'edit') {
     );
   }
 
-  // Load a list of books that the user has access to.
-  $books = ledger_book_user_books();
+  // The form's wrapper function will try to assign the budget to a book.
+  // If it doesn't, display a form element for selecting the book.
+  if (!empty($form_state['values']['book_id'])) {
+    $book_id = $form_state['values']['book_id'];
 
-  // Add a required field for assigning the budget to a book.
-  $form['book_id'] = array(
-    '#type' => 'select',
-    '#title' => t('Book'),
-    '#description' => t('Each budget must be assigned to a book. Select a book from the list or ' . l('create a new book', 'ledger/book/add')),
-    '#options' => $books,
-    '#default_value' => $budget->book_id,
-    '#required' => TRUE,
-    '#ajax' => array(
-      'callback' => 'ledger_account_ajax',
-      'wrapper' => 'accounts-wrapper',
-    ),
-  );
+    // Add the book id as a form value.
+    $form['book_id'] = array(
+      '#type' => 'value',
+      '#value' => $book_id,
+    );
+  }
+
+  else {
+
+    // Load a list of books that the user has access to.
+    $books = ledger_book_user_books();
+
+    // Add a required field for assigning the budget to a book.
+    $form['book_id'] = array(
+      '#type' => 'select',
+      '#title' => t('Book'),
+      '#description' => t('Each budget must be assigned to a book. Select a book from the list or ' . l('create a new book', 'ledger/book/add')),
+      '#options' => $books,
+      '#default_value' => !empty($form_state['values']['book_id']) ? $form_state['values']['book_id'] : NULL,
+      '#required' => TRUE,
+      '#ajax' => array(
+        'callback' => 'ledger_account_ajax',
+        'wrapper' => 'accounts-wrapper',
+      ),
+    );
+
+    // Override with any values that have been set in this form.
+    if (!empty($form_state['values']['book_id'])) {
+      $book_id = $form_state['values']['book_id'];
+    }
+
+    // Otherwise, select the first available book (this will happen automatically in the browser for new accounts).
+    else {
+      reset($books);
+      $book_id = key($books);
+    }
+  }
 
   // Wrapper around the two account fields. Automatically refreshed when the
   // book field above is changed.
@@ -249,22 +302,6 @@ function ledger_budget_form($form, &$form_state, $budget, $op = 'edit') {
     '#prefix' => '<div id="accounts-wrapper">',
     '#suffix' => '</div>',
   );
-
-  // Figure out which book to load accounts from based on priority.
-  $book_id = 0;
-  // First, select the first available book (this will happen automatically in the browser for new accounts).
-  if (!empty($books)) {
-    reset($books);
-    $book_id = key($books);
-  }
-  // Second, override with book_id assigned to the budget already.
-  if (!empty($budget->book_id)) {
-    $book_id = $budget->book_id;
-  }
-  // Lastly, override with any values that have been set in this form.
-  if (!empty($form_state['values']['book_id'])) {
-    $book_id = $form_state['values']['book_id'];
-  }
 
   $form['accounts']['budget_aid'] = array(
     '#type' => 'select',
@@ -346,8 +383,8 @@ function ledger_budget_form_validate(&$form, &$form_state) {
   }
 
   // Make sure the book ID is a valid book.
-  $bid = $form_state['values']['book_id'];
-  $book = ledger_book_load($bid);
+  $book_id = $form_state['values']['book_id'];
+  $book = ledger_book_load($book_id);
   if (!isset($book->bid)) {
     form_set_error('book', 'Invalid book.');
   }
@@ -370,7 +407,6 @@ function ledger_budget_form_submit(&$form, &$form_state) {
     // Overwrite with new values.
     $budget->effective = $form_state['values']['effective'];
     $budget->expires = $form_state['values']['expires'];
-    $budget->book_id = $form_state['values']['book_id'];
     $budget->budget_aid = $form_state['values']['budget_aid'];
     $budget->target_aid = $form_state['values']['target_aid'];
     $budget->repeat_every = $form_state['values']['repeat_every'];
@@ -392,8 +428,10 @@ function ledger_budget_form_submit(&$form, &$form_state) {
   // Display a message.
   drupal_set_message(t('Budget saved.'));
 
-  // Redirect
-  $form_state['redirect'] = 'ledger/book/' . $budget->book_id;
+  // If a book id is available, set a redirect to it.
+  if (!empty($form_state['values']['book_id'])) {
+    $form_state['redirect'] = 'ledger/book/' . $form_state['values']['book_id'] . '/transactions';
+  }
 }
 
 /**
@@ -446,7 +484,10 @@ function ledger_budget_delete_form_submit($form, &$form_state) {
   drupal_set_message(t('Budget "@description" has been deleted.', array('@description' => $budget->description)));
   watchdog('ledger_budget', 'Deleted budget "@description."', array('@description' => $budget->description), WATCHDOG_NOTICE);
 
-  // Redirect
-  $form_state['redirect'] = 'ledger/book/' . $budget->book_id;
+  // Look up the budget's book, and redirect to the book's budget list.
+  $book_id = ledger_budget_book($budget->bid);
+  if (!empty($book_id)) {
+    $form_state['redirect'] = 'ledger/book/' . $book_id . '/budgets';
+  }
 }
 

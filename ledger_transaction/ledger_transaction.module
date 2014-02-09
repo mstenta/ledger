@@ -265,3 +265,32 @@ function ledger_transaction_delete_multiple($transaction_ids) {
   return entity_get_controller('ledger_transaction')->delete($transaction_ids);
 }
 
+/***************************************************************
+ * Utility functions.
+ * *************************************************************/
+
+/**
+ * Return the book id that a transaction belongs to.
+ *
+ * @param $tid
+ *   Transaction id.
+ *
+ * @return
+ *   Returns a book id if available, NULL otherwise.
+ */
+function ledger_transaction_book($tid) {
+
+  // If the transaction doesn't have an id, bail.
+  if (empty($tid) || !is_numeric($tid)) {
+    return;
+  }
+
+  // Look up the book id by finding account entries associated with this
+  // transaction, then looking at the book id of their accounts.
+  $query = db_select('ledger_account_entry', 'lae');
+  $query->addField('la', 'bid');
+  $query->join('ledger_account', 'la', 'la.aid = lae.aid');
+  $query->condition('lae.tid', $transaction->tid);
+  $query->range(0, 1);
+  return $query->execute()->fetchField();
+}

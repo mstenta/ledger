@@ -20,22 +20,27 @@ function ledger_transaction_ui_menu() {
   //   /ledger/transactions
 
   // Create transaction
+  $items['ledger/book/%ledger_book/transaction'] =
+  $items['ledger/account/%ledger_account/transaction'] =
   $items['ledger/transaction/add'] = array(
     'title' => 'Record a ledger transaction',
     'description' => 'Record a new transaction in the ledger.',
     'page callback' => 'ledger_transaction_ui_transaction_form_wrapper',
-    'page arguments' => array(NULL, 2),
+    'page arguments' => array(NULL, 'add', 2),
     'access callback' => 'ledger_transaction_access',
     'access arguments' => array('create'),
     'weight' => 10,
   );
+
+  // Remove the last page argument from the simple /ledger/transaction/add item.
+  array_pop($items['ledger/transaction/add']['page arguments']);
 
   // Edit transaction
   $items['ledger/transaction/%ledger_transaction'] = array(
     'title callback' => 'ledger_transaction_title',
     'title arguments' => array(2),
     'page callback' => 'ledger_transaction_ui_transaction_form_wrapper',
-    'page arguments' => array(2, 3),
+    'page arguments' => array(2, 'edit'),
     'access callback' => 'ledger_transaction_access',
     'access arguments' => array('update', 2),
   );
@@ -136,12 +141,36 @@ function ledger_transaction_ui_views_api() {
 
 /**
  * Wrapper function for the ledger_ui_transaction_form that serves as a page callback.
+ *
+ * @param ...
+ * @param $context_entity
+ *   An entity that has a 'bid' (ledger_book or ledget_account). If a valid
+ *   $transaction entity is passed in, this is ignored.
+ *
+ * @return
+ *   Returns a form for adding/editing/deleting the transaction.
  */
-function ledger_transaction_ui_transaction_form_wrapper($transaction, $op) {
+function ledger_transaction_ui_transaction_form_wrapper($transaction, $op, $context_entity = NULL) {
 
-  // If a transaction isn't provided, create a new one.
-  if (!$transaction) {
+  // If the transaction exists, load the book id up the tree.
+  if (!empty($transaction->tid)) {
+    $query = db_select('ledger_account_entry', 'lae');
+    $query->addField('la', 'bid');
+    $query->join('ledger_account', 'la', 'lae.aid = la.aid');
+    $query->condition('lae.tid', $transaction->tid);
+    $query->condition('lae.tid', '0', '<>');
+    $query->range(0, 1);
+    $transaction->bid = $query->execute()->fetchField();
+  }
+
+  // Otherwise, create a new empty entity.
+  else {
     $transaction = ledger_transaction_new();
+
+    // If a context entity with a book id is available, get the book id.
+    if (!empty($context_entity->bid)) {
+      $transaction->bid = $context_entity->bid;
+    }
   }
 
   // Set the page title
@@ -232,42 +261,55 @@ function ledger_transaction_form($form, &$form_state, $transaction, $op = 'edit'
     );
   }
 
-  // Load a list of books that the user has access to.
-  $books = ledger_book_user_books();
-
-  // Add a required field for assigning the transaction to a book.
-  $form['bid'] = array(
-    '#type' => 'select',
-    '#title' => t('Book'),
-    '#description' => t('Each transaction must be assigned to a book. Select a book from the list or ' . l('create a new book', 'ledger/book/add')),
-    '#options' => $books,
-    '#default_value' => $transaction->bid,
-    '#required' => TRUE,
-    '#ajax' => array(
-      'callback' => 'ledger_transaction_account_entries_ajax',
-      'wrapper' => 'ledger-account-entries',
-    ),
-  );
-
-  // Figure out which book to load accounts from based on priority.
-  $bid = 0;
-  // First, select the first available book (this will happen automatically in the browser for new accounts).
-  if (!empty($books)) {
-    reset($books);
-    $bid = key($books);
-  }
-  // Second, override with bid assigned to the account already.
+  // The form's wrapper function will try to assign the transaction to a book.
+  // If it doesn't, display a form element for selecting the book.
   if (!empty($transaction->bid)) {
     $bid = $transaction->bid;
+
+    // Add the book id as a form value.
+    $form['bid'] = array(
+      '#type' => 'value',
+      '#value' => $bid,
+    );
   }
-  // Lastly, override with any values that have been set in this form.
-  if (!empty($form_state['values']['bid'])) {
-    $bid = $form_state['values']['bid'];
+  else {
+
+    // Load a list of books that the user has access to.
+    $books = ledger_book_user_books();
+
+    // Add a required field for assigning the transaction to a book.
+    $form['bid'] = array(
+      '#type' => 'select',
+      '#title' => t('Book'),
+      '#description' => t('Each transaction must be assigned to a book. Select a book from the list or ' . l('create a new book', 'ledger/book/add')),
+      '#options' => $books,
+      '#default_value' => !empty($form_state['values']['bid']) ? $form_state['values']['bid'] : NULL,
+      '#required' => TRUE,
+      '#ajax' => array(
+        'callback' => 'ledger_transaction_account_entries_ajax',
+        'wrapper' => 'ledger-account-entries',
+      ),
+    );
+
+    // Override with any values that have been set in this form.
+    if (!empty($form_state['values']['bid'])) {
+      $bid = $form_state['values']['bid'];
+    }
+
+    // Otherwise, select the first available book (this will happen automatically in the browser for new accounts).
+    else {
+      reset($books);
+      $bid = key($books);
+    }
   }
 
   // Load the account entries associated with this transaction.
+  $query = db_select('ledger_account_entry', 'lae');
+  $query->addField('lae', 'eid');
+  $query->condition('lae.tid', $transaction->tid);
+  $query->condition('lae.tid', '0', '<>');
+  $result = $query->execute();
   $account_entry_ids = array();
-  $result = db_query('SELECT eid FROM {ledger_account_entry} WHERE tid = :tid AND tid <> 0', array(':tid' => $transaction->tid));
   foreach ($result as $record) {
     $account_entry_ids[] = $record->eid;
   }
@@ -336,7 +378,6 @@ function ledger_transaction_form_submit(&$form, &$form_state) {
     // Overwrite with the new values.
     $transaction->description = $form_state['values']['description'];
     $transaction->timestamp = $form_state['values']['timestamp'];
-    $transaction->bid = $form_state['values']['bid'];
   }
 
   // If a new transaction is being created, build a new transaction object.
@@ -356,8 +397,10 @@ function ledger_transaction_form_submit(&$form, &$form_state) {
   // Display a message.
   drupal_set_message(t('Transaction saved.'));
 
-  // Redirect
-  $form_state['redirect'] = 'ledger/book/' . $transaction->bid;
+  // If a book id is available, set a redirect to it.
+  if (!empty($form_state['values']['bid'])) {
+    $form_state['redirect'] = 'ledger/book/' . $form_state['values']['bid'] . '/transactions';
+  }
 }
 
 /**
@@ -410,7 +453,10 @@ function ledger_transaction_delete_form_submit($form, &$form_state) {
   drupal_set_message(t('Transaction "@description" has been deleted.', array('@description' => $transaction->description)));
   watchdog('ledger_transaction', 'Deleted transaction "@description."', array('@description' => $transaction->description), WATCHDOG_NOTICE);
 
-  // Redirect
-  $form_state['redirect'] = 'ledger/book/' . $transaction->bid;
+  // Look up the transaction's book, and redirect to the book's transaction list.
+  $book_id = ledger_transaction_book($transaction->tid);
+  if (!empty($book_id)) {
+    $form_state['redirect'] = 'ledger/book/' . $book_id . '/transactions';
+  }
 }
 
