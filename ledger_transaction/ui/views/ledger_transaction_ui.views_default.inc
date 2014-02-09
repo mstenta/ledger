@@ -46,8 +46,11 @@ function ledger_transaction_ui_views_default_views() {
     'views_bulk_operations' => 'views_bulk_operations',
     'timestamp' => 'timestamp',
     'description' => 'description',
-    'name' => 'name',
     'name_1' => 'name_1',
+    'name_2' => 'name_2',
+    'name' => 'name',
+    'ledger_value_1' => 'ledger_value_1',
+    'ledger_value' => 'ledger_value',
     'transaction_ops' => 'transaction_ops',
   );
   $handler->display->display_options['style_options']['default'] = 'timestamp';
@@ -65,21 +68,42 @@ function ledger_transaction_ui_views_default_views() {
       'empty_column' => 0,
     ),
     'description' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'name' => array(
-      'sortable' => 0,
+      'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
     'name_1' => array(
-      'sortable' => 0,
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'name_2' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'name' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'ledger_value_1' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'ledger_value' => array(
+      'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
@@ -98,10 +122,20 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
   $handler->display->display_options['empty']['area']['content'] = '(none)';
   $handler->display->display_options['empty']['area']['format'] = 'plain_text';
-  /* Relationship: Transaction: Book bid */
+  /* Relationship: Transaction: Account entry */
+  $handler->display->display_options['relationships']['ledger_account_entry']['id'] = 'ledger_account_entry';
+  $handler->display->display_options['relationships']['ledger_account_entry']['table'] = 'ledger_transaction';
+  $handler->display->display_options['relationships']['ledger_account_entry']['field'] = 'ledger_account_entry';
+  /* Relationship: Account entry: Account aid */
+  $handler->display->display_options['relationships']['account']['id'] = 'account';
+  $handler->display->display_options['relationships']['account']['table'] = 'ledger_account_entry';
+  $handler->display->display_options['relationships']['account']['field'] = 'account';
+  $handler->display->display_options['relationships']['account']['relationship'] = 'ledger_account_entry';
+  /* Relationship: Account: Book bid */
   $handler->display->display_options['relationships']['book']['id'] = 'book';
-  $handler->display->display_options['relationships']['book']['table'] = 'ledger_transaction';
+  $handler->display->display_options['relationships']['book']['table'] = 'ledger_account';
   $handler->display->display_options['relationships']['book']['field'] = 'book';
+  $handler->display->display_options['relationships']['book']['relationship'] = 'account';
   /* Relationship: Book: Owner uid */
   $handler->display->display_options['relationships']['owner']['id'] = 'owner';
   $handler->display->display_options['relationships']['owner']['table'] = 'ledger_book';
@@ -187,13 +221,44 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['description']['table'] = 'ledger_transaction';
   $handler->display->display_options['fields']['description']['field'] = 'description';
   $handler->display->display_options['fields']['description']['hide_alter_empty'] = FALSE;
-  /* Field: Book: Name */
+  /* Field: Field: Value */
+  $handler->display->display_options['fields']['ledger_value_1']['id'] = 'ledger_value_1';
+  $handler->display->display_options['fields']['ledger_value_1']['table'] = 'field_data_ledger_value';
+  $handler->display->display_options['fields']['ledger_value_1']['field'] = 'ledger_value';
+  $handler->display->display_options['fields']['ledger_value_1']['relationship'] = 'ledger_account_entry';
+  $handler->display->display_options['fields']['ledger_value_1']['label'] = 'Debit';
+  $handler->display->display_options['fields']['ledger_value_1']['type'] = 'fraction_decimal';
+  $handler->display->display_options['fields']['ledger_value_1']['settings'] = array(
+    'precision' => '2',
+    'auto_precision' => 1,
+  );
+  $handler->display->display_options['fields']['ledger_value_1']['condition'] = 'increase';
+  /* Field: Field: Value */
+  $handler->display->display_options['fields']['ledger_value']['id'] = 'ledger_value';
+  $handler->display->display_options['fields']['ledger_value']['table'] = 'field_data_ledger_value';
+  $handler->display->display_options['fields']['ledger_value']['field'] = 'ledger_value';
+  $handler->display->display_options['fields']['ledger_value']['relationship'] = 'ledger_account_entry';
+  $handler->display->display_options['fields']['ledger_value']['label'] = 'Credit';
+  $handler->display->display_options['fields']['ledger_value']['type'] = 'fraction_decimal';
+  $handler->display->display_options['fields']['ledger_value']['settings'] = array(
+    'precision' => '2',
+    'auto_precision' => 1,
+  );
+  $handler->display->display_options['fields']['ledger_value']['condition'] = 'decrease';
+  /* Field: Account: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
-  $handler->display->display_options['fields']['name']['table'] = 'ledger_book';
+  $handler->display->display_options['fields']['name']['table'] = 'ledger_account';
   $handler->display->display_options['fields']['name']['field'] = 'name';
-  $handler->display->display_options['fields']['name']['relationship'] = 'book';
-  $handler->display->display_options['fields']['name']['label'] = 'Book';
-  $handler->display->display_options['fields']['name']['link_to_book'] = 'view';
+  $handler->display->display_options['fields']['name']['relationship'] = 'account';
+  $handler->display->display_options['fields']['name']['label'] = 'Account';
+  $handler->display->display_options['fields']['name']['link_to_account'] = 'view';
+  /* Field: Book: Name */
+  $handler->display->display_options['fields']['name_2']['id'] = 'name_2';
+  $handler->display->display_options['fields']['name_2']['table'] = 'ledger_book';
+  $handler->display->display_options['fields']['name_2']['field'] = 'name';
+  $handler->display->display_options['fields']['name_2']['relationship'] = 'book';
+  $handler->display->display_options['fields']['name_2']['label'] = 'Book';
+  $handler->display->display_options['fields']['name_2']['link_to_book'] = 'view';
   /* Field: User: Name */
   $handler->display->display_options['fields']['name_1']['id'] = 'name_1';
   $handler->display->display_options['fields']['name_1']['table'] = 'users';
@@ -205,6 +270,21 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['transaction_ops']['table'] = 'ledger_transaction';
   $handler->display->display_options['fields']['transaction_ops']['field'] = 'transaction_ops';
   $handler->display->display_options['fields']['transaction_ops']['hide_alter_empty'] = FALSE;
+  /* Filter criterion: Transaction: Timestamp */
+  $handler->display->display_options['filters']['timestamp']['id'] = 'timestamp';
+  $handler->display->display_options['filters']['timestamp']['table'] = 'ledger_transaction';
+  $handler->display->display_options['filters']['timestamp']['field'] = 'timestamp';
+  $handler->display->display_options['filters']['timestamp']['group'] = 1;
+  $handler->display->display_options['filters']['timestamp']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['timestamp']['expose']['operator_id'] = 'timestamp_op';
+  $handler->display->display_options['filters']['timestamp']['expose']['label'] = 'Timestamp';
+  $handler->display->display_options['filters']['timestamp']['expose']['use_operator'] = TRUE;
+  $handler->display->display_options['filters']['timestamp']['expose']['operator'] = 'timestamp_op';
+  $handler->display->display_options['filters']['timestamp']['expose']['identifier'] = 'timestamp';
+  $handler->display->display_options['filters']['timestamp']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+  );
   /* Filter criterion: Transaction: Description */
   $handler->display->display_options['filters']['description']['id'] = 'description';
   $handler->display->display_options['filters']['description']['table'] = 'ledger_transaction';
@@ -214,24 +294,44 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['filters']['description']['exposed'] = TRUE;
   $handler->display->display_options['filters']['description']['expose']['operator_id'] = 'description_op';
   $handler->display->display_options['filters']['description']['expose']['label'] = 'Description';
+  $handler->display->display_options['filters']['description']['expose']['use_operator'] = TRUE;
   $handler->display->display_options['filters']['description']['expose']['operator'] = 'description_op';
   $handler->display->display_options['filters']['description']['expose']['identifier'] = 'description';
   $handler->display->display_options['filters']['description']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
   );
-  /* Filter criterion: Transaction: Timestamp */
-  $handler->display->display_options['filters']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['filters']['timestamp']['table'] = 'ledger_transaction';
-  $handler->display->display_options['filters']['timestamp']['field'] = 'timestamp';
-  $handler->display->display_options['filters']['timestamp']['operator'] = 'between';
-  $handler->display->display_options['filters']['timestamp']['group'] = 1;
-  $handler->display->display_options['filters']['timestamp']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['timestamp']['expose']['operator_id'] = 'timestamp_op';
-  $handler->display->display_options['filters']['timestamp']['expose']['label'] = 'Time between';
-  $handler->display->display_options['filters']['timestamp']['expose']['operator'] = 'timestamp_op';
-  $handler->display->display_options['filters']['timestamp']['expose']['identifier'] = 'timestamp';
-  $handler->display->display_options['filters']['timestamp']['expose']['remember_roles'] = array(
+  /* Filter criterion: Account: Name */
+  $handler->display->display_options['filters']['name_1']['id'] = 'name_1';
+  $handler->display->display_options['filters']['name_1']['table'] = 'ledger_account';
+  $handler->display->display_options['filters']['name_1']['field'] = 'name';
+  $handler->display->display_options['filters']['name_1']['relationship'] = 'account';
+  $handler->display->display_options['filters']['name_1']['operator'] = 'contains';
+  $handler->display->display_options['filters']['name_1']['group'] = 1;
+  $handler->display->display_options['filters']['name_1']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['name_1']['expose']['operator_id'] = 'name_1_op';
+  $handler->display->display_options['filters']['name_1']['expose']['label'] = 'Account';
+  $handler->display->display_options['filters']['name_1']['expose']['use_operator'] = TRUE;
+  $handler->display->display_options['filters']['name_1']['expose']['operator'] = 'name_1_op';
+  $handler->display->display_options['filters']['name_1']['expose']['identifier'] = 'name_1';
+  $handler->display->display_options['filters']['name_1']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+  );
+  /* Filter criterion: Book: Name */
+  $handler->display->display_options['filters']['name']['id'] = 'name';
+  $handler->display->display_options['filters']['name']['table'] = 'ledger_book';
+  $handler->display->display_options['filters']['name']['field'] = 'name';
+  $handler->display->display_options['filters']['name']['relationship'] = 'book';
+  $handler->display->display_options['filters']['name']['operator'] = 'contains';
+  $handler->display->display_options['filters']['name']['group'] = 1;
+  $handler->display->display_options['filters']['name']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['name']['expose']['operator_id'] = 'name_op';
+  $handler->display->display_options['filters']['name']['expose']['label'] = 'Book';
+  $handler->display->display_options['filters']['name']['expose']['use_operator'] = TRUE;
+  $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
+  $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
+  $handler->display->display_options['filters']['name']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
   );
@@ -248,22 +348,6 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['filters']['uid']['expose']['operator'] = 'uid_op';
   $handler->display->display_options['filters']['uid']['expose']['identifier'] = 'uid';
   $handler->display->display_options['filters']['uid']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-  );
-  /* Filter criterion: Book: Name */
-  $handler->display->display_options['filters']['name']['id'] = 'name';
-  $handler->display->display_options['filters']['name']['table'] = 'ledger_book';
-  $handler->display->display_options['filters']['name']['field'] = 'name';
-  $handler->display->display_options['filters']['name']['relationship'] = 'book';
-  $handler->display->display_options['filters']['name']['operator'] = 'contains';
-  $handler->display->display_options['filters']['name']['group'] = 1;
-  $handler->display->display_options['filters']['name']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['name']['expose']['operator_id'] = 'name_op';
-  $handler->display->display_options['filters']['name']['expose']['label'] = 'Book';
-  $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
-  $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
-  $handler->display->display_options['filters']['name']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
   );
@@ -310,28 +394,28 @@ function ledger_transaction_ui_views_default_views() {
       'empty_column' => 0,
     ),
     'description' => array(
-      'sortable' => 0,
+      'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
     'ledger_value' => array(
-      'sortable' => 0,
+      'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
     'ledger_value_1' => array(
-      'sortable' => 0,
+      'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
     'ledger_balance' => array(
-      'sortable' => 0,
+      'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
@@ -421,6 +505,21 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['arguments']['account']['validate_options']['access'] = TRUE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Transaction: Timestamp */
+  $handler->display->display_options['filters']['timestamp']['id'] = 'timestamp';
+  $handler->display->display_options['filters']['timestamp']['table'] = 'ledger_transaction';
+  $handler->display->display_options['filters']['timestamp']['field'] = 'timestamp';
+  $handler->display->display_options['filters']['timestamp']['group'] = 1;
+  $handler->display->display_options['filters']['timestamp']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['timestamp']['expose']['operator_id'] = 'timestamp_op';
+  $handler->display->display_options['filters']['timestamp']['expose']['label'] = 'Timestamp';
+  $handler->display->display_options['filters']['timestamp']['expose']['use_operator'] = TRUE;
+  $handler->display->display_options['filters']['timestamp']['expose']['operator'] = 'timestamp_op';
+  $handler->display->display_options['filters']['timestamp']['expose']['identifier'] = 'timestamp';
+  $handler->display->display_options['filters']['timestamp']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+  );
   /* Filter criterion: Transaction: Description */
   $handler->display->display_options['filters']['description']['id'] = 'description';
   $handler->display->display_options['filters']['description']['table'] = 'ledger_transaction';
@@ -430,24 +529,10 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['filters']['description']['exposed'] = TRUE;
   $handler->display->display_options['filters']['description']['expose']['operator_id'] = 'description_op';
   $handler->display->display_options['filters']['description']['expose']['label'] = 'Description';
+  $handler->display->display_options['filters']['description']['expose']['use_operator'] = TRUE;
   $handler->display->display_options['filters']['description']['expose']['operator'] = 'description_op';
   $handler->display->display_options['filters']['description']['expose']['identifier'] = 'description';
   $handler->display->display_options['filters']['description']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-  );
-  /* Filter criterion: Transaction: Timestamp */
-  $handler->display->display_options['filters']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['filters']['timestamp']['table'] = 'ledger_transaction';
-  $handler->display->display_options['filters']['timestamp']['field'] = 'timestamp';
-  $handler->display->display_options['filters']['timestamp']['operator'] = 'between';
-  $handler->display->display_options['filters']['timestamp']['group'] = 1;
-  $handler->display->display_options['filters']['timestamp']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['timestamp']['expose']['operator_id'] = 'timestamp_op';
-  $handler->display->display_options['filters']['timestamp']['expose']['label'] = 'Time between';
-  $handler->display->display_options['filters']['timestamp']['expose']['operator'] = 'timestamp_op';
-  $handler->display->display_options['filters']['timestamp']['expose']['identifier'] = 'timestamp';
-  $handler->display->display_options['filters']['timestamp']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
   );
@@ -546,24 +631,6 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['fields']['description']['table'] = 'ledger_transaction';
   $handler->display->display_options['fields']['description']['field'] = 'description';
   $handler->display->display_options['fields']['description']['hide_alter_empty'] = FALSE;
-  /* Field: Account: Name */
-  $handler->display->display_options['fields']['name']['id'] = 'name';
-  $handler->display->display_options['fields']['name']['table'] = 'ledger_account';
-  $handler->display->display_options['fields']['name']['field'] = 'name';
-  $handler->display->display_options['fields']['name']['relationship'] = 'account';
-  $handler->display->display_options['fields']['name']['label'] = 'Account';
-  $handler->display->display_options['fields']['name']['link_to_account'] = 'view';
-  /* Field: Field: Value */
-  $handler->display->display_options['fields']['ledger_value']['id'] = 'ledger_value';
-  $handler->display->display_options['fields']['ledger_value']['table'] = 'field_data_ledger_value';
-  $handler->display->display_options['fields']['ledger_value']['field'] = 'ledger_value';
-  $handler->display->display_options['fields']['ledger_value']['relationship'] = 'ledger_account_entry';
-  $handler->display->display_options['fields']['ledger_value']['label'] = 'Credit';
-  $handler->display->display_options['fields']['ledger_value']['type'] = 'fraction_decimal';
-  $handler->display->display_options['fields']['ledger_value']['settings'] = array(
-    'precision' => '2',
-  );
-  $handler->display->display_options['fields']['ledger_value']['condition'] = 'decrease';
   /* Field: Field: Value */
   $handler->display->display_options['fields']['ledger_value_1']['id'] = 'ledger_value_1';
   $handler->display->display_options['fields']['ledger_value_1']['table'] = 'field_data_ledger_value';
@@ -575,6 +642,24 @@ function ledger_transaction_ui_views_default_views() {
     'precision' => '2',
   );
   $handler->display->display_options['fields']['ledger_value_1']['condition'] = 'increase';
+  /* Field: Field: Value */
+  $handler->display->display_options['fields']['ledger_value']['id'] = 'ledger_value';
+  $handler->display->display_options['fields']['ledger_value']['table'] = 'field_data_ledger_value';
+  $handler->display->display_options['fields']['ledger_value']['field'] = 'ledger_value';
+  $handler->display->display_options['fields']['ledger_value']['relationship'] = 'ledger_account_entry';
+  $handler->display->display_options['fields']['ledger_value']['label'] = 'Credit';
+  $handler->display->display_options['fields']['ledger_value']['type'] = 'fraction_decimal';
+  $handler->display->display_options['fields']['ledger_value']['settings'] = array(
+    'precision' => '2',
+  );
+  $handler->display->display_options['fields']['ledger_value']['condition'] = 'decrease';
+  /* Field: Account: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'ledger_account';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'account';
+  $handler->display->display_options['fields']['name']['label'] = 'Account';
+  $handler->display->display_options['fields']['name']['link_to_account'] = 'view';
   /* Field: Transaction: Operations */
   $handler->display->display_options['fields']['transaction_ops']['id'] = 'transaction_ops';
   $handler->display->display_options['fields']['transaction_ops']['table'] = 'ledger_transaction';
@@ -600,6 +685,21 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['arguments']['book']['validate_options']['access'] = TRUE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Transaction: Timestamp */
+  $handler->display->display_options['filters']['timestamp']['id'] = 'timestamp';
+  $handler->display->display_options['filters']['timestamp']['table'] = 'ledger_transaction';
+  $handler->display->display_options['filters']['timestamp']['field'] = 'timestamp';
+  $handler->display->display_options['filters']['timestamp']['group'] = 1;
+  $handler->display->display_options['filters']['timestamp']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['timestamp']['expose']['operator_id'] = 'timestamp_op';
+  $handler->display->display_options['filters']['timestamp']['expose']['label'] = 'Timestamp';
+  $handler->display->display_options['filters']['timestamp']['expose']['use_operator'] = TRUE;
+  $handler->display->display_options['filters']['timestamp']['expose']['operator'] = 'timestamp_op';
+  $handler->display->display_options['filters']['timestamp']['expose']['identifier'] = 'timestamp';
+  $handler->display->display_options['filters']['timestamp']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+  );
   /* Filter criterion: Transaction: Description */
   $handler->display->display_options['filters']['description']['id'] = 'description';
   $handler->display->display_options['filters']['description']['table'] = 'ledger_transaction';
@@ -609,24 +709,26 @@ function ledger_transaction_ui_views_default_views() {
   $handler->display->display_options['filters']['description']['exposed'] = TRUE;
   $handler->display->display_options['filters']['description']['expose']['operator_id'] = 'description_op';
   $handler->display->display_options['filters']['description']['expose']['label'] = 'Description';
+  $handler->display->display_options['filters']['description']['expose']['use_operator'] = TRUE;
   $handler->display->display_options['filters']['description']['expose']['operator'] = 'description_op';
   $handler->display->display_options['filters']['description']['expose']['identifier'] = 'description';
   $handler->display->display_options['filters']['description']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
   );
-  /* Filter criterion: Transaction: Timestamp */
-  $handler->display->display_options['filters']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['filters']['timestamp']['table'] = 'ledger_transaction';
-  $handler->display->display_options['filters']['timestamp']['field'] = 'timestamp';
-  $handler->display->display_options['filters']['timestamp']['operator'] = 'between';
-  $handler->display->display_options['filters']['timestamp']['group'] = 1;
-  $handler->display->display_options['filters']['timestamp']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['timestamp']['expose']['operator_id'] = 'timestamp_op';
-  $handler->display->display_options['filters']['timestamp']['expose']['label'] = 'Time between';
-  $handler->display->display_options['filters']['timestamp']['expose']['operator'] = 'timestamp_op';
-  $handler->display->display_options['filters']['timestamp']['expose']['identifier'] = 'timestamp';
-  $handler->display->display_options['filters']['timestamp']['expose']['remember_roles'] = array(
+  /* Filter criterion: Account: Name */
+  $handler->display->display_options['filters']['name']['id'] = 'name';
+  $handler->display->display_options['filters']['name']['table'] = 'ledger_account';
+  $handler->display->display_options['filters']['name']['field'] = 'name';
+  $handler->display->display_options['filters']['name']['relationship'] = 'account';
+  $handler->display->display_options['filters']['name']['operator'] = 'contains';
+  $handler->display->display_options['filters']['name']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['name']['expose']['operator_id'] = 'name_op';
+  $handler->display->display_options['filters']['name']['expose']['label'] = 'Account';
+  $handler->display->display_options['filters']['name']['expose']['use_operator'] = TRUE;
+  $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
+  $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
+  $handler->display->display_options['filters']['name']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
   );
