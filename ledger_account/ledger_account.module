@@ -559,6 +559,13 @@ function ledger_account_get_tree($book, $parent = 0, $max_depth = NULL, $load_en
  *   The book id to load accounts from. Required.
  */
 function ledger_account_select_options($book) {
+
+  // If the book is not a number, bail.
+  if (!is_numeric($book)) {
+    return array();
+  }
+
+  // Start a static array of options.
   $options = &drupal_static(__FUNCTION__ . $book, array());
 
   // If options for the given book are not available, load them.
