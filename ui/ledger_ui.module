@@ -10,30 +10,10 @@
  * *************************************************************/
 
 /**
- * Implements hook_permission().
- */
-function ledger_ui_permission() {
-  return array(
-    'view ledger home' => array(
-      'title' => t('View Ledger Home'),
-      'description' => t('View the Ledger Home page.'),
-    ),
-  );
-}
-
-/**
  * Implements hook_menu().
  */
 function ledger_ui_menu() {
   $items = array();
-
-  // Top level "Ledger" container.
-  $items['ledger'] = array(
-    'title' => 'Ledger',
-    'description' => 'Manage books, accounts, and transactions.',
-    'page callback' => 'ledger_ui_page_callback',
-    'access arguments' => array('view ledger home'),
-  );
 
   // Ledger Settings container
   $items['admin/config/ledger'] = array(
@@ -48,16 +28,3 @@ function ledger_ui_menu() {
   return $items;
 }
 
-/***************************************************************
- * Page callbacks
- * *************************************************************/
-
-/**
- * Page callback for the root /ledger patch.
- */
-function ledger_ui_page_callback() {
-
-  // Just a placeholder at the moment...
-  $output = '';
-  return $output;
-}
