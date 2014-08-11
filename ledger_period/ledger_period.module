@@ -110,6 +110,44 @@ function ledger_period_ledger_account_entry_delete($account_entry) {
   }
 }
 
+/**
+ * Implements hook_[entity]_update().
+ */
+function ledger_period_ledger_transaction_update($transaction) {
+
+  // Check to see if account entry balance calculation is enabled.
+  if (variable_get('ledger_period_balance_calculate', 1)) {
+
+    // If the transaction timestamp changes, recalculate balances in all
+    // accounts starting at the earlier timestamp.
+    if ($transaction->original->timestamp != $transaction->timestamp) {
+
+      // Figure out which timestamp is earlier.
+      $earlier_timestamp = 0;
+      if ($transaction->original->timestamp < $transaction->timestamp) {
+        $earlier_timestamp = $transaction->original->timestamp;
+      }
+      elseif ($transaction->original->timestamp > $transaction->timestamp) {
+        $earlier_timestamp = $transaction->timestamp;
+      }
+
+      // Compile a list of accounts to recalculate. We do this first in case
+      // there are multiple account entries in the same account.
+      $aids = array();
+      if (!empty($transaction->account_entries)) {
+        foreach ($transaction->account_entries as $account_entry) {
+          $aids[$account_entry->aid] = $account_entry->aid;
+        }
+      }
+
+      // Recalculate account balances.
+      foreach ($aids as $aid) {
+        ledger_period_calculate_balances($aid, $earlier_timestamp);
+      }
+    }
+  }
+}
+
 /***************************************************************
  * Views API hooks
  * *************************************************************/

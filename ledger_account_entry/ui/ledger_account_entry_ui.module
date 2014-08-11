@@ -376,6 +376,15 @@ function ledger_account_entry_manager_submit($form, &$form_state, $parents, $tra
       // Compare the form values to the original account entry to see if a save is necessary.
       if ($account_entry->description != $row['description'] || $account_entry->aid != $row['aid'] || $account_entry->value != $value) {
 
+        // Reload the account entry from the database, if available.
+        // We do this because the balance recaluclation function may run during
+        // the transaction entity update hook, which will affect the account
+        // entry's balance. If we don't reload, we may accidentally overwrite
+        // the new balance with the old.
+        if (!empty($account_entry->eid)) {
+          $account_entry = ledger_account_entry_load($account_entry->eid);
+        }
+
         // Update the values in the original account entry and save it.
         $account_entry->description = $row['description'];
         $account_entry->aid = $row['aid'];
