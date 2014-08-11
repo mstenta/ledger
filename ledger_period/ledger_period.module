@@ -78,13 +78,13 @@ function ledger_period_ledger_account_entry_update($account_entry) {
 
     // If the value of the account entry is changed, recalculate the account entry balances in that account.
     if ($account_entry->value != $account_entry->original->value) {
-      $aids[] = $account_entry->aid;
+      $aids[$account_entry->aid] = $account_entry->aid;
     }
 
     // If the account entry is moved to another account, recalculate the account entry balances in both accounts.
     if ($account_entry->aid != $account_entry->original->aid) {
-      $aids[] = $account_entry->aid;
-      $aids[] = $account_entry->original->aid;
+      $aids[$account_entry->aid] = $account_entry->aid;
+      $aids[$account_entry->aid] = $account_entry->original->aid;
     }
 
     // Recalculate account entry balances for the specified accounts.
