@@ -290,7 +290,7 @@ function ledger_transaction_book($tid) {
   $query = db_select('ledger_account_entry', 'lae');
   $query->addField('la', 'bid');
   $query->join('ledger_account', 'la', 'la.aid = lae.aid');
-  $query->condition('lae.tid', $transaction->tid);
+  $query->condition('lae.tid', $tid);
   $query->range(0, 1);
   return $query->execute()->fetchField();
 }
