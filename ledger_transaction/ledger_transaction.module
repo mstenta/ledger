@@ -204,8 +204,8 @@ function ledger_transaction_new($values = array()) {
 /**
  * Loads a transaction by ID.
  */
-function ledger_transaction_load($tid) {
-  $transactions = ledger_transaction_load_multiple(array($tid), array());
+function ledger_transaction_load($tid, $reset = FALSE) {
+  $transactions = ledger_transaction_load_multiple(array($tid), array(), $reset);
   return $transactions ? reset($transactions) : FALSE;
 }
 

@@ -242,8 +242,8 @@ function ledger_budget_new($values = array()) {
 /**
  * Loads a budget by ID.
  */
-function ledger_budget_load($bid) {
-  $budgets = ledger_budget_load_multiple(array($bid), array());
+function ledger_budget_load($bid, $reset = FALSE) {
+  $budgets = ledger_budget_load_multiple(array($bid), array(), $reset);
   return $budgets ? reset($budgets) : FALSE;
 }
 

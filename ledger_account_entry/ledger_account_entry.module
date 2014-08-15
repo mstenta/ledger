@@ -237,8 +237,8 @@ function ledger_account_entry_new($values = array()) {
 /**
  * Loads an account entry by ID.
  */
-function ledger_account_entry_load($eid) {
-  $account_entries = ledger_account_entry_load_multiple(array($eid), array());
+function ledger_account_entry_load($eid, $reset = FALSE) {
+  $account_entries = ledger_account_entry_load_multiple(array($eid), array(), $reset);
   return $account_entries ? reset($account_entries) : FALSE;
 }
 

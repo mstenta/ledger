@@ -261,8 +261,8 @@ function ledger_account_new($values = array()) {
 /**
  * Loads an account by ID.
  */
-function ledger_account_load($aid) {
-  $accounts = ledger_account_load_multiple(array($aid), array());
+function ledger_account_load($aid, $reset = FALSE) {
+  $accounts = ledger_account_load_multiple(array($aid), array(), $reset);
   return $accounts ? reset($accounts) : FALSE;
 }
 

@@ -179,8 +179,8 @@ function ledger_book_new($values = array()) {
 /**
  * Loads a book by ID.
  */
-function ledger_book_load($bid) {
-  $books = ledger_book_load_multiple(array($bid), array());
+function ledger_book_load($bid, $reset = FALSE) {
+  $books = ledger_book_load_multiple(array($bid), array(), $reset);
   return $books ? reset($books) : FALSE;
 }
 
