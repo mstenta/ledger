@@ -225,7 +225,7 @@ function ledger_period_calculate_balances($aid = NULL, $timestamp = 0) {
 
       // Load the account entry, if an id was returned.
       if (!empty($eid)) {
-        $account_entry = ledger_account_entry_load($eid);
+        $account_entry = ledger_account_entry_load($eid, TRUE);
       }
 
       // If there is no balance value stored, clear the timestamp so that
@@ -255,7 +255,7 @@ function ledger_period_calculate_balances($aid = NULL, $timestamp = 0) {
 
       // Load the account entry, if available.
       if (!empty($row->eid)) {
-        $account_entry = ledger_account_entry_load($row->eid);
+        $account_entry = ledger_account_entry_load($row->eid, TRUE);
       }
 
       // If the account entry has a value...
@@ -276,7 +276,7 @@ function ledger_period_calculate_balances($aid = NULL, $timestamp = 0) {
     }
 
     // Load the account entity, set the final balance, and save.
-    $account = ledger_account_load($aid);
+    $account = ledger_account_load($aid, TRUE);
     $account->ledger_balance[LANGUAGE_NONE][0] = array(
       'numerator' => $balance->getNumerator(),
       'denominator' => $balance->getDenominator(),
