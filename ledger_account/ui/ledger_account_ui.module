@@ -117,6 +117,18 @@ function ledger_account_ui_menu_local_tasks_alter(&$data, $router_item, $root_pa
   }
 }
 
+/**
+ * Implements hook_theme().
+ */
+function ledger_account_ui_theme() {
+  return array(
+    'ledger_account_add_list' => array(
+      'variables' => array('content' => array()),
+      'file' => 'ledger_account_ui.theme.inc',
+    ),
+  );
+}
+
 /***************************************************************
  * Ledger hooks
  * *************************************************************/
@@ -147,18 +159,12 @@ function ledger_account_ui_views_api() {
  * *************************************************************/
 
 /**
- * Page that displays a list of all Account Types that may be created.
- * This is copied (and minimally modified) from node.pages.inc.
+ * Display a list of account types that the user can create.
  */
 function ledger_account_ui_add_page() {
   $item = menu_get_item();
   $content = system_admin_menu_block($item);
-  // Bypass the listing page if only one content type is available.
-  if (count($content) == 1) {
-    $item = array_shift($content);
-    drupal_goto($item['href']);
-  }
-  return theme('node_add_list', array('content' => $content));
+  return theme('ledger_account_add_list', array('content' => $content));
 }
 
 /**
