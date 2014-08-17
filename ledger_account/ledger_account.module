@@ -5,9 +5,6 @@
  * Ledger Account
  */
 
-// Include Features code for default account types.
-include_once('ledger_account.features.inc');
-
 /***************************************************************
  * Drupal core hooks
  * *************************************************************/
