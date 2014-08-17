@@ -3,8 +3,15 @@ description = "Defines the Account entity and associated features."
 core = 7.x
 package = "Ledger"
 dependencies[] = entity
+dependencies[] = features
 dependencies[] = ledger
 dependencies[] = ledger_book
+features[features_api][] = api:1
+features[ledger_account_type][] = assets
+features[ledger_account_type][] = equity
+features[ledger_account_type][] = expenses
+features[ledger_account_type][] = income
+features[ledger_account_type][] = liabilities
 
 files[] = views/handlers/ledger_account_handler_field_account_type.inc
 files[] = views/handlers/ledger_account_handler_field_link_delete.inc
