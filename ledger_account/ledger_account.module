@@ -23,8 +23,8 @@ function ledger_account_permission() {
  */
 function ledger_account_entity_info() {
   $entities['ledger_account'] = array(
-    'label' => t('Account'),
-    'label plural' => t('Accounts'),
+    'label' => t('Ledger Account'),
+    'label plural' => t('Ledger Accounts'),
     'description' => t('A Ledger account.'),
     'entity class' => 'LedgerAccount',
     'controller class' => 'LedgerAccountController',
@@ -44,8 +44,8 @@ function ledger_account_entity_info() {
     ),
   );
   $entities['ledger_account_type'] = array(
-    'label' => t('Account type'),
-    'label plural' => t('Account types'),
+    'label' => t('Ledger Account Type'),
+    'label plural' => t('Ledger Account Types'),
     'description' => t('A Ledger account type.'),
     'entity class' => 'Entity',
     'controller class' => 'LedgerAccountTypeController',

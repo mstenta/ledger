@@ -23,8 +23,8 @@ function ledger_budget_permission() {
  */
 function ledger_budget_entity_info() {
   $entities['ledger_budget'] = array(
-    'label' => t('Budget'),
-    'label plural' => t('Budgets'),
+    'label' => t('Ledger Budget'),
+    'label plural' => t('Ledger Budgets'),
     'entity class' => 'LedgerBudget',
     'controller class' => 'LedgerBudgetController',
     'base table' => 'ledger_budget',

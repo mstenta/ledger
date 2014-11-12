@@ -23,8 +23,8 @@ function ledger_transaction_permission() {
  */
 function ledger_transaction_entity_info() {
   $entities['ledger_transaction'] = array(
-    'label' => t('Transaction'),
-    'label plural' => t('Transactions'),
+    'label' => t('Ledger Transaction'),
+    'label plural' => t('Ledger Transactions'),
     'entity class' => 'LedgerTransaction',
     'controller class' => 'LedgerTransactionController',
     'base table' => 'ledger_transaction',

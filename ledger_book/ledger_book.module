@@ -30,8 +30,8 @@ function ledger_book_permission() {
  */
 function ledger_book_entity_info() {
   $entities['ledger_book'] = array(
-    'label' => t('Book'),
-    'label plural' => t('Books'),
+    'label' => t('Ledger Book'),
+    'label plural' => t('Ledger Books'),
     'description' => t('A Ledger book.'),
     'entity class' => 'LedgerBook',
     'controller class' => 'LedgerBookController',
