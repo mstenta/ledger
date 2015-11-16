@@ -8,7 +8,7 @@
 /**
  * Field handler for balance fields.
  */
-class ledger_handler_field_balance extends fraction_handler_field {
+class ledger_handler_field_balance extends fraction_handler_field_field {
 
   // Sort the results by account entry ID.
   function query($use_groupby = FALSE) {

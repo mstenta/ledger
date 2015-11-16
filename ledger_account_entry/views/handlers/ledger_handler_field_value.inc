@@ -8,7 +8,7 @@
 /**
  * Field handler to provide more advanced display options of an account entry's value.
  */
-class ledger_handler_field_value extends fraction_handler_field {
+class ledger_handler_field_value extends fraction_handler_field_field {
 
   /**
    * Define the options.
