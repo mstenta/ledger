@@ -37,7 +37,21 @@ class LedgerAccountTypeForm extends EntityForm {
       '#disabled' => !$ledger_account_type->isNew(),
     );
 
-    /* You will need additional form elements for your custom properties. */
+    $form['type'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Fundamental account type'),
+      '#description' => $this->t('The fundamental type of account, used for reporting. If none is selected, accounts of this type will not be included in any reports.'),
+      '#options' => array(
+        'asset' => t('Asset'),
+        'equity' => t('Equity'),
+        'liability' => t('Liability'),
+        'income' => t('Income'),
+        'expense' => t('Expense'),
+        'undefined' => t('undefined'),
+      ),
+      '#default_value' => $ledger_account_type->getType(),
+      '#required' => TRUE,
+    );
 
     return $form;
   }

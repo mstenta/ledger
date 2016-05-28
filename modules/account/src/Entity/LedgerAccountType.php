@@ -28,6 +28,7 @@ use Drupal\ledger_account\LedgerAccountTypeInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
+ *     "type" = "type",
  *     "uuid" = "uuid"
  *   },
  *   links = {
@@ -54,5 +55,26 @@ class LedgerAccountType extends ConfigEntityBundleBase implements LedgerAccountT
    * @var string
    */
   protected $label;
+
+  /**
+   * The fundamental account type.
+   *
+   * @var string
+   */
+  protected $type;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getType() {
+    return $this->type;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setType($type) {
+    $this->type = $type;
+  }
 
 }

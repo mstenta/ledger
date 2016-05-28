@@ -8,5 +8,8 @@ ledger_account.ledger_account_type.*:
     label:
       type: label
       label: 'Label'
+    type:
+      type: string
+      label: 'Fundamental type'
     uuid:
       type: string

@@ -9,5 +9,26 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
  */
 interface LedgerAccountTypeInterface extends ConfigEntityInterface {
 
-  // Add get/set methods for your configuration properties here.
+  /**
+   * Returns the vocabulary hierarchy.
+   *
+   * @return int
+   *   The vocabulary hierarchy.
+   */
+  public function getType();
+
+  /**
+   * Returns the vocabulary hierarchy.
+   *
+   * @return string $type
+   *   The fundamental account type. Must be one of the following:
+   *     - asset
+   *     - equity
+   *     - expense
+   *     - income
+   *     - liability
+   *     - undefined
+   */
+  public function setType($type);
+
 }

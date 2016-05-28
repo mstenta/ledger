@@ -15,6 +15,7 @@ class LedgerAccountTypeListBuilder extends ConfigEntityListBuilder {
    */
   public function buildHeader() {
     $header['label'] = $this->t('Ledger Account type');
+    $header['type'] = $this->t('Fundamental type');
     $header['id'] = $this->t('Machine name');
     return $header + parent::buildHeader();
   }
@@ -24,6 +25,7 @@ class LedgerAccountTypeListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['label'] = $entity->label();
+    $row['type'] = $entity->getType();
     $row['id'] = $entity->id();
     // You probably want a few more properties here...
     return $row + parent::buildRow($entity);
