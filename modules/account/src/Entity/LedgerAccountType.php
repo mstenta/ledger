@@ -37,6 +37,11 @@ use Drupal\ledger_account\LedgerAccountTypeInterface;
  *     "edit-form" = "/admin/structure/ledger/account/ledger_account_type/{ledger_account_type}/edit",
  *     "delete-form" = "/admin/structure/ledger/account/ledger_account_type/{ledger_account_type}/delete",
  *     "collection" = "/admin/structure/ledger/account/ledger_account_type"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "type",
  *   }
  * )
  */
