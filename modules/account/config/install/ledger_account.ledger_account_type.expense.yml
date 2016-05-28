@@ -1,0 +1,6 @@
+langcode: en
+status: true
+dependencies: {  }
+id: expense
+label: Expense
+type: expense
