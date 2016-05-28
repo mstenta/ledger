@@ -175,7 +175,7 @@ class LedgerAccount extends ContentEntityBase implements LedgerAccountInterface 
       ))
       ->setDefaultValue('')
       ->setDisplayOptions('view', array(
-        'label' => 'above',
+        'label' => 'hidden',
         'type' => 'string',
         'weight' => -4,
       ))
