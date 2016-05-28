@@ -1,0 +1,7 @@
+name: Ledger Transaction
+type: module
+description: Provides the Ledger Transaction log type.
+core: 8.x
+package: Ledger
+dependencies:
+  - log

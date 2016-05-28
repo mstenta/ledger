@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies: {  }
+id: ledger_transaction
+label: 'Ledger Transaction'
+description: 'A transaction between two or more ledger accounts.'
+name_pattern: 'Transaction'
+name_edit: true
+done: true
+new_revision: true
