@@ -149,16 +149,16 @@ class Ledger extends ContentEntityBase implements LedgerInterface {
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields['id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('ID'))
-      ->setDescription(t('The ID of the Ledger entity.'))
+      ->setDescription(t('The ID of the Ledger.'))
       ->setReadOnly(TRUE);
     $fields['uuid'] = BaseFieldDefinition::create('uuid')
       ->setLabel(t('UUID'))
-      ->setDescription(t('The UUID of the Ledger entity.'))
+      ->setDescription(t('The UUID of the Ledger.'))
       ->setReadOnly(TRUE);
 
     $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Authored by'))
-      ->setDescription(t('The user ID of author of the Ledger entity.'))
+      ->setLabel(t('Owner'))
+      ->setDescription(t('The user ID the Ledger owner.'))
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
@@ -184,7 +184,7 @@ class Ledger extends ContentEntityBase implements LedgerInterface {
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
-      ->setDescription(t('The name of the Ledger entity.'))
+      ->setDescription(t('The name of the Ledger.'))
       ->setSettings(array(
         'max_length' => 50,
         'text_processing' => 0,
@@ -209,7 +209,7 @@ class Ledger extends ContentEntityBase implements LedgerInterface {
 
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language code'))
-      ->setDescription(t('The language code for the Ledger entity.'))
+      ->setDescription(t('The language code for the Ledger.'))
       ->setDisplayOptions('form', array(
         'type' => 'language_select',
         'weight' => 10,
@@ -218,11 +218,11 @@ class Ledger extends ContentEntityBase implements LedgerInterface {
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
-      ->setDescription(t('The time that the entity was created.'));
+      ->setDescription(t('The time that the Ledger entity was created.'));
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
-      ->setDescription(t('The time that the entity was last edited.'));
+      ->setDescription(t('The time that the Ledger entity was last edited.'));
 
     return $fields;
   }
