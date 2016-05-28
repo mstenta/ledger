@@ -53,25 +53,4 @@ interface LedgerInterface extends ContentEntityInterface, EntityChangedInterface
    */
   public function setCreatedTime($timestamp);
 
-  /**
-   * Returns the Ledger published status indicator.
-   *
-   * Unpublished Ledger are only visible to restricted users.
-   *
-   * @return bool
-   *   TRUE if the Ledger is published.
-   */
-  public function isPublished();
-
-  /**
-   * Sets the published status of a Ledger.
-   *
-   * @param bool $published
-   *   TRUE to set this Ledger to published, FALSE to set it to unpublished.
-   *
-   * @return \Drupal\ledger\LedgerInterface
-   *   The called Ledger entity.
-   */
-  public function setPublished($published);
-
 }

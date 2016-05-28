@@ -12,8 +12,5 @@ delete ledger entities:
 edit ledger entities:
   title: 'Edit Ledger entities'
 
-view published ledger entities:
-  title: 'View published Ledger entities'
-
-view unpublished ledger entities:
-  title: 'View unpublished Ledger entities'
+view ledger entities:
+  title: 'View Ledger entities'
