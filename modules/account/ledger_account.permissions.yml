@@ -12,8 +12,5 @@ delete ledger account entities:
 edit ledger account entities:
   title: 'Edit Ledger Account entities'
 
-view published ledger account entities:
-  title: 'View published Ledger Account entities'
-
-view unpublished ledger account entities:
-  title: 'View unpublished Ledger Account entities'
+view ledger account entities:
+  title: 'View Ledger Account entities'

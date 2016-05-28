@@ -21,10 +21,7 @@ class LedgerAccountAccessControlHandler extends EntityAccessControlHandler {
     /** @var \Drupal\ledger_account\LedgerAccountInterface $entity */
     switch ($operation) {
       case 'view':
-        if (!$entity->isPublished()) {
-          return AccessResult::allowedIfHasPermission($account, 'view unpublished ledger account entities');
-        }
-        return AccessResult::allowedIfHasPermission($account, 'view published ledger account entities');
+        return AccessResult::allowedIfHasPermission($account, 'view ledger account entities');
 
       case 'update':
         return AccessResult::allowedIfHasPermission($account, 'edit ledger account entities');

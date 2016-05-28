@@ -53,25 +53,4 @@ interface LedgerAccountInterface extends ContentEntityInterface, EntityChangedIn
    */
   public function setCreatedTime($timestamp);
 
-  /**
-   * Returns the Ledger Account published status indicator.
-   *
-   * Unpublished Ledger Account are only visible to restricted users.
-   *
-   * @return bool
-   *   TRUE if the Ledger Account is published.
-   */
-  public function isPublished();
-
-  /**
-   * Sets the published status of a Ledger Account.
-   *
-   * @param bool $published
-   *   TRUE to set this Ledger Account to published, FALSE to set it to unpublished.
-   *
-   * @return \Drupal\ledger_account\LedgerAccountInterface
-   *   The called Ledger Account entity.
-   */
-  public function setPublished($published);
-
 }
