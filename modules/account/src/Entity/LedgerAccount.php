@@ -40,6 +40,7 @@ use Drupal\user\UserInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "name",
+ *     "parent" = "parent",
  *     "ledger" = "ledger",
  *     "uuid" = "uuid",
  *     "uid" = "user_id",
@@ -132,6 +133,36 @@ class LedgerAccount extends ContentEntityBase implements LedgerAccountInterface 
   /**
    * {@inheritdoc}
    */
+  public function getParent() {
+    return $this->get('parent')->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setParent(LedgerAccountInterface $account) {
+    $this->set('parent', $account->id());
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getParentId() {
+    return $this->get('parent')->target_id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setParentId($id) {
+    $this->set('parent', $id);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getLedger() {
     return $this->get('ledger')->entity;
   }
@@ -216,6 +247,32 @@ class LedgerAccount extends ContentEntityBase implements LedgerAccountInterface 
       ->setDisplayOptions('form', array(
         'type' => 'string_textfield',
         'weight' => -4,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['parent'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Parent Account'))
+      ->setDescription(t('The parent of this account (optional).'))
+      ->setRevisionable(TRUE)
+      ->setSetting('target_type', 'ledger_account')
+      ->setSetting('handler', 'default')
+      ->setDefaultValue('')
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => -2,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'entity_reference_autocomplete',
+        'weight' => -2,
+        'settings' => array(
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'autocomplete_type' => 'tags',
+          'placeholder' => '',
+        ),
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);

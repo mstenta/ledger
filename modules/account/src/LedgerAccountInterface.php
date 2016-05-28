@@ -55,6 +55,44 @@ interface LedgerAccountInterface extends ContentEntityInterface, EntityChangedIn
   public function setCreatedTime($timestamp);
 
   /**
+   * Gets the parent account.
+   *
+   * @return \Drupal\ledger_account\LedgerAccountInterface
+   *   Ledger Account entity.
+   */
+  public function getParent();
+
+  /**
+   * Sets the parent account.
+   *
+   * @param \Drupal\ledger_account\LedgerAccountInterface $account
+   *   A Ledger Account entity.
+   *
+   * @return \Drupal\ledger_account\LedgerAccountInterface
+   *   The called Ledger Account entity.
+   */
+  public function setParent(LedgerAccountInterface $account);
+
+  /**
+   * Gets the ID of the parent account..
+   *
+   * @return int
+   *   Ledger Account entity ID.
+   */
+  public function getParentId();
+
+  /**
+   * Sets the ID of the parent account.
+   *
+   * @param int $id
+   *   Ledger Account entity ID.
+   *
+   * @return \Drupal\ledger_account\LedgerAccountInterface
+   *   The called Ledger Account entity.
+   */
+  public function setParentId($id);
+
+  /**
    * Gets the ledger entity that the account is associated with.
    *
    * @return \Drupal\ledger\LedgerInterface
