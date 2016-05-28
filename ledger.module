@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains ledger.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function ledger_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the ledger module.
+    case 'help.page.ledger':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('A double-entry bookkeeping system.') . '</p>';
+      return $output;
+
+    default:
+  }
+}

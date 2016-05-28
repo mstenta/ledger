@@ -1,0 +1,5 @@
+name: Ledger
+type: module
+description: A double-entry bookkeeping system.
+core: 8.x
+package: Ledger

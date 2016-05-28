@@ -1,0 +1,14 @@
+{
+  "name": "drupal/ledger",
+  "type": "drupal-module",
+  "description": "A double-entry bookkeeping system.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/ledger",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "http://drupal.org/project/issues/ledger",
+    "source": "http://cgit.drupalcode.org/ledger"
+  },
+  "require": { }
+}
