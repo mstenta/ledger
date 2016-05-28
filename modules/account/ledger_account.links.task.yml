@@ -1,8 +1,4 @@
 # Ledger Account routing definition
-ledger_account.settings_tab:
-  route_name: ledger_account.settings
-  title: 'Settings'
-  base_route: ledger_account.settings
 entity.ledger_account.canonical:
   route_name: entity.ledger_account.canonical
   base_route: entity.ledger_account.canonical

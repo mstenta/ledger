@@ -4,8 +4,11 @@ entity.ledger_account.collection:
   route_name: entity.ledger_account.collection
   description: 'All Ledger Accounts.'
 
-ledger_account.admin.structure.settings:
-  title: Ledger Account settings
-  description: 'Configure Ledger Account entities'
-  route_name: ledger_account.settings
+# Ledger Account type menu items definition
+entity.ledger_account_type.collection:
+  title: 'Ledger Account type'
+  route_name: entity.ledger_account_type.collection
+  description: 'List Ledger Account type (bundles)'
   parent: system.admin_structure
+  weight: 99
+

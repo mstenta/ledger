@@ -22,3 +22,37 @@ function ledger_account_help($route_name, RouteMatchInterface $route_match) {
     default:
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+function ledger_account_theme() {
+  $theme = [];
+  $theme['ledger_account'] = [
+    'render element' => 'elements',
+    'file' => 'ledger_account.page.inc',
+    'template' => 'ledger_account',
+  ];
+  $theme['ledger_account_content_add_list'] = [
+    'render element' => 'content',
+    'variables' => ['content' => NULL],
+    'file' => 'ledger_account.page.inc',
+  ];
+  return $theme;
+}
+
+/**
+* Implements hook_theme_suggestions_HOOK().
+*/
+function ledger_account_theme_suggestions_ledger_account(array $variables) {
+  $suggestions = array();
+  $entity = $variables['elements']['#ledger_account'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'ledger_account__' . $sanitized_view_mode;
+  $suggestions[] = 'ledger_account__' . $entity->bundle();
+  $suggestions[] = 'ledger_account__' . $entity->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'ledger_account__' . $entity->id();
+  $suggestions[] = 'ledger_account__' . $entity->id() . '__' . $sanitized_view_mode;
+  return $suggestions;
+}

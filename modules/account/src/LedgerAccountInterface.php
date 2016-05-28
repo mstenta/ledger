@@ -17,6 +17,14 @@ interface LedgerAccountInterface extends ContentEntityInterface, EntityChangedIn
   // Add get/set methods for your configuration properties here.
 
   /**
+   * Gets the Ledger Account type.
+   *
+   * @return string
+   *   The Ledger Account type.
+   */
+  public function getType();
+
+  /**
    * Gets the Ledger Account name.
    *
    * @return string

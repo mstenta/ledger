@@ -19,6 +19,7 @@ use Drupal\user\UserInterface;
  * @ContentEntityType(
  *   id = "ledger_account",
  *   label = @Translation("Ledger Account"),
+ *   bundle_label = @Translation("Ledger Account type"),
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\ledger_account\LedgerAccountListBuilder",
@@ -39,6 +40,7 @@ use Drupal\user\UserInterface;
  *   admin_permission = "administer ledger account entities",
  *   entity_keys = {
  *     "id" = "id",
+ *     "bundle" = "type",
  *     "label" = "name",
  *     "parent" = "parent",
  *     "ledger" = "ledger",
@@ -53,7 +55,8 @@ use Drupal\user\UserInterface;
  *     "delete-form" = "/ledger/account/{ledger_account}/delete",
  *     "collection" = "/ledger/account",
  *   },
- *   field_ui_base_route = "ledger_account.settings"
+ *   bundle_entity_type = "ledger_account_type",
+ *   field_ui_base_route = "entity.ledger_account_type.edit_form"
  * )
  */
 class LedgerAccount extends ContentEntityBase implements LedgerAccountInterface {
@@ -68,6 +71,13 @@ class LedgerAccount extends ContentEntityBase implements LedgerAccountInterface 
     $values += array(
       'user_id' => \Drupal::currentUser()->id(),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getType() {
+    return $this->bundle();
   }
 
   /**
@@ -198,6 +208,11 @@ class LedgerAccount extends ContentEntityBase implements LedgerAccountInterface 
       ->setLabel(t('ID'))
       ->setDescription(t('The ID of the Ledger Account entity.'))
       ->setReadOnly(TRUE);
+    $fields['type'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Type'))
+      ->setDescription(t('The Ledger Account type/bundle.'))
+      ->setSetting('target_type', 'ledger_account_type')
+      ->setRequired(TRUE);
     $fields['uuid'] = BaseFieldDefinition::create('uuid')
       ->setLabel(t('UUID'))
       ->setDescription(t('The UUID of the Ledger Account entity.'))
