@@ -7,6 +7,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\ledger\LedgerInterface;
 use Drupal\ledger_account\LedgerAccountInterface;
 use Drupal\user\UserInterface;
 
@@ -39,6 +40,7 @@ use Drupal\user\UserInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "name",
+ *     "ledger" = "ledger",
  *     "uuid" = "uuid",
  *     "uid" = "user_id",
  *     "langcode" = "langcode",
@@ -130,6 +132,36 @@ class LedgerAccount extends ContentEntityBase implements LedgerAccountInterface 
   /**
    * {@inheritdoc}
    */
+  public function getLedger() {
+    return $this->get('ledger')->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setLedger(LedgerInterface $ledger) {
+    $this->set('ledger', $ledger->id());
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLedgerId() {
+    return $this->get('ledger')->target_id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setLedgerId($id) {
+    $this->set('ledger', $id);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields['id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('ID'))
@@ -182,6 +214,32 @@ class LedgerAccount extends ContentEntityBase implements LedgerAccountInterface 
       ->setDisplayOptions('form', array(
         'type' => 'string_textfield',
         'weight' => -4,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['ledger'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Ledger'))
+      ->setDescription(t('The Ledger that this account is in.'))
+      ->setRevisionable(TRUE)
+      ->setSetting('target_type', 'ledger')
+      ->setSetting('handler', 'default')
+      ->setDefaultValue('')
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => 0,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 0,
+        'settings' => array(
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'autocomplete_type' => 'tags',
+          'placeholder' => '',
+        ),
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
