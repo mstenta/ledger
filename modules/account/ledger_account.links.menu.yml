@@ -3,8 +3,6 @@ entity.ledger_account.collection:
   title: 'Ledger Accounts'
   route_name: entity.ledger_account.collection
   description: 'All Ledger Accounts.'
-  parent: system.admin_structure
-  weight: 100
 
 ledger_account.admin.structure.settings:
   title: Ledger Account settings

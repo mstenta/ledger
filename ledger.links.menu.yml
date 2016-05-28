@@ -3,8 +3,6 @@ entity.ledger.collection:
   title: 'Ledger'
   route_name: entity.ledger.collection
   description: 'Manage Ledgers'
-  parent: system.admin_structure
-  weight: 100
 
 ledger.admin.structure.settings:
   title: Ledger settings

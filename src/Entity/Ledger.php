@@ -44,11 +44,11 @@ use Drupal\user\UserInterface;
  *     "langcode" = "langcode",
  *   },
  *   links = {
- *     "canonical" = "/admin/structure/ledger/{ledger}",
- *     "add-form" = "/admin/structure/ledger/add",
- *     "edit-form" = "/admin/structure/ledger/{ledger}/edit",
- *     "delete-form" = "/admin/structure/ledger/{ledger}/delete",
- *     "collection" = "/admin/structure/ledger",
+ *     "canonical" = "/ledger/{ledger}",
+ *     "add-form" = "/ledger/add",
+ *     "edit-form" = "/ledger/{ledger}/edit",
+ *     "delete-form" = "/ledger/{ledger}/delete",
+ *     "collection" = "/ledger",
  *   },
  *   field_ui_base_route = "ledger.settings"
  * )
