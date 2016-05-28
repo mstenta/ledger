@@ -1,0 +1,13 @@
+# Ledger menu items definition
+entity.ledger.collection:
+  title: 'Ledger list'
+  route_name: entity.ledger.collection
+  description: 'List Ledger entities'
+  parent: system.admin_structure
+  weight: 100
+
+ledger.admin.structure.settings:
+  title: Ledger settings
+  description: 'Configure Ledger entities'
+  route_name: ledger.settings
+  parent: system.admin_structure
