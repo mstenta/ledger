@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains ledger_account.module..
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function ledger_account_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the ledger_account module.
+    case 'help.page.ledger_account':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides the Ledger Account entity type.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
