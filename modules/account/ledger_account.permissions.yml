@@ -1,0 +1,19 @@
+add ledger account entities:
+  title: 'Create new Ledger Account entities'
+
+administer ledger account entities:
+  title: 'Administer Ledger Account entities'
+  description: 'Allow to access the administration form to configure Ledger Account entities.'
+  restrict access: true
+
+delete ledger account entities:
+  title: 'Delete Ledger Account entities'
+
+edit ledger account entities:
+  title: 'Edit Ledger Account entities'
+
+view published ledger account entities:
+  title: 'View published Ledger Account entities'
+
+view unpublished ledger account entities:
+  title: 'View unpublished Ledger Account entities'

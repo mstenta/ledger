@@ -1,0 +1,21 @@
+# Ledger Account routing definition
+ledger_account.settings_tab:
+  route_name: ledger_account.settings
+  title: 'Settings'
+  base_route: ledger_account.settings
+entity.ledger_account.canonical:
+  route_name: entity.ledger_account.canonical
+  base_route: entity.ledger_account.canonical
+  title: 'View'
+
+entity.ledger_account.edit_form:
+  route_name: entity.ledger_account.edit_form
+  base_route: entity.ledger_account.canonical
+  title: Edit
+
+entity.ledger_account.delete_form:
+  route_name:  entity.ledger_account.delete_form
+  base_route:  entity.ledger_account.canonical
+  title: Delete
+  weight: 10
+

@@ -1,0 +1,13 @@
+# Ledger Account menu items definition
+entity.ledger_account.collection:
+  title: 'Ledger Account list'
+  route_name: entity.ledger_account.collection
+  description: 'List Ledger Account entities'
+  parent: system.admin_structure
+  weight: 100
+
+ledger_account.admin.structure.settings:
+  title: Ledger Account settings
+  description: 'Configure Ledger Account entities'
+  route_name: ledger_account.settings
+  parent: system.admin_structure

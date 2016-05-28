@@ -1,0 +1,5 @@
+entity.ledger_account.add_form:
+  route_name: entity.ledger_account.add_form
+  title: 'Add Ledger Account'
+  appears_on:
+    - entity.ledger_account.collection
