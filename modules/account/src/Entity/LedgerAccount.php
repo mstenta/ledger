@@ -157,8 +157,8 @@ class LedgerAccount extends ContentEntityBase implements LedgerAccountInterface 
       ->setReadOnly(TRUE);
 
     $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Authored by'))
-      ->setDescription(t('The user ID of author of the Ledger Account entity.'))
+      ->setLabel(t('Owner'))
+      ->setDescription(t('The user ID of the account owner.'))
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
@@ -184,7 +184,7 @@ class LedgerAccount extends ContentEntityBase implements LedgerAccountInterface 
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
-      ->setDescription(t('The name of the Ledger Account entity.'))
+      ->setDescription(t('The name of the account.'))
       ->setSettings(array(
         'max_length' => 50,
         'text_processing' => 0,
@@ -209,7 +209,7 @@ class LedgerAccount extends ContentEntityBase implements LedgerAccountInterface 
 
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language code'))
-      ->setDescription(t('The language code for the Ledger Account entity.'))
+      ->setDescription(t('The language code for the account.'))
       ->setDisplayOptions('form', array(
         'type' => 'language_select',
         'weight' => 10,
@@ -218,11 +218,11 @@ class LedgerAccount extends ContentEntityBase implements LedgerAccountInterface 
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
-      ->setDescription(t('The time that the entity was created.'));
+      ->setDescription(t('The time that the account entity was created.'));
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
-      ->setDescription(t('The time that the entity was last edited.'));
+      ->setDescription(t('The time that the account entity was last edited.'));
 
     return $fields;
   }
