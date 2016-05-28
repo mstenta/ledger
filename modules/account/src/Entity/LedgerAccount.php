@@ -175,6 +175,7 @@ class LedgerAccount extends ContentEntityBase implements LedgerAccountInterface 
     $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Owner'))
       ->setDescription(t('The user ID of the account owner.'))
+      ->setRequired(TRUE)
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
@@ -200,6 +201,7 @@ class LedgerAccount extends ContentEntityBase implements LedgerAccountInterface 
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
+      ->setRequired(TRUE)
       ->setDescription(t('The name of the account.'))
       ->setSettings(array(
         'max_length' => 50,
@@ -221,6 +223,7 @@ class LedgerAccount extends ContentEntityBase implements LedgerAccountInterface 
     $fields['ledger'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Ledger'))
       ->setDescription(t('The Ledger that this account is in.'))
+      ->setRequired(TRUE)
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'ledger')
       ->setSetting('handler', 'default')

@@ -142,6 +142,7 @@ class Ledger extends ContentEntityBase implements LedgerInterface {
 
     $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Owner'))
+      ->setRequired(TRUE)
       ->setDescription(t('The user ID the Ledger owner.'))
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'user')
@@ -168,6 +169,7 @@ class Ledger extends ContentEntityBase implements LedgerInterface {
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
+      ->setRequired(TRUE)
       ->setDescription(t('The name of the Ledger.'))
       ->setSettings(array(
         'max_length' => 50,
