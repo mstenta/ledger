@@ -146,7 +146,7 @@ class Ledger extends ContentEntityBase implements LedgerInterface {
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
-      ->setDefaultValueCallback('Drupal\node\Entity\Node::getCurrentUserId')
+      ->setDefaultValueCallback('Drupal\ledger\Entity\Ledger::getCurrentUserId')
       ->setTranslatable(TRUE)
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
@@ -204,6 +204,18 @@ class Ledger extends ContentEntityBase implements LedgerInterface {
       ->setDescription(t('The time that the Ledger entity was last edited.'));
 
     return $fields;
+  }
+
+  /**
+   * Default value callback for 'user_id' base field definition.
+   *
+   * @see ::baseFieldDefinitions()
+   *
+   * @return array
+   *   An array of default values.
+   */
+  public static function getCurrentUserId() {
+    return array(\Drupal::currentUser()->id());
   }
 
 }
