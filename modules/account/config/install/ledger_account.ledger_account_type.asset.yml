@@ -1,6 +1,6 @@
 langcode: en
 status: true
 dependencies: {  }
-id: test
-label: test
+id: asset
+label: Asset
 type: asset
