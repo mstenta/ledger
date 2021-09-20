@@ -1,0 +1,18 @@
+{
+    "name": "drupal/ledger",
+    "description": "A double-entry bookkeeping system.",
+    "type": "drupal-module",
+    "keywords": ["Drupal", "bookkeeping"],
+    "homepage": "https://www.drupal.org/project/ledger",
+    "license": "GPL-2.0-or-later",
+    "support": {
+        "issues": "https://drupal.org/project/issues/ledger",
+        "source": "https://git.drupalcode.org/project/ledger"
+    },
+    "authors": [
+        {
+            "name": "Michael Stenta",
+            "email": "mike@farmier.com"
+        }
+    ]
+}
