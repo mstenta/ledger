@@ -14,5 +14,8 @@
             "name": "Michael Stenta",
             "email": "mike@farmier.com"
         }
-    ]
+    ],
+    "require": {
+        "drupal/log": "2.x-dev"
+    }
 }
