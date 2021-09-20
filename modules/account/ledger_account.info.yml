@@ -1,7 +1,0 @@
-name: Ledger Account
-type: module
-description: Provides the Ledger Account entity type.
-core: 8.x
-package: Ledger
-dependencies:
-  - ledger
