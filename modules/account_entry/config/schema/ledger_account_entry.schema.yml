@@ -1,0 +1,7 @@
+field.value.ledger_account_entry:
+  type: mapping
+  label: Default value
+  mapping:
+    value:
+      type: label
+      label: Value

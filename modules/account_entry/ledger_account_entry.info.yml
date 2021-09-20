@@ -4,3 +4,5 @@ description: Provides an Account entry field type.
 package: Ledger
 core_version_requirement: ^9
 configure: entity.ledger_account_type.collection
+dependencies:
+  - drupal:field
