@@ -1,7 +1,7 @@
-name: Ledger Transaction
+name: Transaction log
 type: module
-description: Provides the Ledger Transaction log type.
-core: 8.x
+description: Adds a Transaction log type.
 package: Ledger
+core_version_requirement: ^9
 dependencies:
-  - log
+  - log:log

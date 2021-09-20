@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - ledger_transaction
+id: transaction
+label: Transaction
+description: A transaction between two or more ledger accounts.
+name_pattern: 'Transaction [log:id]'
+workflow: log_default
+new_revision: true
