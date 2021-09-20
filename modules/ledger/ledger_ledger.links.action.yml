@@ -1,0 +1,5 @@
+ledger.add_form:
+  route_name: entity.ledger.add_form
+  title: 'Add ledger'
+  appears_on:
+    - entity.ledger.collection

@@ -1,0 +1,10 @@
+entity.ledger.settings:
+  title: Ledger
+  description: Configure a Ledger entity type
+  route_name:  entity.ledger.settings
+  parent: system.admin_structure
+entity.ledger.collection:
+  title: Ledgers
+  description: List of ledgers
+  route_name: entity.ledger.collection
+  parent: system.admin_content

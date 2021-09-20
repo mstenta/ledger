@@ -1,0 +1,13 @@
+administer ledger:
+  title: 'Administer ledger settings'
+  restrict access: true
+access ledger overview:
+  title: 'Access ledger overview page'
+delete ledger:
+  title: Delete ledger
+create ledger:
+  title: Create ledger
+view ledger:
+  title: View ledger
+edit ledger:
+  title: Edit ledger

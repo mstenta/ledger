@@ -1,0 +1,22 @@
+entity.ledger.settings:
+  title: Settings
+  route_name: entity.ledger.settings
+  base_route: entity.ledger.settings
+entity.ledger.view:
+  title: View
+  route_name: entity.ledger.canonical
+  base_route: entity.ledger.canonical
+entity.ledger.edit_form:
+  title: Edit
+  route_name: entity.ledger.edit_form
+  base_route: entity.ledger.canonical
+entity.ledger.delete_form:
+  title: Delete
+  route_name: entity.ledger.delete_form
+  base_route: entity.ledger.canonical
+  weight: 10
+entity.ledger.collection:
+  title: Ledger
+  route_name: entity.ledger.collection
+  base_route: system.admin_content
+  weight: 10

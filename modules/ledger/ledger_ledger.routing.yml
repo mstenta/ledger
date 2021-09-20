@@ -1,0 +1,7 @@
+entity.ledger.settings:
+  path: 'admin/structure/ledger'
+  defaults:
+    _form: '\Drupal\ledger_ledger\Form\LedgerSettingsForm'
+    _title: 'Ledger'
+  requirements:
+    _permission: 'administer ledger'
