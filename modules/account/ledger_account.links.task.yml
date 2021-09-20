@@ -1,0 +1,26 @@
+entity.ledger_account.view:
+  title: View
+  route_name: entity.ledger_account.canonical
+  base_route: entity.ledger_account.canonical
+entity.ledger_account.edit_form:
+  title: Edit
+  route_name: entity.ledger_account.edit_form
+  base_route: entity.ledger_account.canonical
+entity.ledger_account.delete_form:
+  title: Delete
+  route_name: entity.ledger_account.delete_form
+  base_route: entity.ledger_account.canonical
+  weight: 10
+entity.ledger_account.collection:
+  title: Account
+  route_name: entity.ledger_account.collection
+  base_route: system.admin_content
+  weight: 10
+entity.ledger_account_type.edit_form:
+  title: Edit
+  route_name: entity.ledger_account_type.edit_form
+  base_route: entity.ledger_account_type.edit_form
+entity.ledger_account_type.collection:
+  title: List
+  route_name: entity.ledger_account_type.collection
+  base_route: entity.ledger_account_type.collection

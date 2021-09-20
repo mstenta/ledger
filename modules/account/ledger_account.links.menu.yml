@@ -1,0 +1,5 @@
+entity.ledger_account_type.collection:
+  title: 'Account types'
+  parent: system.admin_structure
+  description: 'Manage and CRUD actions on Account type.'
+  route_name: entity.ledger_account_type.collection

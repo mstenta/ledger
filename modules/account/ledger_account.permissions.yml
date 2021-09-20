@@ -1,0 +1,14 @@
+administer account types:
+  title: 'Administer account types'
+  description: 'Maintain the types of account entity.'
+  restrict access: true
+access account overview:
+  title: 'Access account overview page'
+delete account:
+  title: Delete account
+create account:
+  title: Create account
+view account:
+  title: View account
+edit account:
+  title: Edit account

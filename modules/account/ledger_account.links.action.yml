@@ -1,0 +1,11 @@
+ledger_account.type_add:
+  route_name: entity.ledger_account_type.add_form
+  title: 'Add account type'
+  appears_on:
+    - entity.ledger_account_type.collection
+
+ledger_account.add_page:
+  route_name: entity.ledger_account.add_page
+  title: 'Add account'
+  appears_on:
+    - entity.ledger_account.collection
