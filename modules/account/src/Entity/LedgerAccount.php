@@ -165,13 +165,13 @@ class LedgerAccount extends RevisionableContentEntityBase implements LedgerAccou
       ->setSetting('max_length', 255)
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
-        'weight' => -5,
+        'weight' => -10,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'string',
-        'weight' => -5,
+        'weight' => -10,
       ])
       ->setDisplayConfigurable('view', TRUE);
 
@@ -186,13 +186,13 @@ class LedgerAccount extends RevisionableContentEntityBase implements LedgerAccou
         'settings' => [
           'display_label' => FALSE,
         ],
-        'weight' => 0,
+        'weight' => -5,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'type' => 'boolean',
         'label' => 'above',
-        'weight' => 0,
+        'weight' => -5,
         'settings' => [
           'format' => 'enabled-disabled',
         ],
@@ -205,13 +205,13 @@ class LedgerAccount extends RevisionableContentEntityBase implements LedgerAccou
       ->setDescription(t('A description of the account.'))
       ->setDisplayOptions('form', [
         'type' => 'text_textarea',
-        'weight' => 10,
+        'weight' => 0,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'type' => 'text_default',
         'label' => 'above',
-        'weight' => 10,
+        'weight' => 0,
       ])
       ->setDisplayConfigurable('view', TRUE);
 
