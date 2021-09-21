@@ -215,6 +215,32 @@ class LedgerAccount extends RevisionableContentEntityBase implements LedgerAccou
       ])
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['ledger'] = BaseFieldDefinition::create('entity_reference')
+      ->setRevisionable(TRUE)
+      ->setLabel(t('Ledger'))
+      ->setDescription(t('The ledger this account is in.'))
+      ->setRequired(TRUE)
+      ->setSetting('target_type', 'ledger')
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => 60,
+          'placeholder' => '',
+        ],
+        'weight' => 10,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'entity_reference_label',
+        'settings' => [
+          'link' => TRUE,
+        ],
+        'weight' => 10,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setRevisionable(TRUE)
       ->setLabel(t('Author'))
