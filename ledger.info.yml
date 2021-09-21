@@ -3,3 +3,6 @@ description: A double-entry bookkeeping system.
 type: module
 package: Ledger
 core_version_requirement: ^9
+dependencies:
+  - ledger_account
+  - ledger_transaction
