@@ -48,6 +48,21 @@ class LedgerAccountTypeForm extends BundleEntityFormBase {
       '#description' => $this->t('A unique machine-readable name for this account type. It must only contain lowercase letters, numbers, and underscores.'),
     ];
 
+    $form['type'] = [
+      '#title' => $this->t('Fundamental type'),
+      '#type' => 'select',
+      '#default_value' => $entity_type->get('type'),
+      '#options' => [
+        'asset' => $this->t('Asset'),
+        'equity' => $this->t('Equity'),
+        'liability' => $this->t('Liability'),
+        'income' => $this->t('Income'),
+        'expense' => $this->t('Expense'),
+      ],
+      '#description' => $this->t('The fundamental bookkeeping account type. Must be one of: asset, equity, liability, income, or expense.'),
+      '#required' => TRUE,
+    ];
+
     return $this->protectBundleIdElement($form);
   }
 
@@ -69,6 +84,7 @@ class LedgerAccountTypeForm extends BundleEntityFormBase {
 
     $entity_type->set('id', trim($entity_type->id()));
     $entity_type->set('label', trim($entity_type->label()));
+    $entity_type->set('type', $entity_type->get('type'));
 
     $status = $entity_type->save();
 

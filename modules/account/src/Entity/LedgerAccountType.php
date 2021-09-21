@@ -38,6 +38,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *   config_export = {
  *     "id",
  *     "label",
+ *     "type",
  *     "uuid",
  *   }
  * )
@@ -57,5 +58,14 @@ class LedgerAccountType extends ConfigEntityBundleBase {
    * @var string
    */
   protected $label;
+
+  /**
+   * The fundamental account type.
+   *
+   * Must be asset, equity, liability, income, or expense.
+   *
+   * @var string
+   */
+  protected $type;
 
 }
